@@ -1,0 +1,2841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#eef6f8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Coastline Mobile — SoCal Water Conditions</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+:root{
+  --app-bg:#edf5f7;
+  --card:#ffffff;
+  --ink:#153042;
+  --muted:#748792;
+  --line:#dce7eb;
+  --blue:#0e89c8;
+  --blue-soft:#e8f5fb;
+  --green:#13a477;
+  --amber:#e7a72e;
+  --red:#df5c63;
+  --shadow:0 10px 28px rgba(24,57,72,.13);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent
+}
+
+html,body{
+  margin:0;
+  height:100%;
+  background:var(--app-bg);
+  font-family:"DM Sans",system-ui,sans-serif;
+  color:var(--ink);
+  overflow:hidden
+}
+
+button{
+  font:inherit;
+  color:inherit
+}
+
+button,input{
+  outline:none
+}
+
+.phone-stage{
+  position:relative;
+  width:100%;
+  height:100dvh;
+  overflow:hidden;
+  background:#bfd9e3;
+}
+
+#map{
+  position:absolute;
+  inset:0;
+  background:#bfd9e3
+}
+
+.leaflet-control-zoom{
+  display:none!important
+}
+
+.leaflet-control-attribution{
+  font-size:7px!important;
+  max-width:58vw;
+  background:rgba(255,255,255,.7)!important;
+  color:#61747f!important;
+  margin-bottom:82px!important
+}
+
+.leaflet-container{
+  font-family:"DM Sans",system-ui,sans-serif
+}
+
+.leaflet-tooltip{
+  border:0!important;
+  border-radius:10px!important;
+  box-shadow:0 5px 18px rgba(28,59,72,.16)!important;
+  color:#193546!important;
+  font-size:11px!important;
+  padding:7px 9px!important;
+}
+
+.ocean-tint{
+  position:absolute;
+  inset:0;
+  z-index:350;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 70% 72%,rgba(15,145,198,.13),transparent 28%),
+    radial-gradient(circle at 30% 84%,rgba(60,192,166,.11),transparent 26%);
+}
+
+#windCanvas{
+  position:absolute;
+  inset:0;
+  z-index:360;
+  pointer-events:none;
+  opacity:.55
+}
+
+/* MOBILE HEADER */
+
+.mobile-header{
+  position:absolute;
+  z-index:700;
+  top:calc(8px + var(--safe-top));
+  left:10px;
+  right:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  pointer-events:none;
+}
+
+.brand-chip,
+.round-btn{
+  pointer-events:auto;
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(214,227,233,.92);
+  backdrop-filter:blur(14px);
+  box-shadow:0 5px 18px rgba(22,55,70,.11);
+}
+
+.brand-chip{
+  min-width:0;
+  height:44px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border-radius:14px;
+  padding:0 10px 0 7px;
+}
+
+.brand-logo{
+  width:31px;
+  height:31px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  background:linear-gradient(145deg,#2ab5df,#0b78ba);
+  flex:0 0 auto;
+}
+
+.brand-name{
+  font-family:"Plus Jakarta Sans";
+  font-weight:800;
+  font-size:13px;
+  line-height:1;
+  letter-spacing:-.03em
+}
+
+.brand-sub{
+  font-size:8.5px;
+  color:var(--muted);
+  margin-top:3px;
+  white-space:nowrap
+}
+
+.header-actions{
+  display:flex;
+  gap:6px;
+  pointer-events:auto
+}
+
+.round-btn{
+  width:44px;
+  height:44px;
+  border:0;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+
+.round-btn:active,
+.mini-layer:active,
+.mode button:active,
+.region-pill:active,
+.spot-row:active,
+.nav-btn:active{
+  transform:scale(.96)
+}
+
+.quick-status{
+  position:absolute;
+  z-index:650;
+  top:calc(62px + var(--safe-top));
+  left:10px;
+  background:rgba(255,255,255,.91);
+  border:1px solid rgba(214,227,233,.9);
+  border-radius:13px;
+  padding:8px 10px;
+  box-shadow:0 5px 18px rgba(22,55,70,.10);
+  backdrop-filter:blur(12px);
+  pointer-events:none;
+}
+
+.quick-status strong{
+  font-size:10px;
+  display:flex;
+  align-items:center;
+  gap:5px
+}
+
+.quick-status small{
+  display:block;
+  color:var(--muted);
+  font-size:8px;
+  margin-top:2px
+}
+
+.status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green)
+}
+
+/* MAP CONTROLS */
+
+.map-controls{
+  position:absolute;
+  z-index:690;
+  right:10px;
+  top:calc(75px + var(--safe-top));
+  display:grid;
+  gap:7px;
+}
+
+.mini-layer{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(214,227,233,.92);
+  border-radius:14px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 5px 18px rgba(22,55,70,.10);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  backdrop-filter:blur(12px);
+}
+
+.mini-layer.active{
+  background:#eaf7fc;
+  color:#087fba;
+  border-color:#bfe3f2
+}
+
+.mini-layer span{
+  font-size:7px;
+  font-weight:800;
+  margin-top:1px
+}
+
+.layer-stack{
+  display:grid;
+  place-items:center;
+  line-height:1
+}
+
+/* BOTTOM SHEET */
+
+.sheet{
+  --sheet-h:196px;
+  position:absolute;
+  z-index:800;
+  left:0;
+  right:0;
+  bottom:calc(65px + var(--safe-bottom));
+  height:var(--sheet-h);
+  min-height:150px;
+  max-height:74dvh;
+  background:rgba(251,253,254,.985);
+  border:1px solid rgba(219,231,236,.95);
+  border-bottom:0;
+  border-radius:24px 24px 0 0;
+  box-shadow:0 -8px 30px rgba(18,49,64,.14);
+  backdrop-filter:blur(18px);
+  overflow:hidden;
+  transition:height .28s cubic-bezier(.2,.8,.2,1);
+}
+
+.sheet.dragging{
+  transition:none
+}
+
+.sheet-handle-area{
+  height:27px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:grab;
+  touch-action:none;
+}
+
+.grabber{
+  width:38px;
+  height:4px;
+  border-radius:20px;
+  background:#c9d7dc
+}
+
+.sheet-content{
+  height:calc(100% - 27px);
+  overflow:auto;
+  padding:0 12px 12px;
+  scrollbar-width:none
+}
+
+.sheet-content::-webkit-scrollbar{
+  display:none
+}
+
+.sheet-summary{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+}
+
+.summary-kicker{
+  font-size:9px;
+  font-weight:800;
+  color:var(--blue);
+  text-transform:uppercase;
+  letter-spacing:.08em
+}
+
+.summary-title{
+  font-family:"Plus Jakarta Sans";
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:-.04em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-top:2px
+}
+
+.summary-sub{
+  font-size:9.5px;
+  color:var(--muted);
+  margin-top:2px
+}
+
+.mode{
+  display:flex;
+  border-radius:12px;
+  padding:3px;
+  background:#e9f0f3;
+}
+
+.mode button{
+  border:0;
+  background:transparent;
+  border-radius:9px;
+  padding:7px 10px;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer
+}
+
+.mode button.active{
+  background:#fff;
+  color:var(--blue);
+  box-shadow:0 2px 7px rgba(24,57,72,.10)
+}
+
+.summary-metrics{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+  margin:10px 0 9px;
+}
+
+.quick-metric{
+  min-width:0;
+  background:#f2f7f9;
+  border-radius:10px;
+  padding:7px 6px;
+}
+
+.quick-metric span{
+  display:block;
+  font-size:7.5px;
+  color:#81919a;
+  text-transform:uppercase;
+  font-weight:800;
+  letter-spacing:.04em
+}
+
+.quick-metric b{
+  font-size:12px;
+  display:block;
+  margin-top:2px;
+  white-space:nowrap
+}
+
+.quick-metric em{
+  font-size:8px;
+  font-style:normal;
+  color:#71848f
+}
+
+.section-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  border-top:1px solid #edf2f4;
+  padding-top:10px;
+  margin-top:2px
+}
+
+.section-line strong{
+  font-family:"Plus Jakarta Sans";
+  font-size:13px
+}
+
+.section-line small{
+  font-size:8.5px;
+  color:var(--muted)
+}
+
+.regions{
+  display:flex;
+  gap:6px;
+  overflow:auto;
+  padding:9px 0 8px;
+  scroll-snap-type:x proximity;
+  scrollbar-width:none
+}
+
+.regions::-webkit-scrollbar{
+  display:none
+}
+
+.region-pill{
+  white-space:nowrap;
+  scroll-snap-align:start;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:9px;
+  font-weight:700;
+  color:#627782;
+  cursor:pointer
+}
+
+.region-pill.active{
+  background:#e4f4fb;
+  color:#087db8;
+  border-color:#bee3f2
+}
+
+.spot-list{
+  display:grid;
+  gap:7px;
+  padding-bottom:10px
+}
+
+.spot-row{
+  background:#fff;
+  border:1px solid #e2ebef;
+  border-radius:15px;
+  padding:10px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  box-shadow:0 3px 12px rgba(24,57,72,.05);
+  cursor:pointer
+}
+
+.spot-name{
+  font-family:"Plus Jakarta Sans";
+  font-weight:800;
+  font-size:12px;
+  letter-spacing:-.02em
+}
+
+.spot-loc{
+  font-size:8.5px;
+  color:var(--muted);
+  margin-top:2px
+}
+
+.spot-inline{
+  display:flex;
+  gap:10px;
+  margin-top:7px
+}
+
+.spot-inline span{
+  font-size:8px;
+  color:#7c8d97
+}
+
+.spot-inline b{
+  font-size:10px;
+  color:#2b4655
+}
+
+.score-badge{
+  align-self:start;
+  border-radius:999px;
+  padding:5px 7px;
+  font-size:8px;
+  font-weight:800;
+  background:#e7f7f1;
+  color:#087f59
+}
+
+.score-badge.fair{
+  background:#fff5df;
+  color:#a66f0a
+}
+
+.score-badge.rough{
+  background:#fdeced;
+  color:#b53b43
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+  position:absolute;
+  z-index:950;
+  left:0;
+  right:0;
+  bottom:0;
+  height:calc(65px + var(--safe-bottom));
+  padding:5px 10px var(--safe-bottom);
+  background:rgba(255,255,255,.98);
+  border-top:1px solid #dfe9ed;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  box-shadow:0 -4px 18px rgba(19,50,65,.07);
+  backdrop-filter:blur(16px);
+}
+
+.nav-btn{
+  border:0;
+  background:transparent;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:2px;
+  color:#80919a;
+  font-size:8px;
+  font-weight:800;
+  cursor:pointer
+}
+
+.nav-btn.active{
+  color:var(--blue);
+  background:#edf8fc
+}
+
+.nav-btn svg{
+  width:19px;
+  height:19px
+}
+
+/* DETAILS */
+
+.details{
+  position:absolute;
+  inset:0;
+  z-index:1300;
+  background:rgba(10,34,46,.28);
+  display:none;
+  align-items:flex-end
+}
+
+.detail-card{
+  width:100%;
+  max-height:86dvh;
+  overflow:auto;
+  background:#fff;
+  border-radius:26px 26px 0 0;
+  padding:10px 14px calc(18px + var(--safe-bottom));
+  box-shadow:0 -15px 44px rgba(16,45,58,.2)
+}
+
+.detail-grabber{
+  width:38px;
+  height:4px;
+  background:#d2dde1;
+  border-radius:999px;
+  margin:0 auto 10px
+}
+
+.detail-close{
+  float:right;
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:12px;
+  background:#eef3f5;
+  cursor:pointer
+}
+
+.detail-kicker{
+  font-size:9px;
+  color:var(--blue);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em
+}
+
+.detail-title{
+  font-family:"Plus Jakarta Sans";
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:-.04em;
+  margin-top:3px
+}
+
+.big-status{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin:8px 0 12px;
+  font-size:10px;
+  font-weight:800
+}
+
+.detail-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px
+}
+
+.detail-box{
+  background:#f3f7f8;
+  border-radius:13px;
+  padding:11px
+}
+
+.detail-box span{
+  font-size:8px;
+  color:var(--muted);
+  font-weight:700
+}
+
+.detail-box b{
+  display:block;
+  font-size:19px;
+  margin-top:3px
+}
+
+.detail-note{
+  margin-top:10px;
+  background:#edf8fb;
+  border-radius:13px;
+  padding:11px;
+  font-size:10px;
+  line-height:1.5;
+  color:#496774
+}
+
+/* PHONE-FIRST DESKTOP PREVIEW */
+
+@media (min-width:560px){
+  body{
+    display:grid;
+    place-items:center;
+    background:#e3ecef
+  }
+
+  .phone-stage{
+    width:min(430px,100vw);
+    height:min(900px,100dvh);
+    border-radius:28px;
+    box-shadow:0 20px 70px rgba(25,55,67,.18);
+  }
+}
+
+@media (max-width:360px){
+  .brand-sub{
+    display:none
+  }
+
+  .brand-chip{
+    padding-right:8px
+  }
+
+  .summary-title{
+    font-size:16px
+  }
+
+  .mode button{
+    padding:7px 8px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone-stage" id="app">
+
+  <div id="map"></div>
+
+  <div class="ocean-tint"></div>
+
+  <canvas id="windCanvas"></canvas>
+
+  <header class="mobile-header">
+
+    <div class="brand-chip">
+
+      <div class="brand-logo">
+        <svg width="18" height="18"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+
+          <path d="M3 16c3-5 6-5 9 0s6 5 9 0"/>
+          <path d="M3 11c3-5 6-5 9 0s6 5 9 0"/>
+
+        </svg>
+      </div>
+
+      <div>
+
+        <div class="brand-name">
+          Coastline
+        </div>
+
+        <div class="brand-sub">
+          SoCal water conditions
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="header-actions">
+
+      <button
+        class="round-btn"
+        title="Search"
+        onclick="showToast('Search prototype')">
+
+        <svg width="18"
+             height="18"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="#31596f"
+             stroke-width="2">
+
+          <circle cx="11" cy="11" r="6.5"/>
+          <path d="m16 16 4 4"/>
+
+        </svg>
+
+      </button>
+
+      <button
+        class="round-btn"
+        title="Saved"
+        onclick="showToast('Saved spots prototype')">
+
+        <svg width="18"
+             height="18"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="#31596f"
+             stroke-width="2">
+
+          <path d="M6 4.5A2.5 2.5 0 0 1 8.5 2h7A2.5 2.5 0 0 1 18 4.5V21l-6-3.5L6 21z"/>
+
+        </svg>
+
+      </button>
+
+    </div>
+
+  </header>
+
+  <div class="quick-status">
+
+    <strong>
+      <i class="status-dot"></i>
+      Good morning window
+    </strong>
+
+    <small>
+      Light wind · cleaner nearshore
+    </small>
+
+  </div>
+
+  <div class="map-controls">
+
+    <button
+      class="mini-layer active"
+      data-layer="Wind"
+      onclick="setLayer('Wind',this)">
+
+      <div class="layer-stack">
+
+        <svg width="18"
+             height="18"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.8">
+
+          <path d="M3 8h10c2.5 0 2.5-4 0-4-1.4 0-2.2.7-2.5 1.6"/>
+          <path d="M3 12h15c3 0 3 5 0 5-1.5 0-2.4-.8-2.7-1.8"/>
+          <path d="M3 16h7"/>
+
+        </svg>
+
+        <span>WIND</span>
+
+      </div>
+
+    </button>
+
+    <button
+      class="mini-layer"
+      data-layer="Swell"
+      onclick="setLayer('Swell',this)">
+
+      <div class="layer-stack">
+
+        <svg width="18"
+             height="18"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.8">
+
+          <path d="M2 15c2.5-4 5-4 7.5 0s5 4 7.5 0 4.5-4 5 0"/>
+          <path d="M2 10c2.5-4 5-4 7.5 0s5 4 7.5 0 4.5-4 5 0"/>
+
+        </svg>
+
+        <span>SWELL</span>
+
+      </div>
+
+    </button>
+
+    <button
+      class="mini-layer"
+      title="Recenter"
+      onclick="recenter()">
+
+      <div class="layer-stack">
+
+        <svg width="18"
+             height="18"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="#176f99"
+             stroke-width="2">
+
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+
+        </svg>
+
+        <span>HOME</span>
+
+      </div>
+
+    </button>
+
+  </div>
+
+  <section class="sheet" id="sheet">
+
+    <div class="sheet-handle-area" id="sheetHandle">
+
+      <div class="grabber"></div>
+
+    </div>
+
+    <div class="sheet-content" id="sheetContent">
+
+      <div class="sheet-summary">
+
+        <div>
+
+          <div class="summary-kicker">
+            Right now
+          </div>
+
+          <div class="summary-title" id="sheetTitle">
+            Surf conditions
+          </div>
+
+          <div class="summary-sub">
+            Southern California · sample prototype data
+          </div>
+
+        </div>
+
+        <div class="mode">
+
+          <button
+            id="surfBtn"
+            class="active"
+            onclick="setMode('surf')">
+
+            Surf
+
+          </button>
+
+          <button
+            id="boatBtn"
+            onclick="setMode('boat')">
+
+            Boat
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <div
+        class="summary-metrics"
+        id="summaryMetrics">
+      </div>
+
+      <div class="section-line">
+
+        <div>
+
+          <strong>
+            Nearby conditions
+          </strong>
+
+          <br>
+
+          <small>
+            Tap a card or marker for details
+          </small>
+
+        </div>
+
+        <button
+          onclick="expandSheet()"
+          style="
+          border:0;
+          background:transparent;
+          color:#0e89c8;
+          font-size:9px;
+          font-weight:800;
+          padding:6px">
+
+          VIEW ALL
+
+        </button>
+
+      </div>
+
+      <div
+        class="regions"
+        id="regions">
+      </div>
+
+      <div
+        class="spot-list"
+        id="spotList">
+      </div>
+
+    </div>
+
+  </section>
+
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-btn active"
+      onclick="navMode('map',this)">
+
+      <svg viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2">
+
+        <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15"/>
+
+      </svg>
+
+      Map
+
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="navMode('spots',this)">
+
+      <svg viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2">
+
+        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/>
+        <circle cx="12" cy="10" r="2.5"/>
+
+      </svg>
+
+      Spots
+
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="navMode('forecast',this)">
+
+      <svg viewBox="0 0 24 24"
+           fill="none"
+           stroke="currentColor"
+           stroke-width="2">
+
+        <path d="M4 19V5M4 19h16"/>
+        <path d="m7 15 4-5 3 3 5-7"/>
+
+      </svg>
+
+      Forecast
+
+    </button>
+
+    <button
+      class="nav-btn"
+      onclick="navMode('more',this)">
+
+      <svg viewBox="0 0 24 24"
+           fill="currentColor">
+
+        <circle cx="5" cy="12" r="1.7"/>
+        <circle cx="12" cy="12" r="1.7"/>
+        <circle cx="19" cy="12" r="1.7"/>
+
+      </svg>
+
+      More
+
+    </button>
+
+  </nav>
+
+  <div
+    class="details"
+    id="details"
+    onclick="if(event.target===this)closeDetails()">
+
+    <div class="detail-card">
+
+      <div class="detail-grabber"></div>
+
+      <button
+        class="detail-close"
+        onclick="closeDetails()">
+
+        ✕
+
+      </button>
+
+      <div id="detailContent"></div>
+
+    </div>
+
+  </div>
+
+  <div
+    id="toast"
+    style="
+      position:absolute;
+      z-index:1600;
+      left:50%;
+      bottom:86px;
+      transform:translate(-50%,16px);
+      background:rgba(19,43,55,.94);
+      color:white;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:9px;
+      font-weight:700;
+      opacity:0;
+      pointer-events:none;
+      transition:.2s;
+      white-space:nowrap">
+  </div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   SURF LOCATIONS
+========================================================= */
+
+const surfSpots=[
+
+ {
+   region:"San Diego",
+   name:"Sunset Cliffs",
+   loc:"Point Loma",
+   score:"Good",
+   wave:"3.2",
+   period:"14",
+   wind:"6",
+   windDir:"E",
+   tide:"+2.1 ft",
+   water:"64",
+   note:"Clean WSW swell with light E wind. A solid morning window."
+ },
+
+ {
+   region:"Newport",
+   name:"The Wedge",
+   loc:"Newport Jetty",
+   score:"Fair",
+   wave:"4.0",
+   period:"16",
+   wind:"11",
+   windDir:"W",
+   tide:"+1.4 ft",
+   water:"66",
+   note:"Bigger pulse, but wind is beginning to add texture."
+ },
+
+ {
+   region:"LA / Long Beach",
+   name:"El Porto",
+   loc:"Manhattan Beach",
+   score:"Caution",
+   wave:"2.1",
+   period:"9",
+   wind:"14",
+   windDir:"WSW",
+   tide:"+0.6 ft",
+   water:"62",
+   note:"Shorter-period surf with stronger onshore wind."
+ }
+
+];
+
+
+/* =========================================================
+   BOATING LOCATIONS
+========================================================= */
+
+const boatSpots=[
+
+ {
+   region:"San Diego",
+   name:"Coronado Banks",
+   loc:"Offshore San Diego",
+   score:"Fair",
+   wave:"2.8",
+   period:"12",
+   wind:"9",
+   windDir:"NW",
+   tide:"—",
+   water:"63",
+   note:"Moderate offshore conditions. Watch the afternoon wind increase."
+ },
+
+ {
+   region:"Newport",
+   name:"Newport to Catalina",
+   loc:"Route",
+   score:"Good",
+   wave:"2.0",
+   period:"10",
+   wind:"7",
+   windDir:"WNW",
+   tide:"—",
+   water:"65",
+   note:"Relatively low wind and modest swell in this sample."
+ },
+
+ {
+   region:"LA / Long Beach",
+   name:"San Pedro Channel",
+   loc:"Offshore Long Beach",
+   score:"Rough",
+   wave:"5.1",
+   period:"8",
+   wind:"19",
+   windDir:"W",
+   tide:"—",
+   water:"61",
+   note:"Large short-period seas and strong wind. Unfavorable boating conditions."
+ },
+
+ /* =====================================================
+    LONG BEACH / LOS ANGELES STATIONS
+ ===================================================== */
+
+ {
+   region:"LA / Long Beach",
+   name:"Station 46256",
+   loc:"Long Beach Channel · Wave Buoy",
+   score:"Good",
+   wave:"2.6",
+   period:"13",
+   wind:"8.4",
+   windDir:"—",
+   tide:"—",
+   water:"68",
+   station:true,
+   note:"Long Beach Channel wave buoy. Sample prototype values shown here."
+ },
+
+ {
+   region:"LA / Long Beach",
+   name:"Station PRJC1",
+   loc:"Los Angeles Pier J · Wind Station",
+   score:"Good",
+   wave:"—",
+   period:"—",
+   wind:"8.0",
+   windDir:"S",
+   tide:"—",
+   water:"—",
+   station:true,
+   note:"NOAA/NOS PORTS marine wind station at Los Angeles Pier J. Sample prototype values shown here."
+ },
+
+ {
+   region:"LA / Long Beach",
+   name:"Station AGXC1",
+   loc:"Angels Gate · Wind Station",
+   score:"Good",
+   wave:"—",
+   period:"—",
+   wind:"4.1",
+   windDir:"S",
+   tide:"—",
+   water:"—",
+   station:true,
+   note:"NOAA/NOS PORTS marine wind station at Angels Gate. Sample prototype values shown here."
+ },
+
+ {
+   region:"LA / Long Beach",
+   name:"Station PFDC1",
+   loc:"Los Angeles Pier 400 · Wind Station",
+   score:"Fair",
+   wave:"—",
+   period:"—",
+   wind:"8.0",
+   windDir:"E",
+   tide:"—",
+   water:"—",
+   station:true,
+   note:"NOAA/NOS PORTS marine wind station at Los Angeles Pier 400. Sample prototype values shown here."
+ },
+
+ {
+   region:"LA / Long Beach",
+   name:"Station PFXC1",
+   loc:"Los Angeles Pier F · Wind Station",
+   score:"Good",
+   wave:"—",
+   period:"—",
+   wind:"4.1",
+   windDir:"S",
+   tide:"—",
+   water:"—",
+   station:true,
+   note:"NOAA/NOS PORTS marine wind station at Los Angeles Pier F. Sample prototype values shown here."
+ }
+
+];
+
+
+/* =========================================================
+   MAP STATIONS
+========================================================= */
+
+const stationData=[
+
+ {
+   name:"Pt. Loma",
+   station:"CDIP 191",
+   lat:32.75,
+   lng:-117.77,
+   mode:"surf",
+   type:"wave",
+   region:"San Diego",
+   wave:3.2,
+   wind:6,
+   period:14,
+   water:64,
+   score:"Good"
+ },
+
+ {
+   name:"Newport",
+   station:"CDIP 092",
+   lat:33.60,
+   lng:-117.98,
+   mode:"surf",
+   type:"wave",
+   region:"Newport",
+   wave:4.0,
+   wind:11,
+   period:16,
+   water:66,
+   score:"Fair"
+ },
+
+ {
+   name:"Santa Monica",
+   station:"NDBC 46221",
+   lat:33.855,
+   lng:-118.633,
+   mode:"surf",
+   type:"wave",
+   region:"LA / Long Beach",
+   wave:2.1,
+   wind:14,
+   period:9,
+   water:62,
+   score:"Caution"
+ },
+
+ {
+   name:"Long Beach Channel",
+   station:"46256",
+   lat:33.700,
+   lng:-118.201,
+   mode:"both",
+   type:"wave",
+   region:"LA / Long Beach",
+   wave:2.6,
+   wind:8.4,
+   period:13,
+   water:68,
+   score:"Good"
+ },
+
+ {
+   name:"Los Angeles Pier J",
+   station:"PRJC1",
+   lat:33.733,
+   lng:-118.186,
+   mode:"both",
+   type:"wind",
+   region:"LA / Long Beach",
+   wind:8.0,
+   windDir:"S",
+   score:"Good"
+ },
+
+ {
+   name:"Angels Gate",
+   station:"AGXC1",
+   lat:33.716,
+   lng:-118.246,
+   mode:"both",
+   type:"wind",
+   region:"LA / Long Beach",
+   wind:4.1,
+   windDir:"S",
+   score:"Good"
+ },
+
+ {
+   name:"Los Angeles Pier 400",
+   station:"PFDC1",
+   lat:33.735,
+   lng:-118.241,
+   mode:"both",
+   type:"wind",
+   region:"LA / Long Beach",
+   wind:8.0,
+   windDir:"E",
+   score:"Fair"
+ },
+
+ {
+   name:"Los Angeles Pier F",
+   station:"PFXC1",
+   lat:33.747,
+   lng:-118.215,
+   mode:"both",
+   type:"wind",
+   region:"LA / Long Beach",
+   wind:4.1,
+   windDir:"S",
+   score:"Good"
+ },
+
+ {
+   name:"San Pedro South",
+   station:"NDBC 46253",
+   lat:33.40,
+   lng:-118.49,
+   mode:"boat",
+   type:"wave",
+   region:"LA / Long Beach",
+   wave:5.1,
+   wind:19,
+   period:8,
+   water:61,
+   score:"Rough"
+ }
+
+];
+
+
+/* =========================================================
+   APP STATE
+========================================================= */
+
+let mode="surf";
+let region="All";
+let layer="Wind";
+
+let map;
+let markers=[];
+
+const defaultView={
+  center:[33.58,-118.12],
+  zoom:8.65
+};
+
+
+/* =========================================================
+   MAP
+========================================================= */
+
+map=L.map("map",{
+  zoomControl:false,
+  attributionControl:true,
+  preferCanvas:true
+}).setView(
+  defaultView.center,
+  defaultView.zoom
+);
+
+
+L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}",
+  {
+    attribution:"Tiles © Esri · GEBCO · NOAA",
+    maxZoom:13
+  }
+).addTo(map);
+
+
+/* =========================================================
+   STATION MARKERS
+========================================================= */
+
+function scoreColor(score){
+
+  return score==="Good"
+    ? "#13a477"
+    : score==="Fair" || score==="Caution"
+      ? "#e7a72e"
+      : "#df5c63";
+
+}
+
+
+function stationIcon(s){
+
+  const c=scoreColor(s.score);
+
+  const label=
+    s.type==="wind"
+      ? "↗"
+      : "≈";
+
+  return L.divIcon({
+
+    className:"",
+
+    iconSize:[38,42],
+
+    iconAnchor:[19,34],
+
+    html:`
+      <div style="
+        position:relative;
+        width:38px;
+        height:42px">
+
+        <div style="
+          position:absolute;
+          left:5px;
+          top:3px;
+          width:28px;
+          height:28px;
+          border-radius:14px;
+          background:rgba(255,255,255,.96);
+          border:3px solid ${c};
+          box-shadow:0 4px 13px rgba(20,55,70,.22);
+          display:grid;
+          place-items:center;
+          font-size:13px;
+          font-weight:900;
+          color:${c}">
+
+          ${label}
+
+        </div>
+
+        <div style="
+          position:absolute;
+          left:16px;
+          top:29px;
+          width:6px;
+          height:6px;
+          background:${c};
+          transform:rotate(45deg);
+          border-radius:1px">
+        </div>
+
+      </div>
+    `
+  });
+
+}
+
+
+function drawMarkers(){
+
+  markers.forEach(
+    m=>map.removeLayer(m)
+  );
+
+  markers=[];
+
+  stationData
+
+    .filter(
+      s=>
+        (s.mode===mode || s.mode==="both")
+        &&
+        (region==="All" || s.region===region)
+    )
+
+    .forEach(s=>{
+
+      const m=L.marker(
+        [s.lat,s.lng],
+        {
+          icon:stationIcon(s)
+        }
+      ).addTo(map);
+
+      m.bindTooltip(
+
+        `<b>${s.name}</b><br>
+         ${s.station} ·
+         ${s.type==="wave" ? "Wave" : "Wind"}`,
+
+        {
+          direction:"top",
+          offset:[0,-25],
+          opacity:.97
+        }
+
+      );
+
+      m.on(
+        "click",
+        ()=>openStationDetails(s)
+      );
+
+      markers.push(m);
+
+    });
+
+}
+
+
+/* =========================================================
+   DATA RENDERING
+========================================================= */
+
+function listForMode(){
+
+  return mode==="surf"
+    ? surfSpots
+    : boatSpots;
+
+}
+
+
+function renderSummary(){
+
+  const list=listForMode();
+
+  const good=
+    list.find(x=>x.score==="Good")
+    || list[0];
+
+  const waveLabel=
+    mode==="surf"
+      ? "Swell"
+      : "Seas";
+
+  document
+    .getElementById("summaryMetrics")
+    .innerHTML=`
+
+      <div class="quick-metric">
+
+        <span>${waveLabel}</span>
+
+        <b>
+          ${good.wave}
+          <em> ft</em>
+        </b>
+
+      </div>
+
+      <div class="quick-metric">
+
+        <span>Period</span>
+
+        <b>
+          ${good.period}
+          <em> s</em>
+        </b>
+
+      </div>
+
+      <div class="quick-metric">
+
+        <span>Wind</span>
+
+        <b>
+          ${good.wind}
+          <em> mph</em>
+        </b>
+
+      </div>
+
+      <div class="quick-metric">
+
+        <span>Water</span>
+
+        <b>
+          ${good.water}
+          <em>°F</em>
+        </b>
+
+      </div>
+    `;
+
+}
+
+
+function renderRegions(){
+
+  const regions=[
+    "All",
+    "San Diego",
+    "Newport",
+    "LA / Long Beach"
+  ];
+
+  document
+    .getElementById("regions")
+    .innerHTML=
+
+      regions.map(
+        r=>
+
+        `<button
+          class="region-pill ${r===region ? "active" : ""}"
+          onclick="setRegion('${r}')">
+
+          ${r}
+
+        </button>`
+
+      ).join("");
+
+}
+
+
+function renderSpots(){
+
+  const rows=
+
+    listForMode()
+
+      .filter(
+        s=>
+          region==="All"
+          ||
+          s.region===region
+      );
+
+
+  document
+    .getElementById("spotList")
+    .innerHTML=
+
+      rows.map(s=>{
+
+        const cls=
+
+          s.score==="Good"
+
+            ? ""
+
+            : s.score==="Fair"
+              || s.score==="Caution"
+
+                ? "fair"
+
+                : "rough";
+
+
+        return `
+
+          <article
+            class="spot-row"
+            onclick='openSpotDetails(${JSON.stringify(s)})'>
+
+            <div>
+
+              <div class="spot-name">
+                ${s.name}
+              </div>
+
+              <div class="spot-loc">
+                ${s.loc}
+              </div>
+
+              <div class="spot-inline">
+
+                <span>
+
+                  ${mode==="surf" ? "Swell" : "Seas"}
+
+                  <b>
+                    ${s.wave==="—"
+                      ? "—"
+                      : s.wave+" ft"}
+                  </b>
+
+                </span>
+
+                <span>
+
+                  Period
+
+                  <b>
+                    ${s.period==="—"
+                      ? "—"
+                      : s.period+"s"}
+                  </b>
+
+                </span>
+
+                <span>
+
+                  Wind
+
+                  <b>
+                    ${s.wind} ${s.windDir}
+                  </b>
+
+                </span>
+
+              </div>
+
+            </div>
+
+            <div class="score-badge ${cls}">
+              ${s.score}
+            </div>
+
+          </article>
+
+        `;
+
+      }).join("");
+
+}
+
+
+function renderAll(){
+
+  renderSummary();
+
+  renderRegions();
+
+  renderSpots();
+
+  drawMarkers();
+
+}
+
+
+/* =========================================================
+   SURF / BOAT MODE
+========================================================= */
+
+function setMode(m){
+
+  mode=m;
+
+  region="All";
+
+
+  document
+    .getElementById("surfBtn")
+    .classList
+    .toggle(
+      "active",
+      m==="surf"
+    );
+
+
+  document
+    .getElementById("boatBtn")
+    .classList
+    .toggle(
+      "active",
+      m==="boat"
+    );
+
+
+  document
+    .getElementById("sheetTitle")
+    .textContent=
+
+      m==="surf"
+        ? "Surf conditions"
+        : "Boat conditions";
+
+
+  renderAll();
+
+}
+
+
+/* =========================================================
+   REGION FILTERING
+========================================================= */
+
+function setRegion(r){
+
+  region=r;
+
+  renderRegions();
+
+  renderSpots();
+
+  drawMarkers();
+
+
+  if(r==="San Diego"){
+
+    map.flyTo(
+      [32.80,-117.42],
+      9.1,
+      {duration:.6}
+    );
+
+  }
+
+
+  if(r==="Newport"){
+
+    map.flyTo(
+      [33.60,-117.92],
+      9.2,
+      {duration:.6}
+    );
+
+  }
+
+
+  if(r==="LA / Long Beach"){
+
+    map.flyTo(
+      [33.72,-118.27],
+      9.4,
+      {duration:.6}
+    );
+
+  }
+
+
+  if(r==="All"){
+
+    recenter();
+
+  }
+
+}
+
+
+/* =========================================================
+   MAP LAYERS
+========================================================= */
+
+function setLayer(name,el){
+
+  layer=name;
+
+
+  document
+    .querySelectorAll("[data-layer]")
+    .forEach(
+
+      b=>
+        b.classList.toggle(
+          "active",
+          b.dataset.layer===name
+        )
+
+    );
+
+
+  document
+    .getElementById("windCanvas")
+    .style.opacity=
+
+      name==="Wind"
+        ? ".55"
+        : ".12";
+
+
+  showToast(
+    name+" layer"
+  );
+
+}
+
+
+function recenter(){
+
+  map.flyTo(
+    defaultView.center,
+    defaultView.zoom,
+    {
+      duration:.7
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SPOT DETAILS
+========================================================= */
+
+function openSpotDetails(s){
+
+  document
+    .getElementById("detailContent")
+    .innerHTML=`
+
+      <div class="detail-kicker">
+
+        ${mode==="surf"
+          ? "Surf spot"
+          : "Boat area"}
+
+        · ${s.region}
+
+      </div>
+
+
+      <div class="detail-title">
+        ${s.name}
+      </div>
+
+
+      <div class="big-status">
+
+        <span style="
+          width:8px;
+          height:8px;
+          border-radius:50%;
+          background:${scoreColor(s.score)}">
+        </span>
+
+        ${s.score} conditions
+
+      </div>
+
+
+      <div class="detail-grid">
+
+
+        <div class="detail-box">
+
+          <span>
+            ${mode==="surf"
+              ? "SWELL"
+              : "SEAS"}
+          </span>
+
+          <b>
+
+            ${s.wave==="—"
+              ? "—"
+              : s.wave+" ft"}
+
+          </b>
+
+        </div>
+
+
+        <div class="detail-box">
+
+          <span>
+            PERIOD
+          </span>
+
+          <b>
+
+            ${s.period==="—"
+              ? "—"
+              : s.period+" s"}
+
+          </b>
+
+        </div>
+
+
+        <div class="detail-box">
+
+          <span>
+            WIND
+          </span>
+
+          <b>
+            ${s.wind} mph
+          </b>
+
+        </div>
+
+
+        <div class="detail-box">
+
+          <span>
+            WATER
+          </span>
+
+          <b>
+
+            ${s.water==="—"
+              ? "—"
+              : s.water+"°F"}
+
+          </b>
+
+        </div>
+
+
+      </div>
+
+
+      <div class="detail-note">
+
+        <b>
+          Quick read
+        </b>
+
+        <br>
+
+        ${s.note}
+
+      </div>
+
+    `;
+
+
+  document
+    .getElementById("details")
+    .style.display="flex";
+
+}
+
+
+/* =========================================================
+   STATION DETAILS
+========================================================= */
+
+function openStationDetails(s){
+
+  const isWave=
+    s.type==="wave";
+
+
+  document
+    .getElementById("detailContent")
+    .innerHTML=`
+
+      <div class="detail-kicker">
+
+        ${isWave
+          ? "Wave buoy"
+          : "Marine wind station"}
+
+        · ${s.region}
+
+      </div>
+
+
+      <div class="detail-title">
+
+        ${s.name}
+
+      </div>
+
+
+      <div class="big-status">
+
+        <span style="
+          width:8px;
+          height:8px;
+          border-radius:50%;
+          background:${scoreColor(s.score)}">
+        </span>
+
+        ${s.station}
+
+        · prototype observation
+
+      </div>
+
+
+      <div class="detail-grid">
+
+
+        ${isWave
+          ? `
+
+            <div class="detail-box">
+
+              <span>
+                WAVE HEIGHT
+              </span>
+
+              <b>
+                ${s.wave ?? "—"} ft
+              </b>
+
+            </div>
+
+
+            <div class="detail-box">
+
+              <span>
+                PERIOD
+              </span>
+
+              <b>
+                ${s.period ?? "—"} s
+              </b>
+
+            </div>
+
+          `
+          : ""
+        }
+
+
+        <div class="detail-box">
+
+          <span>
+            WIND
+          </span>
+
+          <b>
+            ${s.wind ?? "—"} kt
+          </b>
+
+        </div>
+
+
+        <div class="detail-box">
+
+          <span>
+            STATION
+          </span>
+
+          <b style="font-size:16px">
+
+            ${s.station}
+
+          </b>
+
+        </div>
+
+
+      </div>
+
+
+      <div class="detail-note">
+
+        <b>
+
+          ${isWave
+            ? "Wave observation"
+            : "Harbor wind observation"}
+
+        </b>
+
+        <br>
+
+        ${isWave
+
+          ? "Useful for offshore wave height, period and water-condition context."
+
+          : "Useful for local wind conditions around the Los Angeles / Long Beach harbor."
+
+        }
+
+      </div>
+
+    `;
+
+
+  document
+    .getElementById("details")
+    .style.display="flex";
+
+}
+
+
+function closeDetails(){
+
+  document
+    .getElementById("details")
+    .style.display="none";
+
+}
+
+
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+function navMode(n,el){
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(
+
+      b=>
+        b.classList.remove("active")
+
+    );
+
+
+  el.classList.add("active");
+
+
+  if(n==="map"){
+
+    collapseSheet();
+
+  }
+
+
+  if(n==="spots"){
+
+    expandSheet();
+
+  }
+
+
+  if(n==="forecast"){
+
+    showToast(
+      "Forecast timeline coming next"
+    );
+
+  }
+
+
+  if(n==="more"){
+
+    showToast(
+      "More tools coming next"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   TOAST MESSAGE
+========================================================= */
+
+function showToast(text){
+
+  const t=
+    document.getElementById("toast");
+
+
+  t.textContent=text;
+
+  t.style.opacity="1";
+
+  t.style.transform=
+    "translate(-50%,0)";
+
+
+  clearTimeout(
+    showToast.timer
+  );
+
+
+  showToast.timer=
+
+    setTimeout(()=>{
+
+      t.style.opacity="0";
+
+      t.style.transform=
+        "translate(-50%,16px)";
+
+    },1300);
+
+}
+
+
+/* =========================================================
+   DRAGGABLE BOTTOM SHEET
+========================================================= */
+
+const sheet=
+  document.getElementById("sheet");
+
+const handle=
+  document.getElementById("sheetHandle");
+
+
+let dragStartY=0;
+
+let dragStartH=0;
+
+let dragging=false;
+
+
+function collapsedHeight(){
+
+  return Math.min(
+    202,
+    window.innerHeight*.25
+  );
+
+}
+
+
+function midHeight(){
+
+  return Math.min(
+    window.innerHeight*.48,
+    430
+  );
+
+}
+
+
+function expandedHeight(){
+
+  return Math.min(
+    window.innerHeight*.72,
+    640
+  );
+
+}
+
+
+function setSheetHeight(h){
+
+  sheet.style.setProperty(
+    "--sheet-h",
+    `${Math.round(h)}px`
+  );
+
+}
+
+
+function collapseSheet(){
+
+  setSheetHeight(
+    collapsedHeight()
+  );
+
+}
+
+
+function expandSheet(){
+
+  setSheetHeight(
+    expandedHeight()
+  );
+
+}
+
+
+handle.addEventListener(
+
+  "pointerdown",
+
+  e=>{
+
+    dragging=true;
+
+    dragStartY=
+      e.clientY;
+
+    dragStartH=
+      sheet
+        .getBoundingClientRect()
+        .height;
+
+
+    sheet
+      .classList
+      .add("dragging");
+
+
+    handle
+      .setPointerCapture(
+        e.pointerId
+      );
+
+  }
+
+);
+
+
+handle.addEventListener(
+
+  "pointermove",
+
+  e=>{
+
+    if(!dragging)
+      return;
+
+
+    const h=
+
+      dragStartH
+      +
+      (
+        dragStartY
+        -
+        e.clientY
+      );
+
+
+    setSheetHeight(
+
+      Math.max(
+
+        148,
+
+        Math.min(
+          expandedHeight(),
+          h
+        )
+
+      )
+
+    );
+
+  }
+
+);
+
+
+handle.addEventListener(
+
+  "pointerup",
+
+  e=>{
+
+    if(!dragging)
+      return;
+
+
+    dragging=false;
+
+
+    sheet
+      .classList
+      .remove("dragging");
+
+
+    const h=
+
+      sheet
+        .getBoundingClientRect()
+        .height;
+
+
+    const c=
+      collapsedHeight();
+
+    const m=
+      midHeight();
+
+    const x=
+      expandedHeight();
+
+
+    const choices=
+
+      [c,m,x]
+
+        .sort(
+
+          (a,b)=>
+
+            Math.abs(h-a)
+            -
+            Math.abs(h-b)
+
+        );
+
+
+    setSheetHeight(
+      choices[0]
+    );
+
+  }
+
+);
+
+
+handle.addEventListener(
+
+  "dblclick",
+
+  ()=>{
+
+    const h=
+
+      sheet
+        .getBoundingClientRect()
+        .height;
+
+
+    h>midHeight()
+
+      ? collapseSheet()
+
+      : expandSheet();
+
+  }
+
+);
+
+
+/* =========================================================
+   ANIMATED WIND TEXTURE
+========================================================= */
+
+const canvas=
+  document.getElementById("windCanvas");
+
+const ctx=
+  canvas.getContext("2d");
+
+
+let particles=[];
+
+
+function resizeCanvas(){
+
+  const box=
+
+    document
+      .getElementById("app")
+      .getBoundingClientRect();
+
+
+  const dpr=
+
+    Math.min(
+      devicePixelRatio || 1,
+      2
+    );
+
+
+  canvas.width=
+    box.width*dpr;
+
+  canvas.height=
+    box.height*dpr;
+
+
+  canvas.style.width=
+    box.width+"px";
+
+  canvas.style.height=
+    box.height+"px";
+
+
+  ctx.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
+  );
+
+
+  seed(
+    box.width,
+    box.height
+  );
+
+}
+
+
+function seed(w,h){
+
+  particles=
+
+    Array.from(
+
+      {length:54},
+
+      ()=>({
+
+        x:
+          Math.random()*w,
+
+        y:
+          Math.random()*h,
+
+        len:
+          4+Math.random()*9,
+
+        spd:
+          .25+Math.random()*.45
+
+      })
+
+    );
+
+}
+
+
+function animate(){
+
+  const box=
+
+    document
+      .getElementById("app")
+      .getBoundingClientRect();
+
+
+  ctx.clearRect(
+    0,
+    0,
+    box.width,
+    box.height
+  );
+
+
+  if(layer==="Wind"){
+
+    ctx.lineWidth=.9;
+
+
+    particles.forEach(p=>{
+
+
+      const dx=
+
+        1
+        +
+        .32
+        *
+        Math.sin(
+          p.y*.015
+        );
+
+
+      const dy=
+
+        .16
+        *
+        Math.cos(
+          p.x*.012
+        );
+
+
+      ctx.beginPath();
+
+
+      ctx.moveTo(
+        p.x,
+        p.y
+      );
+
+
+      ctx.lineTo(
+
+        p.x
+        +
+        dx*p.len,
+
+        p.y
+        +
+        dy*p.len
+
+      );
+
+
+      ctx.strokeStyle=
+        "rgba(255,255,255,.65)";
+
+
+      ctx.stroke();
+
+
+      p.x+=
+        dx*p.spd;
+
+
+      p.y+=
+        dy*p.spd;
+
+
+      if(
+        p.x
+        >
+        box.width+12
+      ){
+
+        p.x=-12;
+
+        p.y=
+          Math.random()
+          *
+          box.height;
+
+      }
+
+
+      if(
+        p.y
+        >
+        box.height+12
+      ){
+
+        p.y=-12;
+
+      }
+
+    });
+
+  }
+
+
+  requestAnimationFrame(
+    animate
+  );
+
+}
+
+
+/* =========================================================
+   WINDOW RESIZE
+========================================================= */
+
+window.addEventListener(
+
+  "resize",
+
+  ()=>{
+
+    resizeCanvas();
+
+    setTimeout(
+      ()=>map.invalidateSize(),
+      100
+    );
+
+  }
+
+);
+
+
+/* =========================================================
+   START APP
+========================================================= */
+
+renderAll();
+
+collapseSheet();
+
+resizeCanvas();
+
+animate();
+
+
+setTimeout(
+  ()=>map.invalidateSize(),
+  120
+);
+
+</script>
+
+</body>
+</html>
