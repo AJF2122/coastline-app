@@ -1,0 +1,46 @@
+name: Update live marine data
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "3,13,23,33,43,53 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: coastline-live-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch NOAA live data
+        run: python scripts/update_live.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "coastline-live-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/live.json
+
+          if git diff --cached --quiet; then
+            echo "No data changes."
+            exit 0
+          fi
+
+          git commit -m "Update live marine data"
+          git pull --rebase
+          git push
