@@ -1,1163 +1,725 @@
-<!DOCTYPE html>
+from pathlib import Path
+import json, textwrap, zipfile, os
+
+base = Path("/mnt/data/coastline-live-v7")
+(base / ".github/workflows").mkdir(parents=True, exist_ok=True)
+(base / "scripts").mkdir(parents=True, exist_ok=True)
+(base / "data").mkdir(parents=True, exist_ok=True)
+
+# 72 major fishing-condition areas, Washington -> Mexico border.
+fishing_spots = [
+    # Washington
+    ("Semiahmoo / Blaine","Washington",48.99,-122.78),
+    ("Bellingham Bay","Washington",48.75,-122.52),
+    ("San Juan Islands","Washington",48.53,-123.02),
+    ("Edmonds / Possession Sound","Washington",47.81,-122.39),
+    ("Seattle / Elliott Bay","Washington",47.60,-122.39),
+    ("Tacoma / Commencement Bay","Washington",47.29,-122.45),
+    ("Port Townsend","Washington",48.12,-122.76),
+    ("Port Angeles","Washington",48.12,-123.43),
+    ("Neah Bay","Washington",48.37,-124.62),
+    ("La Push","Washington",47.91,-124.65),
+    ("Westport","Washington",46.90,-124.13),
+    ("Grays Harbor","Washington",46.95,-124.07),
+    ("Willapa Bay","Washington",46.62,-124.05),
+    ("Ilwaco / Columbia River Mouth","Washington",46.25,-124.08),
+
+    # Oregon
+    ("Astoria / Columbia River","Oregon",46.19,-123.98),
+    ("Seaside","Oregon",45.99,-123.94),
+    ("Cannon Beach","Oregon",45.89,-123.97),
+    ("Tillamook Bay","Oregon",45.52,-123.96),
+    ("Pacific City","Oregon",45.20,-123.98),
+    ("Depoe Bay","Oregon",44.81,-124.07),
+    ("Newport","Oregon",44.63,-124.07),
+    ("Waldport / Alsea Bay","Oregon",44.43,-124.08),
+    ("Florence / Siuslaw","Oregon",43.97,-124.12),
+    ("Winchester Bay","Oregon",43.68,-124.18),
+    ("Coos Bay","Oregon",43.36,-124.32),
+    ("Bandon","Oregon",43.12,-124.42),
+    ("Gold Beach","Oregon",42.41,-124.43),
+    ("Brookings","Oregon",42.05,-124.29),
+
+    # California north/central
+    ("Crescent City","Northern California",41.74,-124.20),
+    ("Trinidad","Northern California",41.06,-124.16),
+    ("Humboldt Bay / Eureka","Northern California",40.77,-124.23),
+    ("Shelter Cove","Northern California",40.03,-124.07),
+    ("Fort Bragg","Northern California",39.45,-123.82),
+    ("Mendocino","Northern California",39.30,-123.80),
+    ("Point Arena","Northern California",38.91,-123.71),
+    ("Bodega Bay","Northern California",38.32,-123.05),
+    ("Tomales Bay / Point Reyes","Northern California",38.12,-122.95),
+    ("San Francisco / Ocean Beach","Northern California",37.75,-122.52),
+    ("Golden Gate / Marin","Northern California",37.83,-122.50),
+    ("Half Moon Bay","Central California",37.50,-122.50),
+    ("Santa Cruz","Central California",36.96,-122.03),
+    ("Capitola","Central California",36.97,-121.95),
+    ("Monterey Bay","Central California",36.61,-121.90),
+    ("Carmel Bay","Central California",36.55,-121.93),
+    ("Big Sur","Central California",36.27,-121.83),
+    ("San Simeon","Central California",35.64,-121.19),
+    ("Morro Bay","Central California",35.37,-120.87),
+    ("Avila Beach / Port San Luis","Central California",35.17,-120.76),
+    ("Pismo Beach","Central California",35.14,-120.65),
+    ("Gaviota","Central California",34.47,-120.22),
+    ("Santa Barbara","Central California",34.40,-119.70),
+    ("Ventura","Southern California",34.27,-119.29),
+    ("Channel Islands Harbor","Southern California",34.16,-119.23),
+
+    # Southern California
+    ("Malibu","Southern California",34.03,-118.68),
+    ("Santa Monica","Southern California",34.01,-118.50),
+    ("Marina del Rey","Southern California",33.97,-118.46),
+    ("Manhattan Beach","Southern California",33.88,-118.42),
+    ("Hermosa Beach","Southern California",33.86,-118.40),
+    ("Redondo Beach","Southern California",33.84,-118.39),
+    ("Palos Verdes Peninsula","Southern California",33.74,-118.41),
+    ("San Pedro / Long Beach","Southern California",33.71,-118.24),
+    ("Alamitos Bay / Seal Beach","Southern California",33.74,-118.12),
+    ("Huntington Beach","Southern California",33.65,-118.00),
+    ("Newport Beach","Southern California",33.60,-117.91),
+    ("Laguna Beach","Southern California",33.54,-117.79),
+    ("Dana Point","Southern California",33.46,-117.70),
+    ("San Clemente","Southern California",33.42,-117.62),
+    ("Oceanside","Southern California",33.19,-117.39),
+    ("Carlsbad","Southern California",33.15,-117.35),
+    ("Encinitas / Cardiff","Southern California",33.04,-117.29),
+    ("La Jolla","Southern California",32.85,-117.27),
+    ("Mission Bay","Southern California",32.77,-117.25),
+    ("Point Loma / San Diego Bay","Southern California",32.69,-117.24),
+    ("Imperial Beach / Mexico Border","Southern California",32.58,-117.14),
+]
+assert len(fishing_spots) >= 60
+
+# Tide stations chosen to give broad West Coast coverage. Failed stations are skipped by updater.
+tide_stations = [
+    ("9443090","Neah Bay, WA",48.370,-124.602),
+    ("9444090","Port Angeles, WA",48.125,-123.440),
+    ("9447130","Seattle, WA",47.602,-122.339),
+    ("9439040","Astoria, OR",46.207,-123.768),
+    ("9437540","Garibaldi, OR",45.554,-123.918),
+    ("9435380","South Beach, OR",44.625,-124.044),
+    ("9432780","Charleston, OR",43.345,-124.322),
+    ("9419750","Crescent City, CA",41.745,-124.184),
+    ("9418767","North Spit, Humboldt Bay, CA",40.767,-124.217),
+    ("9414290","San Francisco, CA",37.807,-122.465),
+    ("9413450","Monterey, CA",36.605,-121.888),
+    ("9412110","Port San Luis, CA",35.169,-120.754),
+    ("9411340","Santa Barbara, CA",34.408,-119.685),
+    ("9410660","Los Angeles, CA",33.720,-118.272),
+    ("9410580","Newport Bay Entrance, CA",33.603,-117.883),
+    ("9410230","La Jolla, CA",32.867,-117.257),
+    ("9410170","San Diego, CA",32.714,-117.174),
+]
+
+# Placeholder live file so app renders before first Action run.
+placeholder = {
+    "generated_at": None,
+    "status": "waiting_for_first_update",
+    "ndbc": [],
+    "tides": [],
+    "notes": ["Run the GitHub Action once, or wait for the scheduled update."]
+}
+(base/"data/live.json").write_text(json.dumps(placeholder, indent=2), encoding="utf-8")
+
+# Build JavaScript data literals.
+spots_js = json.dumps([
+    {"id":f"fish-{i+1:02d}","name":n,"region":r,"lat":lat,"lng":lng}
+    for i,(n,r,lat,lng) in enumerate(fishing_spots)
+], separators=(",",":"))
+
+# Use a curated surf set for map context.
+surf_spots = [
+    ("Westport","Washington",46.90,-124.13),
+    ("Short Sands","Oregon",45.75,-123.97),
+    ("Pacific City","Oregon",45.20,-123.98),
+    ("Otter Rock","Oregon",44.75,-124.06),
+    ("Newport","Oregon",44.63,-124.07),
+    ("Crescent City","Northern California",41.74,-124.20),
+    ("Ocean Beach SF","Northern California",37.76,-122.51),
+    ("Pacifica / Linda Mar","Northern California",37.60,-122.51),
+    ("Mavericks / Half Moon Bay","Central California",37.49,-122.50),
+    ("Steamer Lane","Central California",36.95,-122.02),
+    ("Pleasure Point","Central California",36.96,-121.97),
+    ("Malibu Surfrider","Southern California",34.04,-118.68),
+    ("El Porto","Southern California",33.90,-118.42),
+    ("Seal Beach Pier","Southern California",33.74,-118.10),
+    ("Huntington Beach Pier","Southern California",33.65,-118.00),
+    ("The Wedge","Southern California",33.59,-117.88),
+    ("Salt Creek","Southern California",33.48,-117.72),
+    ("Lower Trestles","Southern California",33.38,-117.59),
+    ("San Onofre","Southern California",33.37,-117.56),
+    ("Oceanside Pier","Southern California",33.19,-117.39),
+    ("Swami's","Southern California",33.04,-117.29),
+    ("Black's Beach","Southern California",32.89,-117.25),
+    ("Scripps Pier","Southern California",32.87,-117.26),
+    ("Sunset Cliffs","Southern California",32.72,-117.26),
+]
+surf_js = json.dumps([
+    {"id":f"surf-{i+1:02d}","name":n,"region":r,"lat":lat,"lng":lng}
+    for i,(n,r,lat,lng) in enumerate(surf_spots)
+], separators=(",",":"))
+
+index_html = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#eef6f8">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Coastline — SoCal Water Conditions</title>
-
+<title>Coastline Live — West Coast</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <style>
-:root{
-  --ink:#153042;
-  --muted:#718590;
-  --line:#dce7eb;
-  --panel:#fbfdfe;
-  --blue:#0e89c8;
-  --green:#24a861;
-  --yellow:#e3c53d;
-  --orange:#ee8b32;
-  --red:#df4d52;
-  --gray:#9aa8ae;
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bottom:env(safe-area-inset-bottom,0px);
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;overflow:hidden;background:#dfeaec;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-button,input{font:inherit}
-button{color:inherit}
-.app{
-  position:relative;
-  width:100%;
-  height:100dvh;
-  overflow:hidden;
-  background:#bfd9e3;
-}
-#map{position:absolute;inset:0;background:#bfd9e3}
-.leaflet-control-zoom{display:none!important}
-.leaflet-control-attribution{
-  font-size:7px!important;
-  max-width:62vw;
-  margin-bottom:76px!important;
-  background:rgba(255,255,255,.72)!important;
-  color:#5f7681!important;
-}
-.leaflet-tooltip{
-  border:0!important;
-  border-radius:11px!important;
-  padding:7px 9px!important;
-  box-shadow:0 5px 18px rgba(24,52,65,.16)!important;
-  font-size:11px!important;
-}
-.map-wash{
-  position:absolute;inset:0;z-index:350;pointer-events:none;
-  background:
-    radial-gradient(circle at 70% 72%,rgba(14,137,200,.08),transparent 27%),
-    radial-gradient(circle at 30% 82%,rgba(36,168,97,.05),transparent 30%);
-}
-
-/* TOP BAR */
-.topbar{
-  position:absolute;
-  z-index:800;
-  top:calc(8px + var(--safe-top));
-  left:10px;right:10px;
-  display:flex;justify-content:space-between;align-items:center;gap:8px;
-  pointer-events:none;
-}
-.brand,.icon-btn{
-  pointer-events:auto;
-  background:rgba(255,255,255,.95);
-  border:1px solid rgba(215,228,234,.96);
-  box-shadow:0 5px 18px rgba(22,55,70,.12);
-  backdrop-filter:blur(14px);
-}
-.brand{
-  height:44px;border-radius:14px;padding:0 11px 0 7px;
-  display:flex;align-items:center;gap:8px;
-}
-.brand-mark{
-  width:31px;height:31px;border-radius:10px;
-  background:linear-gradient(145deg,#2ab5df,#0878b9);
-  color:white;display:grid;place-items:center;
-}
-.brand-name{font-weight:800;font-size:13px;letter-spacing:-.02em;line-height:1}
-.brand-sub{font-size:8.5px;color:var(--muted);margin-top:3px}
-.top-actions{display:flex;gap:6px;pointer-events:auto}
-.icon-btn{
-  width:44px;height:44px;border:0;border-radius:14px;display:grid;place-items:center;cursor:pointer
-}
-.icon-btn:active,.layer-btn:active,.mode button:active,.region-pill:active,.row-card:active,.nav-btn:active{transform:scale(.96)}
-
-/* STATUS CHIP */
-.status-chip{
-  position:absolute;z-index:690;
-  left:10px;
-  top:calc(62px + var(--safe-top));
-  background:rgba(255,255,255,.92);
-  border:1px solid rgba(215,228,234,.94);
-  border-radius:13px;
-  padding:8px 10px;
-  box-shadow:0 5px 18px rgba(22,55,70,.10);
-  backdrop-filter:blur(12px);
-}
-.status-chip strong{font-size:10px;display:flex;align-items:center;gap:5px}
-.status-chip small{display:block;font-size:8px;color:var(--muted);margin-top:2px}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--yellow)}
-
-/* RIGHT LAYER BUTTONS */
-.layers{
-  position:absolute;
-  z-index:790;
-  right:10px;
-  top:calc(67px + var(--safe-top));
-  display:grid;gap:7px;
-}
-.layer-btn{
-  width:48px;height:48px;
-  border:1px solid rgba(215,228,234,.95);
-  border-radius:14px;
-  background:rgba(255,255,255,.95);
-  box-shadow:0 5px 18px rgba(22,55,70,.11);
-  display:grid;place-items:center;
-  cursor:pointer;backdrop-filter:blur(12px);
-  padding:3px 0;
-}
-.layer-btn.active{background:#eaf7fc;color:#087fba;border-color:#b9dfef}
-.layer-btn svg{display:block;width:20px;height:20px}
-.layer-btn span{font-size:6.8px;font-weight:900;letter-spacing:.02em;line-height:1;margin-top:1px}
-
-/* MAP MARKERS */
-.pin-wrap{
-  width:38px;height:43px;position:relative;
-  filter:drop-shadow(0 4px 6px rgba(26,58,72,.18));
-}
-.pin-circle{
-  position:absolute;left:4px;top:2px;width:30px;height:30px;
-  border-radius:50%;background:#fff;border:3px solid var(--pin);
-  display:grid;place-items:center;color:var(--pin);
-}
-.pin-tail{
-  position:absolute;left:15px;top:29px;width:8px;height:8px;
-  background:#fff;border-right:3px solid var(--pin);border-bottom:3px solid var(--pin);
-  transform:rotate(45deg);border-radius:0 0 2px 0;
-}
-.pin-circle svg{width:18px;height:18px;position:relative;z-index:2}
-.pin-speed{
-  position:absolute;left:50%;top:35px;transform:translateX(-50%);
-  white-space:nowrap;font-size:7px;font-weight:900;color:#35515f;
-  background:rgba(255,255,255,.93);border-radius:999px;padding:1px 4px;
-  border:1px solid #dce7eb;
-}
-.user-dot{
-  width:16px;height:16px;border-radius:50%;
-  background:#168bd0;border:3px solid #fff;
-  box-shadow:0 0 0 4px rgba(22,139,208,.18),0 3px 8px rgba(18,60,80,.24)
-}
-
-/* BOTTOM SHEET */
-.sheet{
-  --sheet-h:205px;
-  position:absolute;z-index:900;left:0;right:0;
-  bottom:calc(64px + var(--safe-bottom));
-  height:var(--sheet-h);
-  min-height:156px;
-  max-height:74dvh;
-  background:rgba(251,253,254,.985);
-  border:1px solid rgba(218,231,236,.98);
-  border-bottom:0;
-  border-radius:24px 24px 0 0;
-  box-shadow:0 -8px 30px rgba(18,49,64,.14);
-  backdrop-filter:blur(18px);
-  overflow:hidden;
-  transition:height .26s cubic-bezier(.2,.8,.2,1);
-}
-.sheet.dragging{transition:none}
-.handle{
-  height:27px;display:flex;align-items:center;justify-content:center;
-  touch-action:none;cursor:grab;
-}
-.grabber{width:38px;height:4px;border-radius:999px;background:#cbd8dd}
-.sheet-body{height:calc(100% - 27px);overflow:auto;padding:0 12px 14px;scrollbar-width:none}
-.sheet-body::-webkit-scrollbar{display:none}
-.sheet-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px}
-.eyebrow{font-size:8.5px;font-weight:900;letter-spacing:.08em;color:var(--blue);text-transform:uppercase}
-.sheet-title{font-size:18px;font-weight:850;letter-spacing:-.035em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.sheet-sub{font-size:8.7px;color:var(--muted);margin-top:2px}
-.mode{display:flex;background:#e8f0f3;border-radius:12px;padding:3px}
-.mode button{
-  border:0;background:transparent;border-radius:9px;padding:7px 10px;
-  font-size:10px;font-weight:850;cursor:pointer
-}
-.mode button.active{background:#fff;color:var(--blue);box-shadow:0 2px 8px rgba(25,54,67,.10)}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0}
-.metric{background:#f1f6f8;border-radius:10px;padding:7px 6px;min-width:0}
-.metric span{display:block;font-size:7.2px;color:#81919a;font-weight:850;text-transform:uppercase}
-.metric b{display:block;font-size:11.5px;margin-top:2px;white-space:nowrap}
-.section-head{
-  border-top:1px solid #edf2f4;padding-top:10px;margin-top:2px;
-  display:flex;justify-content:space-between;align-items:center;gap:8px
-}
-.section-head strong{font-size:13px}
-.section-head small{display:block;font-size:8.3px;color:var(--muted);margin-top:2px}
-.viewall{border:0;background:transparent;color:var(--blue);font-size:8.5px;font-weight:900;padding:7px;cursor:pointer}
-.regions{display:flex;gap:6px;overflow:auto;padding:9px 0 8px;scrollbar-width:none}
-.regions::-webkit-scrollbar{display:none}
-.region-pill{
-  white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;
-  padding:7px 10px;font-size:8.7px;font-weight:750;color:#627782;cursor:pointer
-}
-.region-pill.active{background:#e5f4fb;color:#087db8;border-color:#bee3f2}
-.list{display:grid;gap:7px;padding-bottom:12px}
-.row-card{
-  background:#fff;border:1px solid #e1eaee;border-radius:15px;padding:10px;
-  box-shadow:0 3px 12px rgba(24,57,72,.05);
-  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;cursor:pointer
-}
-.row-name{font-size:12px;font-weight:850;letter-spacing:-.015em}
-.row-sub{font-size:8.4px;color:var(--muted);margin-top:2px}
-.row-data{display:flex;gap:9px;flex-wrap:wrap;margin-top:7px}
-.row-data span{font-size:7.8px;color:#7a8d96}
-.row-data b{font-size:9.7px;color:#294756}
-.badge{align-self:start;border-radius:999px;padding:5px 7px;font-size:7.7px;font-weight:900}
-.good{background:#e6f7ee;color:#11794b}
-.fair{background:#fff6d9;color:#956d00}
-.poor{background:#ffeddf;color:#a5520d}
-.alert{background:#fde8e9;color:#ad3439}
-.neutral{background:#edf2f4;color:#687d87}
-
-/* BOTTOM NAV */
-.bottom-nav{
-  position:absolute;z-index:1000;left:0;right:0;bottom:0;
-  height:calc(64px + var(--safe-bottom));
-  padding:5px 10px var(--safe-bottom);
-  background:rgba(255,255,255,.985);
-  border-top:1px solid #dfe9ed;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  box-shadow:0 -4px 18px rgba(19,50,65,.07);
-}
-.nav-btn{
-  border:0;background:transparent;border-radius:13px;display:grid;place-items:center;
-  align-content:center;gap:2px;color:#80919a;font-size:8px;font-weight:850;cursor:pointer
-}
-.nav-btn.active{color:var(--blue);background:#edf8fc}
-.nav-btn svg{width:18px;height:18px}
-
-/* DETAIL MODAL */
-.modal{
-  position:absolute;inset:0;z-index:1500;background:rgba(11,34,45,.28);
-  display:none;align-items:flex-end;
-}
-.detail{
-  width:100%;max-height:87dvh;overflow:auto;background:#fff;border-radius:26px 26px 0 0;
-  padding:10px 14px calc(18px + var(--safe-bottom));box-shadow:0 -15px 45px rgba(16,45,58,.20)
-}
-.detail-handle{width:38px;height:4px;border-radius:999px;background:#d2dde1;margin:0 auto 10px}
-.close{
-  float:right;width:34px;height:34px;border:0;border-radius:12px;background:#eef3f5;cursor:pointer
-}
-.detail-kicker{font-size:8.6px;color:var(--blue);font-weight:900;text-transform:uppercase;letter-spacing:.08em}
-.detail-title{font-size:22px;font-weight:900;letter-spacing:-.04em;margin-top:3px}
-.detail-status{display:flex;align-items:center;gap:6px;margin:8px 0 12px;font-size:9.5px;font-weight:850}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.detail-box{background:#f2f7f8;border-radius:13px;padding:11px}
-.detail-box span{font-size:7.6px;color:var(--muted);font-weight:800}
-.detail-box b{display:block;font-size:18px;margin-top:3px}
-.detail-note{margin-top:10px;background:#edf8fb;border-radius:13px;padding:11px;font-size:9.7px;line-height:1.5;color:#486875}
-.detail-source{margin-top:9px;padding-top:9px;border-top:1px solid #edf1f3;font-size:8.5px;color:#758991;line-height:1.45}
-.favorite-btn{
-  width:100%;margin-top:10px;border:1px solid #cfe3eb;background:#f4fbfd;color:#117aa9;
-  border-radius:13px;padding:11px;font-size:10px;font-weight:850;cursor:pointer
-}
-
-/* SEARCH */
-.search-panel{
-  position:absolute;z-index:1400;left:10px;right:10px;top:calc(60px + var(--safe-top));
-  background:#fff;border:1px solid #dce7eb;border-radius:16px;padding:10px;
-  box-shadow:0 10px 32px rgba(21,53,67,.18);display:none
-}
-.search-panel input{
-  width:100%;border:1px solid #dce7eb;border-radius:12px;padding:12px 11px;font-size:16px;color:#173444
-}
-.search-results{display:grid;gap:5px;margin-top:8px;max-height:280px;overflow:auto}
-.search-result{
-  border:0;background:#f4f8fa;border-radius:11px;text-align:left;padding:9px;cursor:pointer
-}
-.search-result b{display:block;font-size:10px}
-.search-result span{font-size:8px;color:#70838e}
-.toast{
-  position:absolute;z-index:1800;left:50%;bottom:84px;transform:translate(-50%,15px);
-  background:rgba(18,43,55,.95);color:white;border-radius:999px;padding:8px 12px;
-  font-size:8.5px;font-weight:800;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap
-}
-
-/* DESKTOP PREVIEW = PHONE */
-@media (min-width:560px){
-  body{display:grid;place-items:center}
-  .app{width:min(430px,100vw);height:min(900px,100dvh);border-radius:28px;box-shadow:0 20px 70px rgba(25,55,67,.18)}
-}
-@media (max-width:360px){
-  .brand-sub{display:none}
-  .brand{padding-right:8px}
-  .layer-btn{width:45px;height:45px}
-  .sheet-title{font-size:16px}
-}
+:root{{--ink:#163242;--muted:#758995;--line:#dce8ec;--blue:#138ac7;--green:#25a861;--yellow:#e4c63f;--orange:#ee8a31;--red:#df4d52;--gray:#9ba9af;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}}
+*{{box-sizing:border-box;-webkit-tap-highlight-color:transparent}}
+html,body{{margin:0;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#dfe9ec}}
+button,input{{font:inherit}}
+.app{{position:relative;width:100%;height:100dvh;overflow:hidden;background:#bdd8e2}}
+#map{{position:absolute;inset:0;background:#bdd8e2}}
+.leaflet-control-zoom{{display:none!important}}
+.leaflet-control-attribution{{font-size:7px!important;max-width:63vw;margin-bottom:77px!important;background:rgba(255,255,255,.72)!important}}
+.top{{position:absolute;z-index:900;top:calc(8px + var(--safe-top));left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none}}
+.brand,.round{{pointer-events:auto;background:rgba(255,255,255,.96);border:1px solid #d9e7ec;box-shadow:0 5px 18px rgba(20,53,68,.12);backdrop-filter:blur(14px)}}
+.brand{{height:44px;border-radius:14px;padding:0 10px 0 7px;display:flex;align-items:center;gap:8px}}
+.brandmark{{width:31px;height:31px;border-radius:10px;background:linear-gradient(145deg,#2ab5df,#0878b9);color:#fff;display:grid;place-items:center}}
+.brand b{{font-size:13px;display:block;line-height:1}} .brand small{{font-size:8px;color:var(--muted)}}
+.actions{{display:flex;gap:6px;pointer-events:auto}}
+.round{{width:44px;height:44px;border:0;border-radius:14px;display:grid;place-items:center}}
+.livechip{{position:absolute;z-index:790;top:calc(62px + var(--safe-top));left:10px;background:rgba(255,255,255,.94);border:1px solid #d8e6eb;border-radius:13px;padding:8px 10px;box-shadow:0 5px 18px rgba(20,53,68,.10);max-width:210px}}
+.livechip strong{{font-size:9px;display:flex;gap:5px;align-items:center}} .livechip small{{font-size:7.5px;color:var(--muted);display:block;margin-top:2px}}
+.dot{{width:7px;height:7px;border-radius:50%;background:var(--yellow)}}
+.layers{{position:absolute;z-index:850;right:10px;top:calc(66px + var(--safe-top));display:grid;gap:6px}}
+.layer{{width:48px;height:48px;border:1px solid #d7e5ea;border-radius:14px;background:rgba(255,255,255,.96);box-shadow:0 5px 16px rgba(20,53,68,.11);display:grid;place-items:center;padding:3px 0;color:#315668}}
+.layer.active{{background:#e8f6fc;color:#087eb9;border-color:#b9dfef}}
+.layer svg{{width:20px;height:20px;display:block}} .layer span{{font-size:6.5px;font-weight:900;line-height:1}}
+.pin{{width:38px;height:45px;position:relative;filter:drop-shadow(0 4px 5px rgba(22,55,68,.18))}}
+.circle{{position:absolute;left:4px;top:2px;width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--c);color:var(--c);display:grid;place-items:center}}
+.tail{{position:absolute;left:15px;top:29px;width:8px;height:8px;background:#fff;border-right:3px solid var(--c);border-bottom:3px solid var(--c);transform:rotate(45deg)}}
+.circle svg{{width:18px;height:18px}}
+.mlabel{{position:absolute;top:35px;left:50%;transform:translateX(-50%);font-size:6.7px;font-weight:900;color:#35515f;background:#fff;border:1px solid #dce7eb;border-radius:999px;padding:1px 4px;white-space:nowrap}}
+.cluster{{background:#fff;border:3px solid #168bd0;color:#168bd0;border-radius:50%;width:34px;height:34px;display:grid;place-items:center;font-size:10px;font-weight:900;box-shadow:0 4px 12px rgba(20,55,70,.2)}}
+.sheet{{--h:212px;position:absolute;z-index:950;left:0;right:0;bottom:calc(64px + var(--safe-bottom));height:var(--h);min-height:158px;max-height:74dvh;background:rgba(252,254,255,.99);border:1px solid #dce8ec;border-bottom:0;border-radius:24px 24px 0 0;box-shadow:0 -8px 30px rgba(18,49,64,.14);overflow:hidden;transition:height .25s ease}}
+.sheet.dragging{{transition:none}}
+.handle{{height:27px;display:grid;place-items:center;touch-action:none}} .grab{{width:38px;height:4px;border-radius:999px;background:#ccd9de}}
+.body{{height:calc(100% - 27px);overflow:auto;padding:0 12px 14px;scrollbar-width:none}} .body::-webkit-scrollbar{{display:none}}
+.head{{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:center}}
+.eyebrow{{font-size:8px;font-weight:900;color:var(--blue);letter-spacing:.08em;text-transform:uppercase}}
+.title{{font-size:18px;font-weight:900;letter-spacing:-.035em;margin-top:2px}} .sub{{font-size:8.5px;color:var(--muted);margin-top:2px}}
+.mode{{display:flex;background:#e9f0f3;border-radius:12px;padding:3px}} .mode button{{border:0;background:transparent;border-radius:9px;padding:7px 9px;font-size:9px;font-weight:900}} .mode button.active{{background:#fff;color:var(--blue);box-shadow:0 2px 7px rgba(25,55,68,.1)}}
+.metrics{{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px 0}}
+.metric{{background:#f1f6f8;border-radius:10px;padding:7px 6px;min-width:0}} .metric span{{font-size:6.8px;font-weight:850;color:#81919a;display:block;text-transform:uppercase}} .metric b{{font-size:11px;display:block;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+.section{{border-top:1px solid #edf2f4;padding-top:10px;display:flex;justify-content:space-between;gap:8px;align-items:center}} .section strong{{font-size:12px}} .section small{{font-size:8px;color:var(--muted);display:block;margin-top:2px}}
+.viewall{{border:0;background:transparent;color:var(--blue);font-size:8px;font-weight:900;padding:7px}}
+.regions{{display:flex;gap:6px;overflow:auto;padding:9px 0 8px;scrollbar-width:none}} .regions::-webkit-scrollbar{{display:none}}
+.regions button{{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px;font-size:8px;font-weight:750;color:#627782}} .regions button.active{{background:#e5f4fb;color:#087db8;border-color:#bee3f2}}
+.list{{display:grid;gap:7px;padding-bottom:10px}} .card{{background:#fff;border:1px solid #e1ebef;border-radius:15px;padding:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;box-shadow:0 3px 10px rgba(24,57,72,.045)}} .card b{{font-size:11px}} .card small{{display:block;font-size:8px;color:var(--muted);margin-top:2px}} .facts{{display:flex;gap:9px;flex-wrap:wrap;margin-top:7px;font-size:7.5px;color:#7a8d96}} .facts strong{{font-size:9px;color:#294756}}
+.badge{{align-self:start;border-radius:999px;padding:5px 7px;font-size:7px;font-weight:900}} .good{{background:#e6f7ee;color:#11794b}} .fair{{background:#fff6d9;color:#956d00}} .poor{{background:#ffeddf;color:#a5520d}} .bad{{background:#fde8e9;color:#ad3439}} .gray{{background:#edf2f4;color:#687d87}}
+.nav{{position:absolute;z-index:1100;left:0;right:0;bottom:0;height:calc(64px + var(--safe-bottom));padding:5px 10px var(--safe-bottom);background:rgba(255,255,255,.985);border-top:1px solid #dfe9ed;display:grid;grid-template-columns:repeat(4,1fr)}} .nav button{{border:0;background:transparent;border-radius:13px;display:grid;place-items:center;align-content:center;gap:2px;color:#80919a;font-size:8px;font-weight:850}} .nav button.active{{color:var(--blue);background:#edf8fc}} .nav svg{{width:18px;height:18px}}
+.modal{{position:absolute;inset:0;z-index:1600;background:rgba(11,34,45,.28);display:none;align-items:flex-end}} .detail{{width:100%;max-height:87dvh;overflow:auto;background:#fff;border-radius:26px 26px 0 0;padding:10px 14px calc(18px + var(--safe-bottom))}} .dh{{width:38px;height:4px;border-radius:999px;background:#d2dde1;margin:0 auto 10px}} .close{{float:right;width:34px;height:34px;border:0;border-radius:12px;background:#eef3f5}} .dk{{font-size:8px;font-weight:900;color:var(--blue);letter-spacing:.08em;text-transform:uppercase}} .dt{{font-size:22px;font-weight:900;letter-spacing:-.04em;margin-top:3px}} .ds{{font-size:9px;font-weight:800;margin:8px 0 12px}}
+.grid{{display:grid;grid-template-columns:1fr 1fr;gap:7px}} .box{{background:#f2f7f8;border-radius:13px;padding:11px}} .box span{{font-size:7px;color:var(--muted);font-weight:800}} .box b{{font-size:17px;display:block;margin-top:3px}} .note{{margin-top:10px;background:#edf8fb;border-radius:13px;padding:11px;font-size:9px;line-height:1.5;color:#486875}}
+.search{{position:absolute;z-index:1500;left:10px;right:10px;top:calc(60px + var(--safe-top));background:#fff;border:1px solid #dce7eb;border-radius:16px;padding:10px;box-shadow:0 10px 32px rgba(21,53,67,.18);display:none}} .search input{{width:100%;border:1px solid #dce7eb;border-radius:12px;padding:12px 11px;font-size:16px}} .results{{display:grid;gap:5px;margin-top:8px;max-height:300px;overflow:auto}} .results button{{border:0;background:#f4f8fa;border-radius:11px;text-align:left;padding:9px}} .results b{{display:block;font-size:10px}} .results small{{font-size:8px;color:#70838e}}
+.toast{{position:absolute;z-index:1900;left:50%;bottom:84px;transform:translate(-50%,15px);background:rgba(18,43,55,.95);color:white;border-radius:999px;padding:8px 12px;font-size:8px;font-weight:800;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap}}
+@media(min-width:560px){{body{{display:grid;place-items:center}}.app{{width:min(430px,100vw);height:min(900px,100dvh);border-radius:28px;box-shadow:0 20px 70px rgba(25,55,67,.18)}}}}
 </style>
 </head>
-
 <body>
 <div class="app" id="app">
-  <div id="map"></div>
-  <div class="map-wash"></div>
+<div id="map"></div>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 16c3-5 6-5 9 0s6 5 9 0"/>
-          <path d="M3 11c3-5 6-5 9 0s6 5 9 0"/>
-        </svg>
-      </div>
-      <div>
-        <div class="brand-name">Coastline</div>
-        <div class="brand-sub">SoCal water conditions</div>
-      </div>
-    </div>
-
-    <div class="top-actions">
-      <button class="icon-btn" id="searchBtn" aria-label="Search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#31596f" stroke-width="2">
-          <circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/>
-        </svg>
-      </button>
-      <button class="icon-btn" id="favoritesBtn" aria-label="Favorites">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#31596f" stroke-width="2">
-          <path d="M6 4.5A2.5 2.5 0 0 1 8.5 2h7A2.5 2.5 0 0 1 18 4.5V21l-6-3.5L6 21z"/>
-        </svg>
-      </button>
-    </div>
-  </header>
-
-  <div class="status-chip">
-    <strong><i class="live-dot"></i> Prototype data</strong>
-    <small>Live-data connection comes next</small>
+<header class="top">
+  <div class="brand"><div class="brandmark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 16c3-5 6-5 9 0s6 5 9 0"/><path d="M3 11c3-5 6-5 9 0s6 5 9 0"/></svg></div><div><b>Coastline</b><small>West Coast live conditions</small></div></div>
+  <div class="actions">
+    <button class="round" id="searchBtn" aria-label="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#31596f" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg></button>
+    <button class="round" id="favBtn" aria-label="Favorites"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#31596f" stroke-width="2"><path d="M6 4.5A2.5 2.5 0 0 1 8.5 2h7A2.5 2.5 0 0 1 18 4.5V21l-6-3.5L6 21z"/></svg></button>
   </div>
+</header>
 
-  <div class="layers" aria-label="Map layers">
-    <button class="layer-btn active" data-layer="wind" aria-label="Wind layer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M3 8h10c2.5 0 2.5-4 0-4-1.4 0-2.2.7-2.5 1.6"/>
-        <path d="M3 12h15c3 0 3 5 0 5-1.5 0-2.4-.8-2.7-1.8"/>
-        <path d="M3 16h7"/>
-      </svg>
-      <span>WIND</span>
-    </button>
+<div class="livechip"><strong><i class="dot" id="liveDot"></i><span id="liveText">Loading live data…</span></strong><small id="liveSub">NOAA / NDBC / CO-OPS</small></div>
 
-    <button class="layer-btn" data-layer="swell" aria-label="Swell layer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M2 15c2.5-4 5-4 7.5 0s5 4 7.5 0 4.5-4 5 0"/>
-        <path d="M2 10c2.5-4 5-4 7.5 0s5 4 7.5 0 4.5-4 5 0"/>
-      </svg>
-      <span>SWELL</span>
-    </button>
+<div class="layers">
+<button class="layer active" data-layer="wind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8h10c2.5 0 2.5-4 0-4-1.4 0-2.2.7-2.5 1.6"/><path d="M3 12h15c3 0 3 5 0 5-1.5 0-2.4-.8-2.7-1.8"/><path d="M3 16h7"/></svg><span>WIND</span></button>
+<button class="layer" data-layer="swell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 15c2.5-4 5-4 7.5 0s5 4 7.5 0 4.5-4 5 0"/><path d="M2 10c2.5-4 5-4 7.5 0s5 4 7.5 0 4.5-4 5 0"/></svg><span>SWELL</span></button>
+<button class="layer" data-layer="fish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12c3.2-4.3 7.7-5.6 11.6-2.2 1.7-1.4 3.2-2 4.4-2.2-.2 2.3-.8 3.8-2 4.7 1.2 1 1.8 2.5 2 4.7-1.3-.2-2.9-.9-4.6-2.3C11.4 18 7 16.4 4 12Z"/><circle cx="10.7" cy="10.5" r=".7" fill="currentColor" stroke="none"/></svg><span>FISH</span></button>
+<button class="layer" data-layer="tides"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 15c2-2.4 4-2.4 6 0s4 2.4 6 0 4-2.4 6 0"/><path d="M12 3v8M9 6l3-3 3 3"/></svg><span>TIDES</span></button>
+<button class="layer" data-layer="stations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="2.2"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/><circle cx="12" cy="12" r="7"/></svg><span>STATIONS</span></button>
+</div>
 
-    <button class="layer-btn" data-layer="fish" aria-label="Fishing conditions layer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-        <path d="M4 12c3.2-4.3 7.7-5.6 11.6-2.2 1.7-1.4 3.2-2 4.4-2.2-.2 2.3-.8 3.8-2 4.7 1.2 1 1.8 2.5 2 4.7-1.3-.2-2.9-.9-4.6-2.3C11.4 18 7 16.4 4 12Z"/>
-        <circle cx="10.7" cy="10.5" r=".7" fill="currentColor" stroke="none"/>
-      </svg>
-      <span>FISH</span>
-    </button>
+<div class="search" id="search"><input id="q" type="search" placeholder="Search fishing area, station, surf spot…"><div class="results" id="results"></div></div>
 
-    <button class="layer-btn" data-layer="tides" aria-label="Tide layer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-        <path d="M3 15c2-2.4 4-2.4 6 0s4 2.4 6 0 4-2.4 6 0"/>
-        <path d="M12 3v8M9 6l3-3 3 3"/>
-      </svg>
-      <span>TIDES</span>
-    </button>
-  </div>
+<section class="sheet" id="sheet"><div class="handle" id="handle"><div class="grab"></div></div><div class="body">
+<div class="head"><div><div class="eyebrow">LIVE WEST COAST</div><div class="title" id="title">Boat + Wind</div><div class="sub" id="sub">Latest official observations</div></div><div class="mode"><button id="surf">Surf</button><button id="boat" class="active">Boat</button></div></div>
+<div class="metrics" id="metrics"></div>
+<div class="section"><div><strong id="sectionTitle">Wind stations</strong><small id="sectionSub">Arrow points where wind is blowing toward</small></div><button class="viewall" id="viewall">VIEW ALL</button></div>
+<div class="regions" id="regions"></div>
+<div class="list" id="list"></div>
+</div></section>
 
-  <div class="search-panel" id="searchPanel">
-    <input id="searchInput" type="search" placeholder="Search station, buoy, surf spot…" autocomplete="off">
-    <div class="search-results" id="searchResults"></div>
-  </div>
+<nav class="nav">
+<button class="active" data-nav="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15"/></svg>Map</button>
+<button data-nav="spots"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Spots</button>
+<button data-nav="forecast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-5 3 3 5-7"/></svg>Forecast</button>
+<button data-nav="more"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>More</button>
+</nav>
 
-  <section class="sheet" id="sheet">
-    <div class="handle" id="sheetHandle"><div class="grabber"></div></div>
-    <div class="sheet-body">
-      <div class="sheet-head">
-        <div>
-          <div class="eyebrow">Right now</div>
-          <div class="sheet-title" id="sheetTitle">Surf + Wind</div>
-          <div class="sheet-sub" id="sheetSub">Popular surf spots plus coastal wind stations</div>
-        </div>
-        <div class="mode">
-          <button id="surfBtn" class="active" type="button">Surf</button>
-          <button id="boatBtn" type="button">Boat</button>
-        </div>
-      </div>
-
-      <div class="metrics" id="metrics"></div>
-
-      <div class="section-head">
-        <div>
-          <strong id="sectionTitle">Wind stations</strong>
-          <small id="sectionSub">Arrowhead points where the wind is blowing toward</small>
-        </div>
-        <button class="viewall" id="viewAllBtn" type="button">VIEW ALL</button>
-      </div>
-
-      <div class="regions" id="regions"></div>
-      <div class="list" id="list"></div>
-    </div>
-  </section>
-
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-nav="map" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15M15 6v15"/></svg>
-      Map
-    </button>
-    <button class="nav-btn" data-nav="spots" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-      Spots
-    </button>
-    <button class="nav-btn" data-nav="forecast" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-5 3 3 5-7"/></svg>
-      Forecast
-    </button>
-    <button class="nav-btn" data-nav="more" type="button">
-      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="19" cy="12" r="1.7"/></svg>
-      More
-    </button>
-  </nav>
-
-  <div class="modal" id="modal">
-    <div class="detail">
-      <div class="detail-handle"></div>
-      <button class="close" id="closeDetail" type="button" aria-label="Close">✕</button>
-      <div id="detailContent"></div>
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="detail"><div class="dh"></div><button class="close" id="close">✕</button><div id="detail"></div></div></div>
+<div class="toast" id="toast"></div>
 </div>
 
 <script>
-/* =========================================================
-   COASTLINE V6 TEST-DRIVE
-   ---------------------------------------------------------
-   This build uses sample observations so you can test the UI.
-   The next step is replacing the sample values with cached
-   NOAA / PORTS / approved PWS data from live.json.
-========================================================= */
+const FISHING={spots_js};
+const SURF={surf_js};
+const COLORS={{green:"#25a861",yellow:"#e4c63f",orange:"#ee8a31",red:"#df4d52",blue:"#168bd0",gray:"#9ba9af"}};
+const REGIONS=["All","Washington","Oregon","Northern California","Central California","Southern California"];
+let LIVE={{generated_at:null,ndbc:[],tides:[]}};
+let layer="wind",mode="boat",region="All",markers=[];
+const map=L.map("map",{{zoomControl:false,preferCanvas:true}}).setView([39.2,-123.0],5);
+L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{{z}}/{{y}}/{{x}}",{{maxZoom:14,attribution:"Tiles © Esri · GEBCO · NOAA"}}).addTo(map);
 
-const COLORS = {
-  green:"#24a861",
-  yellow:"#e3c53d",
-  orange:"#ee8b32",
-  red:"#df4d52",
-  blue:"#168bd0",
-  gray:"#9aa8ae"
-};
+function windColor(k){{if(k==null)return COLORS.gray;if(k<=9)return COLORS.green;if(k<=16)return COLORS.yellow;if(k<=24)return COLORS.orange;return COLORS.red}}
+function waveColor(f){{if(f==null)return COLORS.gray;if(f<2)return COLORS.green;if(f<4)return COLORS.yellow;if(f<6)return COLORS.orange;return COLORS.red}}
+function qColor(q){{return q==="Good"?COLORS.green:q==="Fair"?COLORS.yellow:q==="Poor"?COLORS.orange:q==="Hazardous"?COLORS.red:COLORS.gray}}
+function card(deg){{if(deg==null)return "—";const d=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];return d[Math.round((((deg%360)+360)%360)/22.5)%16]}}
+function toward(from){{return from==null?null:(Number(from)+180)%360}}
+function dist(a,b){{const R=6371,p=Math.PI/180,dlat=(b.lat-a.lat)*p,dlon=(b.lng-a.lng)*p,x=Math.sin(dlat/2)**2+Math.cos(a.lat*p)*Math.cos(b.lat*p)*Math.sin(dlon/2)**2;return 2*R*Math.asin(Math.sqrt(x))}}
+function visible(x){{return region==="All"||x.region===region}}
+function regionOf(lat){{if(lat>=46)return"Washington";if(lat>=42)return"Oregon";if(lat>=38)return"Northern California";if(lat>=34.35)return"Central California";return"Southern California"}}
 
-const REGIONS = ["All","LA / Long Beach","Orange County","San Diego"];
+function svg(kind,item){{
+ if(kind==="wind"){{const d=toward(item.wind_from_deg)||0;return `<svg viewBox="0 0 24 24" style="transform:rotate(${{d}}deg)"><path d="M12 19V5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M7.5 9.5 12 5l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`}}
+ if(kind==="wave")return `<svg viewBox="0 0 24 24"><path d="M3 9c2.3-2.8 4.6-2.8 6.9 0s4.6 2.8 6.9 0S21 6.2 22 8.2M3 15c2.3-2.8 4.6-2.8 6.9 0s4.6 2.8 6.9 0S21 12.2 22 14.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+ if(kind==="fish")return `<svg viewBox="0 0 24 24"><path d="M4 12c3-4 7.4-5.4 11.3-2.2 1.7-1.4 3.3-2.1 4.7-2.3-.2 2.2-.9 3.8-2.1 4.5 1.2.9 1.9 2.4 2.1 4.6-1.4-.2-3-.9-4.7-2.3C11.4 17.5 7 16 4 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="10.4" cy="10.7" r=".9" fill="currentColor"/></svg>`;
+ if(kind==="surf")return `<svg viewBox="0 0 24 24"><circle cx="14.7" cy="5.5" r="2" fill="currentColor"/><path d="M13 8.2 10.2 11l-3.8.7M13 8.2l3.2 2.6 2.6.3M11.2 10.2l2.1 4.1 3.2 2.5M4 18.2c4.7 2 10 2.1 16-.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+ return `<svg viewBox="0 0 24 24"><path d="M3 15c2-2.2 4-2.2 6 0s4 2.2 6 0 4-2.2 6 0M12 3v8M9 6l3-3 3 3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>`;
+}}
+function icon(kind,item,color,label=""){{return L.divIcon({{className:"",iconSize:[38,46],iconAnchor:[19,37],html:`<div class="pin" style="--c:${{color}}"><div class="circle">${{svg(kind,item)}}</div><div class="tail"></div>${{label?`<div class="mlabel">${{label}}</div>`:""}}</div>`}})}}
+function clear(){{markers.forEach(m=>map.removeLayer(m));markers=[]}}
+function add(item,kind,color,label,click){{const m=L.marker([item.lat,item.lng],{{icon:icon(kind,item,color,label)}}).addTo(map);m.bindTooltip(`<b>${{item.name||item.station}}</b><br>${{item.station||item.id||""}}`,{{direction:"top",offset:[0,-26]}});m.on("click",()=>click(item));markers.push(m)}}
 
-/* Meteorological direction is where wind comes FROM.
-   The marker arrow points where the wind is blowing TOWARD. */
-function windTowardDeg(fromDeg){
-  return (Number(fromDeg) + 180) % 360;
-}
+function nearestObs(p){{let best=null,bd=1e9;for(const x of LIVE.ndbc){{const d=dist(p,x);if(d<bd){{bd=d;best=x}}}}return best?{{...best,distance_km:bd}}:null}}
+function nearestTide(p){{let best=null,bd=1e9;for(const x of LIVE.tides){{const d=dist(p,x);if(d<bd){{bd=d;best=x}}}}return best?{{...best,distance_km:bd}}:null}}
+function fishInfo(p){{
+ const o=nearestObs(p),t=nearestTide(p);
+ let score=60;
+ if(o?.wind_kt!=null){{score+=o.wind_kt<=9?15:o.wind_kt<=16?5:o.wind_kt<=24?-12:-28}}
+ if(o?.wave_ft!=null){{score+=o.wave_ft<2?12:o.wave_ft<4?6:o.wave_ft<6?-8:-22}}
+ if(t?.trend) score+=4;
+ score=Math.max(0,Math.min(100,Math.round(score)));
+ const rating=score>=75?"Good":score>=55?"Fair":score>=35?"Poor":"Hazardous";
+ return {{score,rating,obs:o,tide:t}};
+}}
 
-function windColor(knots){
-  const k = Number(knots);
-  if(!Number.isFinite(k)) return COLORS.gray;
-  if(k <= 9) return COLORS.green;
-  if(k <= 16) return COLORS.yellow;
-  if(k <= 24) return COLORS.orange;
-  return COLORS.red;
-}
+function draw(){{
+ clear();
+ const obs=LIVE.ndbc.map(x=>({{...x,region:regionOf(x.lat)}}));
+ if(layer==="wind") obs.filter(x=>visible(x)&&x.wind_kt!=null).forEach(x=>add(x,"wind",windColor(x.wind_kt),`${{Math.round(x.wind_kt)}}kt`,openObs));
+ if(layer==="swell") obs.filter(x=>visible(x)&&x.wave_ft!=null).forEach(x=>add(x,"wave",waveColor(x.wave_ft),`${{x.wave_ft.toFixed(1)}}'`,openObs));
+ if(layer==="stations") obs.filter(visible).forEach(x=>add(x,x.wave_ft!=null?"wave":"wind",COLORS.blue,"",openObs));
+ if(layer==="tides") LIVE.tides.map(x=>({{...x,region:regionOf(x.lat)}})).filter(visible).forEach(x=>add(x,"tide",COLORS.blue,x.trend==="Rising"?"↑":"↓",openTide));
+ if(layer==="fish") FISHING.filter(visible).forEach(x=>{{const f=fishInfo(x);add({{...x,...f}},"fish",qColor(f.rating),`${{f.score}}`,openFish)}});
+ if(mode==="surf"&&layer!=="fish") SURF.filter(visible).forEach(x=>add(x,"surf",COLORS.blue,"",openSurf));
+}}
+function listData(){{
+ if(layer==="fish")return FISHING.filter(visible).map(x=>({{...x,...fishInfo(x)}}));
+ if(layer==="tides")return LIVE.tides.map(x=>({{...x,region:regionOf(x.lat)}})).filter(visible);
+ const o=LIVE.ndbc.map(x=>({{...x,region:regionOf(x.lat)}})).filter(visible);
+ if(layer==="wind")return o.filter(x=>x.wind_kt!=null);
+ if(layer==="swell")return o.filter(x=>x.wave_ft!=null);
+ return o;
+}}
+function renderList(){{
+ const d=listData().slice(0,70),el=document.getElementById("list");
+ if(!d.length){{el.innerHTML='<div class="card"><div><b>No current observations</b><small>Waiting for the next live-data update.</small></div></div>';return}}
+ el.innerHTML=d.map((x,i)=>{{
+   if(layer==="fish")return `<div class="card" data-i="${{i}}"><div><b>${{x.name}}</b><small>${{x.region}} · nearest live observations</small><div class="facts"><span>Wind <strong>${{x.obs?.wind_kt!=null?x.obs.wind_kt.toFixed(0)+" kt":"—"}}</strong></span><span>Seas <strong>${{x.obs?.wave_ft!=null?x.obs.wave_ft.toFixed(1)+" ft":"—"}}</strong></span><span>Tide <strong>${{x.tide?.trend||"—"}}</strong></span></div></div><span class="badge ${{x.rating==="Good"?"good":x.rating==="Fair"?"fair":x.rating==="Poor"?"poor":"bad"}}">${{x.rating}}</span></div>`;
+   if(layer==="tides")return `<div class="card" data-i="${{i}}"><div><b>${{x.name}}</b><small>${{x.station}}</small><div class="facts"><span>Height <strong>${{x.height_ft??"—"}} ft</strong></span><span>Trend <strong>${{x.trend||"—"}}</strong></span></div></div><span class="badge gray">${{x.trend||"Tide"}}</span></div>`;
+   return `<div class="card" data-i="${{i}}"><div><b>${{x.name||("Station "+x.station)}}</b><small>${{x.station}} · NOAA/NDBC</small><div class="facts"><span>Wind <strong>${{x.wind_kt!=null?x.wind_kt.toFixed(0)+" kt":"—"}}</strong></span><span>Wave <strong>${{x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":"—"}}</strong></span><span>Water <strong>${{x.water_f!=null?x.water_f.toFixed(0)+"°F":"—"}}</strong></span></div></div><span class="badge gray">${{layer==="swell"&&x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":layer==="wind"&&x.wind_kt!=null?x.wind_kt.toFixed(0)+" kt":"Live"}}</span></div>`;
+ }}).join("");
+ document.querySelectorAll("[data-i]").forEach(b=>b.addEventListener("click",()=>{{const x=d[+b.dataset.i];layer==="fish"?openFish(x):layer==="tides"?openTide(x):openObs(x)}}));
+}}
+function render(){{
+ document.querySelectorAll(".layer").forEach(b=>b.classList.toggle("active",b.dataset.layer===layer));
+ document.getElementById("title").textContent=`${{mode==="boat"?"Boat":"Surf"}} + ${{layer[0].toUpperCase()+layer.slice(1)}}`;
+ const meta={{wind:["Wind stations","Arrow points where wind is blowing toward"],swell:["Wave buoys","Color = live wave/seas height"],fish:["Fishing conditions",`${{FISHING.length}} major West Coast areas · experimental score`],tides:["Tide stations","Latest observed level + high/low predictions"],stations:["All stations","Current NOAA/NDBC observation network"]}}[layer];
+ document.getElementById("sectionTitle").textContent=meta[0];document.getElementById("sectionSub").textContent=meta[1];
+ const d=listData();let m=[];
+ if(layer==="fish"){{const good=d.filter(x=>x.rating==="Good").length;m=[["AREAS",FISHING.length],["GOOD",good],["LIVE OBS",LIVE.ndbc.length],["TIDES",LIVE.tides.length]]}}
+ else if(layer==="tides")m=[["TIDES",d.length],["RISING",d.filter(x=>x.trend==="Rising").length],["FALLING",d.filter(x=>x.trend==="Falling").length],["LIVE OBS",LIVE.ndbc.length]];
+ else if(layer==="wind")m=[["WIND",d.length],["<10 KT",d.filter(x=>x.wind_kt<=9).length],["10–16",d.filter(x=>x.wind_kt>=10&&x.wind_kt<=16).length],["17+ KT",d.filter(x=>x.wind_kt>=17).length]];
+ else if(layer==="swell")m=[["BUOYS",d.length],["<2 FT",d.filter(x=>x.wave_ft<2).length],["2–4 FT",d.filter(x=>x.wave_ft>=2&&x.wave_ft<4).length],["4+ FT",d.filter(x=>x.wave_ft>=4).length]];
+ else m=[["STATIONS",d.length],["WIND",d.filter(x=>x.wind_kt!=null).length],["WAVE",d.filter(x=>x.wave_ft!=null).length],["TIDES",LIVE.tides.length]];
+ document.getElementById("metrics").innerHTML=m.map(x=>`<div class="metric"><span>${{x[0]}}</span><b>${{x[1]}}</b></div>`).join("");
+ renderRegions();renderList();draw();
+}}
+function renderRegions(){{
+ document.getElementById("regions").innerHTML=REGIONS.map(r=>`<button class="${{r===region?"active":""}}" data-r="${{r}}">${{r}}</button>`).join("");
+ document.querySelectorAll("[data-r]").forEach(b=>b.addEventListener("click",()=>{{region=b.dataset.r;render();fitRegion(region)}}));
+}}
+function fitRegion(r){{const b={{Washington:[[46.1,-125.1],[49.1,-122.0]],Oregon:[[41.9,-125.0],[46.3,-123.0]],"Northern California":[[37.8,-124.8],[42.1,-122.1]],"Central California":[[34.2,-123.0],[38.1,-119.9]],"Southern California":[[32.45,-120.0],[34.55,-117.0]],All:[[32.3,-125.6],[49.2,-116.8]]}}[r];map.fitBounds(b,{{padding:[45,45],maxZoom:8}})}}
 
-function waveColor(feet){
-  const f = Number(feet);
-  if(!Number.isFinite(f)) return COLORS.gray;
-  if(f < 2) return COLORS.green;
-  if(f < 4) return COLORS.yellow;
-  if(f < 6) return COLORS.orange;
-  return COLORS.red;
-}
+function open(html){{document.getElementById("detail").innerHTML=html;document.getElementById("modal").style.display="flex"}}
+function openObs(x){{const to=toward(x.wind_from_deg);open(`<div class="dk">LIVE NOAA / NDBC OBSERVATION</div><div class="dt">${{x.name||("Station "+x.station)}}</div><div class="ds">${{x.station}} · ${{x.observed_at||"latest"}}</div><div class="grid"><div class="box"><span>WIND</span><b>${{x.wind_kt!=null?x.wind_kt.toFixed(1)+" kt":"—"}}</b></div><div class="box"><span>WIND FROM</span><b>${{x.wind_from_deg!=null?card(x.wind_from_deg)+" "+x.wind_from_deg+"°":"—"}}</b></div><div class="box"><span>BLOWING TOWARD</span><b>${{to!=null?card(to)+" "+to+"°":"—"}}</b></div><div class="box"><span>WAVE HEIGHT</span><b>${{x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":"—"}}</b></div><div class="box"><span>PERIOD</span><b>${{x.period_sec!=null?x.period_sec.toFixed(0)+" s":"—"}}</b></div><div class="box"><span>WATER</span><b>${{x.water_f!=null?x.water_f.toFixed(1)+"°F":"—"}}</b></div></div><div class="note">Official real-time observation cached by the Coastline GitHub updater. Always verify marine-safety decisions with official NOAA/NWS products.</div>`)}}
+function openTide(x){{open(`<div class="dk">LIVE NOAA CO-OPS</div><div class="dt">${{x.name}}</div><div class="ds">${{x.station}} · ${{x.observed_at||"latest"}}</div><div class="grid"><div class="box"><span>WATER LEVEL</span><b>${{x.height_ft??"—"}} ft</b></div><div class="box"><span>TREND</span><b>${{x.trend||"—"}}</b></div><div class="box"><span>NEXT HIGH</span><b style="font-size:12px">${{x.next_high?.time||"—"}}<br>${{x.next_high?.height_ft??""}} ft</b></div><div class="box"><span>NEXT LOW</span><b style="font-size:12px">${{x.next_low?.time||"—"}}<br>${{x.next_low?.height_ft??""}} ft</b></div></div><div class="note">Observed water level and tide predictions from NOAA Tides & Currents.</div>`)}}
+function openFish(x){{open(`<div class="dk">FISHING CONDITIONS · EXPERIMENTAL</div><div class="dt">${{x.name}}</div><div class="ds">${{x.region}} · environmental score ${{x.score}}/100</div><div class="grid"><div class="box"><span>RATING</span><b>${{x.rating}}</b></div><div class="box"><span>WIND</span><b>${{x.obs?.wind_kt!=null?x.obs.wind_kt.toFixed(1)+" kt":"—"}}</b></div><div class="box"><span>SEAS</span><b>${{x.obs?.wave_ft!=null?x.obs.wave_ft.toFixed(1)+" ft":"—"}}</b></div><div class="box"><span>TIDE</span><b>${{x.tide?.trend||"—"}}</b></div><div class="box"><span>NEAREST OBS</span><b style="font-size:12px">${{x.obs?.station||"—"}}</b></div><div class="box"><span>DISTANCE</span><b>${{x.obs?.distance_km!=null?(x.obs.distance_km*0.621371).toFixed(0)+" mi":"—"}}</b></div></div><div class="note">This is a simple live environmental-conditions score using nearby wind, seas and tide information. It is not a fish-bite prediction and does not guarantee fishing success.</div>`)}}
+function openSurf(x){{open(`<div class="dk">POPULAR SURF SPOT</div><div class="dt">${{x.name}}</div><div class="ds">${{x.region}}</div><div class="note">Popular surf-location marker. Live spot-quality modeling is not connected yet; use nearby Wind, Swell and Tides layers for current observations.</div>`)}}
 
-function qualityColor(q){
-  if(q==="Good") return COLORS.green;
-  if(q==="Fair") return COLORS.yellow;
-  if(q==="Poor") return COLORS.orange;
-  if(q==="Hazardous") return COLORS.red;
-  return COLORS.gray;
-}
+async function loadLive(){{
+ try{{const r=await fetch(`data/live.json?ts=${{Date.now()}}`,{{cache:"no-store"}});if(!r.ok)throw new Error("HTTP "+r.status);LIVE=await r.json();if(!Array.isArray(LIVE.ndbc))LIVE.ndbc=[];if(!Array.isArray(LIVE.tides))LIVE.tides=[];const dt=LIVE.generated_at?new Date(LIVE.generated_at):null;document.getElementById("liveText").textContent=dt?`Live data · ${{dt.toLocaleTimeString([],{{hour:"numeric",minute:"2-digit"}})}}`:"Waiting for first update";document.getElementById("liveDot").style.background=dt?COLORS.green:COLORS.yellow;document.getElementById("liveSub").textContent=`${{LIVE.ndbc.length}} NOAA/NDBC obs · ${{LIVE.tides.length}} tide stations`;render()}}catch(e){{document.getElementById("liveText").textContent="Live data unavailable";document.getElementById("liveDot").style.background=COLORS.red;document.getElementById("liveSub").textContent="Run the GitHub updater workflow";render()}}
+}}
+setInterval(loadLive,5*60*1000);
 
-function cardinal(deg){
-  const dirs=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
-  const d=((Number(deg)%360)+360)%360;
-  return dirs[Math.round(d/22.5)%16];
-}
+document.querySelectorAll(".layer").forEach(b=>b.addEventListener("click",()=>{{layer=b.dataset.layer;render()}}));
+document.getElementById("boat").addEventListener("click",()=>{{mode="boat";boat.classList.add("active");surf.classList.remove("active");render()}});
+document.getElementById("surf").addEventListener("click",()=>{{mode="surf";surf.classList.add("active");boat.classList.remove("active");render()}});
+document.getElementById("close").addEventListener("click",()=>modal.style.display="none");modal.addEventListener("click",e=>{{if(e.target===modal)modal.style.display="none"}});
+document.getElementById("viewall").addEventListener("click",()=>setH(expanded()));
+document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>{{document.querySelectorAll("[data-nav]").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.nav==="spots")setH(expanded());if(b.dataset.nav==="map")setH(collapsed());if(b.dataset.nav==="forecast")toast("Forecast view is the next feature to build");if(b.dataset.nav==="more")toast("More tools coming later")}}));
 
-/* -------------------- Wind stations -------------------- */
-const windStations = [
-  {
-    id:"PRJC1", name:"Los Angeles Pier J", region:"LA / Long Beach",
-    lat:33.733, lng:-118.186, source:"NOAA PORTS", sourceType:"Harbor wind station",
-    windKt:8, windFromDeg:180, tempF:68, pressure:"29.92", updated:"6 min ago"
-  },
-  {
-    id:"AGXC1", name:"Angels Gate", region:"LA / Long Beach",
-    lat:33.716, lng:-118.246, source:"NOAA PORTS", sourceType:"Harbor wind station",
-    windKt:5, windFromDeg:205, tempF:67, pressure:"29.93", updated:"5 min ago"
-  },
-  {
-    id:"PFDC1", name:"Los Angeles Pier 400", region:"LA / Long Beach",
-    lat:33.735, lng:-118.241, source:"NOAA PORTS", sourceType:"Harbor wind station",
-    windKt:12, windFromDeg:270, tempF:69, pressure:"29.91", updated:"4 min ago"
-  },
-  {
-    id:"PFXC1", name:"Los Angeles Pier F", region:"LA / Long Beach",
-    lat:33.747, lng:-118.215, source:"NOAA PORTS", sourceType:"Harbor weather station",
-    windKt:7, windFromDeg:235, tempF:70, pressure:"29.92", updated:"5 min ago"
-  },
-  {
-    id:"KCALONGB350", name:"ABay", region:"LA / Long Beach",
-    lat:33.750, lng:-118.130, source:"Weather Underground / PWS", sourceType:"Community weather station",
-    windKt:4.4, windFromDeg:270, tempF:70.3, pressure:"29.91", updated:"7 min ago"
-  },
-  {
-    id:"ABYC", name:"Alamitos Bay Yacht Club", region:"LA / Long Beach",
-    lat:33.7458, lng:-118.1169, source:"ABYC", sourceType:"Harbor weather station",
-    windKt:6, windFromDeg:250, tempF:69, pressure:"29.92", updated:"8 min ago"
-  },
-  {
-    id:"6L9", name:"Huntington Beach Pier", region:"Orange County",
-    lat:33.655, lng:-118.003, source:"Coastal observation", sourceType:"Pier/coastal station",
-    windKt:9, windFromDeg:255, tempF:68, pressure:"29.93", updated:"18 min ago"
-  },
-  {
-    id:"3L3", name:"Newport Beach Harbor", region:"Orange County",
-    lat:33.603, lng:-117.883, source:"Coastal observation", sourceType:"Harbor/coastal station",
-    windKt:11, windFromDeg:260, tempF:68, pressure:"29.92", updated:"22 min ago"
-  },
-  {
-    id:"L10", name:"San Clemente Pier", region:"Orange County",
-    lat:33.419, lng:-117.622, source:"Coastal observation", sourceType:"Pier/coastal station",
-    windKt:8, windFromDeg:245, tempF:67, pressure:"29.94", updated:"20 min ago"
-  },
-  {
-    id:"2L7", name:"Solana Beach", region:"San Diego",
-    lat:32.990, lng:-117.272, source:"Coastal observation", sourceType:"Coastal station",
-    windKt:14, windFromDeg:250, tempF:67, pressure:"29.92", updated:"21 min ago"
-  },
-  {
-    id:"L58", name:"Mission Beach", region:"San Diego",
-    lat:32.770, lng:-117.253, source:"Coastal observation", sourceType:"Coastal station",
-    windKt:17, windFromDeg:260, tempF:66, pressure:"29.91", updated:"17 min ago"
-  }
-];
+function allSearch(){{return [...FISHING.map(x=>({{...x,k:"fish"}})),...SURF.map(x=>({{...x,k:"surf"}})),...LIVE.ndbc.map(x=>({{...x,name:x.name||("Station "+x.station),id:x.station,k:"obs"}})),...LIVE.tides.map(x=>({{...x,id:x.station,k:"tide"}}))]}}
+function searchRun(v){{const q=v.trim().toLowerCase(),res=document.getElementById("results");if(!q){{res.innerHTML="";return}}const h=allSearch().filter(x=>`${{x.name||""}} ${{x.id||""}} ${{x.station||""}}`.toLowerCase().includes(q)).slice(0,20);res.innerHTML=h.map((x,i)=>`<button data-s="${{i}}"><b>${{x.name}}</b><small>${{x.id||x.station||x.k}}</small></button>`).join("");document.querySelectorAll("[data-s]").forEach(b=>b.addEventListener("click",()=>{{const x=h[+b.dataset.s];map.flyTo([x.lat,x.lng],10);search.style.display="none";x.k==="fish"?openFish({{...x,...fishInfo(x)}}):x.k==="surf"?openSurf(x):x.k==="tide"?openTide(x):openObs(x)}}))}}
+searchBtn.addEventListener("click",()=>{{search.style.display=search.style.display==="block"?"none":"block";if(search.style.display==="block")q.focus()}});q.addEventListener("input",e=>searchRun(e.target.value));favBtn.addEventListener("click",()=>toast("Favorites are still local to the device in the next build"));
 
-/* -------------------- Wave buoys -------------------- */
-const waveBuoys = [
-  {
-    id:"46256", name:"Long Beach Channel", region:"LA / Long Beach",
-    lat:33.700, lng:-118.201, source:"NOAA / NDBC", sourceType:"Wave buoy",
-    waveFt:2.6, periodSec:13, waveDirDeg:245, waterF:68, windKt:8, updated:"18 min ago"
-  },
-  {
-    id:"46253", name:"San Pedro South", region:"LA / Long Beach",
-    lat:33.400, lng:-118.490, source:"NOAA / NDBC", sourceType:"Wave buoy",
-    waveFt:5.1, periodSec:8, waveDirDeg:270, waterF:65, windKt:19, updated:"20 min ago"
-  },
-  {
-    id:"46221", name:"Santa Monica Bay", region:"LA / Long Beach",
-    lat:33.855, lng:-118.633, source:"NOAA / NDBC", sourceType:"Wave buoy",
-    waveFt:2.1, periodSec:9, waveDirDeg:255, waterF:64, windKt:12, updated:"16 min ago"
-  },
-  {
-    id:"CDIP092", name:"San Pedro / Newport", region:"Orange County",
-    lat:33.603, lng:-117.981, source:"CDIP", sourceType:"Wave buoy",
-    waveFt:3.4, periodSec:15, waveDirDeg:205, waterF:67, windKt:10, updated:"23 min ago"
-  },
-  {
-    id:"CDIP191", name:"Point Loma", region:"San Diego",
-    lat:32.750, lng:-117.770, source:"CDIP", sourceType:"Wave buoy",
-    waveFt:1.8, periodSec:14, waveDirDeg:220, waterF:66, windKt:7, updated:"19 min ago"
-  }
-];
+const sheet=document.getElementById("sheet"),handle=document.getElementById("handle");let drag=false,sy=0,sh=0;
+const collapsed=()=>Math.min(212,innerHeight*.27),mid=()=>Math.min(430,innerHeight*.49),expanded=()=>Math.min(650,innerHeight*.72),setH=h=>sheet.style.setProperty("--h",Math.round(h)+"px");
+handle.addEventListener("pointerdown",e=>{{drag=true;sy=e.clientY;sh=sheet.getBoundingClientRect().height;sheet.classList.add("dragging");handle.setPointerCapture(e.pointerId)}});handle.addEventListener("pointermove",e=>{{if(drag)setH(Math.max(158,Math.min(expanded(),sh+sy-e.clientY)))}});handle.addEventListener("pointerup",()=>{{if(!drag)return;drag=false;sheet.classList.remove("dragging");const h=sheet.getBoundingClientRect().height,a=[collapsed(),mid(),expanded()].sort((x,y)=>Math.abs(h-x)-Math.abs(h-y));setH(a[0])}});
+function toast(s){{const t=document.getElementById("toast");t.textContent=s;t.style.opacity=1;t.style.transform="translate(-50%,0)";clearTimeout(toast.t);toast.t=setTimeout(()=>{{t.style.opacity=0;t.style.transform="translate(-50%,15px)"}},1500)}}
 
-/* -------------------- Popular surf spots V1 -------------------- */
-const surfSpots = [
-  {id:"malibu",name:"Malibu Surfrider",region:"LA / Long Beach",lat:34.035,lng:-118.678,quality:"Good",surfFt:"2–3",periodSec:14,swell:"SSW",wind:"6 kt E",tide:"Rising",waterF:66},
-  {id:"zuma",name:"Zuma Beach",region:"LA / Long Beach",lat:34.021,lng:-118.832,quality:"Fair",surfFt:"2–4",periodSec:12,swell:"SW",wind:"9 kt W",tide:"Mid",waterF:65},
-  {id:"topanga",name:"Topanga",region:"LA / Long Beach",lat:34.039,lng:-118.583,quality:"Good",surfFt:"2–3",periodSec:13,swell:"SSW",wind:"5 kt E",tide:"Rising",waterF:66},
-  {id:"venice",name:"Venice Breakwater",region:"LA / Long Beach",lat:33.985,lng:-118.474,quality:"Fair",surfFt:"2–3",periodSec:10,swell:"SW",wind:"10 kt W",tide:"Mid",waterF:65},
-  {id:"elporto",name:"El Porto",region:"LA / Long Beach",lat:33.903,lng:-118.423,quality:"Fair",surfFt:"2–3",periodSec:10,swell:"SW",wind:"11 kt WSW",tide:"Mid",waterF:64},
-  {id:"manhattan",name:"Manhattan Beach Pier",region:"LA / Long Beach",lat:33.884,lng:-118.413,quality:"Fair",surfFt:"2–3",periodSec:10,swell:"SW",wind:"11 kt WSW",tide:"Mid",waterF:64},
-  {id:"hermosa",name:"Hermosa Beach Pier",region:"LA / Long Beach",lat:33.862,lng:-118.404,quality:"Fair",surfFt:"2–3",periodSec:10,swell:"SW",wind:"10 kt W",tide:"Mid",waterF:64},
-  {id:"seal",name:"Seal Beach Pier",region:"Orange County",lat:33.738,lng:-118.105,quality:"Good",surfFt:"2–3",periodSec:12,swell:"SSW",wind:"7 kt W",tide:"Rising",waterF:66},
-  {id:"bolsa",name:"Bolsa Chica",region:"Orange County",lat:33.695,lng:-118.048,quality:"Good",surfFt:"2–3",periodSec:13,swell:"SSW",wind:"8 kt W",tide:"Rising",waterF:66},
-  {id:"hb",name:"Huntington Beach Pier",region:"Orange County",lat:33.655,lng:-118.003,quality:"Good",surfFt:"3–4",periodSec:14,swell:"SSW",wind:"8 kt W",tide:"Mid",waterF:67},
-  {id:"newport",name:"Newport Beach Pier",region:"Orange County",lat:33.607,lng:-117.929,quality:"Fair",surfFt:"3–4",periodSec:14,swell:"S",wind:"10 kt W",tide:"Mid",waterF:67},
-  {id:"wedge",name:"The Wedge",region:"Orange County",lat:33.593,lng:-117.881,quality:"Poor",surfFt:"4–6",periodSec:16,swell:"S",wind:"12 kt W",tide:"Falling",waterF:67},
-  {id:"saltcreek",name:"Salt Creek",region:"Orange County",lat:33.476,lng:-117.725,quality:"Good",surfFt:"3–4",periodSec:14,swell:"SSW",wind:"7 kt WNW",tide:"Mid",waterF:67},
-  {id:"doheny",name:"Doheny",region:"Orange County",lat:33.461,lng:-117.683,quality:"Fair",surfFt:"1–2",periodSec:12,swell:"S",wind:"7 kt W",tide:"Rising",waterF:67},
-  {id:"trestles",name:"Lower Trestles",region:"Orange County",lat:33.382,lng:-117.588,quality:"Good",surfFt:"3–4",periodSec:15,swell:"SSW",wind:"6 kt W",tide:"Mid",waterF:67},
-  {id:"sanonofre",name:"San Onofre",region:"Orange County",lat:33.371,lng:-117.555,quality:"Good",surfFt:"2–3",periodSec:14,swell:"SSW",wind:"6 kt W",tide:"Mid",waterF:67},
-  {id:"oceanside",name:"Oceanside Pier",region:"San Diego",lat:33.193,lng:-117.386,quality:"Fair",surfFt:"2–3",periodSec:11,swell:"SW",wind:"10 kt W",tide:"Mid",waterF:67},
-  {id:"cardiff",name:"Cardiff Reef",region:"San Diego",lat:33.013,lng:-117.280,quality:"Good",surfFt:"2–3",periodSec:13,swell:"SW",wind:"7 kt W",tide:"Rising",waterF:67},
-  {id:"swamis",name:"Swami's",region:"San Diego",lat:33.035,lng:-117.293,quality:"Good",surfFt:"3–4",periodSec:14,swell:"SW",wind:"7 kt W",tide:"Rising",waterF:67},
-  {id:"blacks",name:"Black's Beach",region:"San Diego",lat:32.889,lng:-117.253,quality:"Good",surfFt:"3–5",periodSec:14,swell:"WSW",wind:"8 kt W",tide:"Mid",waterF:66},
-  {id:"scripps",name:"Scripps Pier",region:"San Diego",lat:32.867,lng:-117.257,quality:"Fair",surfFt:"2–3",periodSec:12,swell:"WSW",wind:"9 kt W",tide:"Mid",waterF:66},
-  {id:"pb",name:"Pacific Beach",region:"San Diego",lat:32.797,lng:-117.258,quality:"Fair",surfFt:"2–3",periodSec:11,swell:"WSW",wind:"10 kt W",tide:"Mid",waterF:66},
-  {id:"ob",name:"Ocean Beach",region:"San Diego",lat:32.750,lng:-117.253,quality:"Fair",surfFt:"2–4",periodSec:12,swell:"WSW",wind:"10 kt W",tide:"Mid",waterF:66},
-  {id:"sunsetcliffs",name:"Sunset Cliffs",region:"San Diego",lat:32.721,lng:-117.257,quality:"Good",surfFt:"3–4",periodSec:14,swell:"WSW",wind:"7 kt W",tide:"Mid",waterF:66}
-];
-
-/* -------------------- Fishing-condition areas -------------------- */
-const fishingAreas = [
-  {id:"lb-breakwall",name:"Long Beach Breakwall",region:"LA / Long Beach",lat:33.707,lng:-118.180,rating:"Good",score:78,wind:"7 kt",seas:"1.8 ft",tide:"Rising",water:"67°F",pressure:"Steady",window:"6:10 AM – 8:30 AM"},
-  {id:"alamitos",name:"Alamitos Bay / Outside Wall",region:"LA / Long Beach",lat:33.737,lng:-118.115,rating:"Good",score:82,wind:"6 kt",seas:"1.6 ft",tide:"Rising",water:"67°F",pressure:"Steady",window:"6:00 AM – 8:20 AM"},
-  {id:"hb-fish",name:"Huntington Nearshore",region:"Orange County",lat:33.648,lng:-118.030,rating:"Fair",score:61,wind:"10 kt",seas:"2.7 ft",tide:"Mid",water:"67°F",pressure:"Steady",window:"6:20 AM – 8:10 AM"},
-  {id:"newport-fish",name:"Newport Nearshore",region:"Orange County",lat:33.596,lng:-117.925,rating:"Fair",score:64,wind:"9 kt",seas:"2.4 ft",tide:"Rising",water:"67°F",pressure:"Slow rise",window:"6:15 AM – 8:45 AM"},
-  {id:"sd-fish",name:"San Diego Nearshore",region:"San Diego",lat:32.760,lng:-117.245,rating:"Good",score:76,wind:"7 kt",seas:"1.9 ft",tide:"Rising",water:"66°F",pressure:"Steady",window:"6:05 AM – 8:15 AM"}
-];
-
-/* -------------------- Tide stations -------------------- */
-const tideStations = [
-  {id:"9410660",name:"Los Angeles / Long Beach",region:"LA / Long Beach",lat:33.720,lng:-118.272,source:"NOAA Tides & Currents",height:"2.4 ft",trend:"Rising",nextHigh:"4.8 ft · 11:18 PM",nextLow:"0.7 ft · 5:42 AM",updated:"6 min ago"},
-  {id:"9410580",name:"Newport Bay Entrance",region:"Orange County",lat:33.603,lng:-117.883,source:"NOAA Tides & Currents",height:"2.2 ft",trend:"Rising",nextHigh:"4.6 ft · 11:06 PM",nextLow:"0.6 ft · 5:29 AM",updated:"7 min ago"},
-  {id:"9410230",name:"La Jolla",region:"San Diego",lat:32.867,lng:-117.257,source:"NOAA Tides & Currents",height:"2.0 ft",trend:"Rising",nextHigh:"4.4 ft · 10:54 PM",nextLow:"0.5 ft · 5:14 AM",updated:"8 min ago"}
-];
-
-let mode = "surf";
-let activeLayer = "wind";
-let region = "All";
-let map;
-let mapMarkers = [];
-let userLocationMarker = null;
-let currentDetail = null;
-
-const defaultView = {center:[33.55,-118.10], zoom:8.4};
-
-function loadSavedView(){
-  try{
-    const raw=localStorage.getItem("coastlineMapView");
-    if(!raw) return null;
-    const v=JSON.parse(raw);
-    if(Array.isArray(v.center) && Number.isFinite(v.zoom)) return v;
-  }catch(e){}
-  return null;
-}
-
-const savedView = loadSavedView();
-map = L.map("map",{zoomControl:false,attributionControl:true,preferCanvas:true})
-  .setView(savedView?.center || defaultView.center, savedView?.zoom || defaultView.zoom);
-
-L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}",{
-  attribution:"Tiles © Esri · GEBCO · NOAA", maxZoom:14
-}).addTo(map);
-
-map.on("moveend",()=>{
-  try{
-    const c=map.getCenter();
-    localStorage.setItem("coastlineMapView",JSON.stringify({center:[c.lat,c.lng],zoom:map.getZoom()}));
-  }catch(e){}
-});
-
-/* Try location on startup. If permission is denied/unavailable, keep saved/default view. */
-if("geolocation" in navigator){
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const lat=pos.coords.latitude, lng=pos.coords.longitude;
-    map.setView([lat,lng],10.4);
-    const icon=L.divIcon({className:"",iconSize:[16,16],iconAnchor:[8,8],html:'<div class="user-dot"></div>'});
-    userLocationMarker=L.marker([lat,lng],{icon,zIndexOffset:1000}).addTo(map).bindTooltip("Your location",{direction:"top"});
-    showToast("Map centered near your location");
-  },()=>{}, {enableHighAccuracy:false,timeout:5000,maximumAge:300000});
-}
-
-/* -------------------- SVG marker helpers -------------------- */
-function windSVG(fromDeg){
-  const toDeg=windTowardDeg(fromDeg);
-  return `
-    <svg viewBox="0 0 24 24" style="transform:rotate(${toDeg}deg)">
-      <path d="M12 19V5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M7.5 9.5 12 5l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`;
-}
-function waveSVG(){
-  return `<svg viewBox="0 0 24 24">
-    <path d="M3 9c2.3-2.8 4.6-2.8 6.9 0s4.6 2.8 6.9 0S21 6.2 22 8.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    <path d="M3 15c2.3-2.8 4.6-2.8 6.9 0s4.6 2.8 6.9 0S21 12.2 22 14.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  </svg>`;
-}
-function fishSVG(){
-  return `<svg viewBox="0 0 24 24">
-    <path d="M4 12c3-4 7.4-5.4 11.3-2.2 1.7-1.4 3.3-2.1 4.7-2.3-.2 2.2-.9 3.8-2.1 4.5 1.2.9 1.9 2.4 2.1 4.6-1.4-.2-3-.9-4.7-2.3C11.4 17.5 7 16 4 12Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-    <circle cx="10.4" cy="10.7" r=".9" fill="currentColor"/>
-  </svg>`;
-}
-function surfSVG(){
-  return `<svg viewBox="0 0 24 24">
-    <circle cx="14.7" cy="5.5" r="2" fill="currentColor"/>
-    <path d="M13 8.2 10.2 11l-3.8.7M13 8.2l3.2 2.6 2.6.3M11.2 10.2l2.1 4.1 3.2 2.5M8.4 17.4c3.8 1.5 7.2 1.2 10.3-.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M4 18.2c4.7 2 10 2.1 16-.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-  </svg>`;
-}
-function tideSVG(trend){
-  const up=String(trend).toLowerCase().includes("ris");
-  return `<svg viewBox="0 0 24 24">
-    <path d="M3 15c2-2.2 4-2.2 6 0s4 2.2 6 0 4-2.2 6 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-    <path d="M12 ${up? "4V11":"11V4"}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
-    <path d="${up?"M9.2 7 12 4l2.8 3":"M9.2 8 12 11l2.8-3"}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>`;
-}
-function markerIcon(kind,item,color,label=""){
-  let inner="";
-  if(kind==="wind") inner=windSVG(item.windFromDeg);
-  if(kind==="wave") inner=waveSVG();
-  if(kind==="fish") inner=fishSVG();
-  if(kind==="surf") inner=surfSVG();
-  if(kind==="tide") inner=tideSVG(item.trend);
-  const html=`<div class="pin-wrap" style="--pin:${color}">
-      <div class="pin-circle">${inner}</div>
-      <div class="pin-tail"></div>
-      ${label?`<div class="pin-speed">${label}</div>`:""}
-    </div>`;
-  return L.divIcon({className:"",iconSize:[38,48],iconAnchor:[19,37],html});
-}
-
-function clearMarkers(){
-  mapMarkers.forEach(m=>map.removeLayer(m));
-  mapMarkers=[];
-}
-
-function inRegion(item){ return region==="All" || item.region===region; }
-
-function addMarker(item,kind,color,label,openFn){
-  const m=L.marker([item.lat,item.lng],{icon:markerIcon(kind,item,color,label)}).addTo(map);
-  m.bindTooltip(`<b>${item.name}</b><br>${item.id || ""}`,{direction:"top",offset:[0,-28],opacity:.97});
-  m.on("click",()=>openFn(item));
-  mapMarkers.push(m);
-}
-
-function drawMap(){
-  clearMarkers();
-
-  /* Surf spots remain visible on Surf mode except when Fish layer is active. */
-  if(mode==="surf" && activeLayer!=="fish"){
-    surfSpots.filter(inRegion).forEach(s=>{
-      addMarker(s,"surf",qualityColor(s.quality),"",openSurf);
-    });
-  }
-
-  if(activeLayer==="wind"){
-    windStations.filter(inRegion).forEach(s=>{
-      addMarker(s,"wind",windColor(s.windKt),`${Math.round(s.windKt)}kt`,openWind);
-    });
-  }
-  if(activeLayer==="swell"){
-    waveBuoys.filter(inRegion).forEach(s=>{
-      addMarker(s,"wave",waveColor(s.waveFt),`${s.waveFt}'`,openWave);
-    });
-  }
-  if(activeLayer==="fish"){
-    fishingAreas.filter(inRegion).forEach(s=>{
-      addMarker(s,"fish",qualityColor(s.rating),`${s.score}`,openFish);
-    });
-  }
-  if(activeLayer==="tides"){
-    tideStations.filter(inRegion).forEach(s=>{
-      addMarker(s,"tide",COLORS.blue,"",openTide);
-    });
-  }
-}
-
-function layerList(){
-  if(activeLayer==="wind") return windStations;
-  if(activeLayer==="swell") return waveBuoys;
-  if(activeLayer==="fish") return fishingAreas;
-  return tideStations;
-}
-
-function regionBounds(r){
-  if(r==="LA / Long Beach") return [[33.45,-118.75],[34.10,-117.95]];
-  if(r==="Orange County") return [[33.30,-118.15],[33.78,-117.50]];
-  if(r==="San Diego") return [[32.60,-117.80],[33.30,-117.10]];
-  return [[32.55,-118.95],[34.20,-117.05]];
-}
-
-function setRegion(r){
-  region=r;
-  renderRegions(); renderList(); drawMap();
-  map.fitBounds(regionBounds(r),{padding:[48,48],maxZoom:10.3});
-}
-
-function setLayer(layer){
-  activeLayer=layer;
-  document.querySelectorAll(".layer-btn").forEach(b=>b.classList.toggle("active",b.dataset.layer===layer));
-  renderHeaderText(); renderMetrics(); renderList(); drawMap();
-}
-
-function setMode(next){
-  mode=next;
-  document.getElementById("surfBtn").classList.toggle("active",mode==="surf");
-  document.getElementById("boatBtn").classList.toggle("active",mode==="boat");
-  renderHeaderText(); renderMetrics(); renderList(); drawMap();
-}
-
-function renderHeaderText(){
-  const title=document.getElementById("sheetTitle");
-  const sub=document.getElementById("sheetSub");
-  const section=document.getElementById("sectionTitle");
-  const sectionSub=document.getElementById("sectionSub");
-
-  const layerName={wind:"Wind",swell:"Swell",fish:"Fishing",tides:"Tides"}[activeLayer];
-  title.textContent = mode==="surf" ? `Surf + ${layerName}` : `Boat + ${layerName}`;
-
-  if(activeLayer==="wind"){
-    sub.textContent=mode==="surf"?"Popular surf spots plus coastal wind stations":"Coastal, harbor and pier wind stations";
-    section.textContent="Wind stations";
-    sectionSub.textContent="Arrowhead points where the wind is blowing toward";
-  }else if(activeLayer==="swell"){
-    sub.textContent=mode==="surf"?"Popular surf spots plus wave-buoy conditions":"Wave buoys and sea-state observations";
-    section.textContent="Wave buoys";
-    sectionSub.textContent="Marker color is based on wave/seas height";
-  }else if(activeLayer==="fish"){
-    sub.textContent="Simple environmental fishing-condition overview";
-    section.textContent="Fishing conditions";
-    sectionSub.textContent="Prototype rating based on wind, seas, tide and pressure";
-  }else{
-    sub.textContent="Nearby tide stations and current tide stage";
-    section.textContent="Tide stations";
-    sectionSub.textContent="Tap a station for high/low tide details";
-  }
-}
-
-function renderMetrics(){
-  let values=[];
-  if(activeLayer==="wind"){
-    const items=windStations.filter(inRegion);
-    const avg=items.length?items.reduce((a,b)=>a+b.windKt,0)/items.length:0;
-    const max=items.length?Math.max(...items.map(x=>x.windKt)):0;
-    values=[["AVG WIND",`${avg.toFixed(1)} kt`],["STRONGEST",`${max.toFixed(0)} kt`],["STATIONS",items.length],["LAYER","Wind"]];
-  }else if(activeLayer==="swell"){
-    const items=waveBuoys.filter(inRegion);
-    const avg=items.length?items.reduce((a,b)=>a+b.waveFt,0)/items.length:0;
-    const max=items.length?Math.max(...items.map(x=>x.waveFt)):0;
-    values=[["AVG SEAS",`${avg.toFixed(1)} ft`],["HIGHEST",`${max.toFixed(1)} ft`],["BUOYS",items.length],["LAYER","Swell"]];
-  }else if(activeLayer==="fish"){
-    const items=fishingAreas.filter(inRegion);
-    const best=items.length?Math.max(...items.map(x=>x.score)):0;
-    values=[["BEST SCORE",best||"—"],["AREAS",items.length],["INPUTS","5"],["LAYER","Fish"]];
-  }else{
-    const items=tideStations.filter(inRegion);
-    values=[["STATIONS",items.length],["RISING",items.filter(x=>x.trend==="Rising").length],["FALLING",items.filter(x=>x.trend==="Falling").length],["LAYER","Tides"]];
-  }
-  document.getElementById("metrics").innerHTML=values.map(v=>`<div class="metric"><span>${v[0]}</span><b>${v[1]}</b></div>`).join("");
-}
-
-function renderRegions(){
-  document.getElementById("regions").innerHTML=REGIONS.map(r=>
-    `<button class="region-pill ${r===region?"active":""}" data-region="${r}" type="button">${r}</button>`
-  ).join("");
-  document.querySelectorAll("[data-region]").forEach(b=>b.addEventListener("click",()=>setRegion(b.dataset.region)));
-}
-
-function badgeClass(status){
-  if(status==="Good") return "good";
-  if(status==="Fair") return "fair";
-  if(status==="Poor") return "poor";
-  if(status==="Hazardous") return "alert";
-  return "neutral";
-}
-
-function renderList(){
-  const items=layerList().filter(inRegion);
-  const list=document.getElementById("list");
-
-  if(!items.length){
-    list.innerHTML=`<div class="row-card"><div><div class="row-name">No stations in this region yet</div><div class="row-sub">More locations can be added later.</div></div></div>`;
-    return;
-  }
-
-  list.innerHTML=items.map((x,i)=>{
-    if(activeLayer==="wind"){
-      const level=x.windKt<=9?"Good":x.windKt<=16?"Fair":x.windKt<=24?"Poor":"Hazardous";
-      return `<article class="row-card" data-row="${i}">
-        <div><div class="row-name">${x.name}</div><div class="row-sub">${x.id} · ${x.sourceType}</div>
-        <div class="row-data"><span>Wind <b>${x.windKt} kt</b></span><span>From <b>${cardinal(x.windFromDeg)}</b></span><span>Temp <b>${x.tempF}°F</b></span></div></div>
-        <div class="badge ${badgeClass(level)}">${x.windKt} kt</div></article>`;
-    }
-    if(activeLayer==="swell"){
-      const level=x.waveFt<2?"Good":x.waveFt<4?"Fair":x.waveFt<6?"Poor":"Hazardous";
-      return `<article class="row-card" data-row="${i}">
-        <div><div class="row-name">${x.name}</div><div class="row-sub">${x.id} · ${x.sourceType}</div>
-        <div class="row-data"><span>Seas <b>${x.waveFt} ft</b></span><span>Period <b>${x.periodSec}s</b></span><span>Dir <b>${cardinal(x.waveDirDeg)}</b></span></div></div>
-        <div class="badge ${badgeClass(level)}">${x.waveFt} ft</div></article>`;
-    }
-    if(activeLayer==="fish"){
-      return `<article class="row-card" data-row="${i}">
-        <div><div class="row-name">${x.name}</div><div class="row-sub">Fishing conditions · prototype score</div>
-        <div class="row-data"><span>Wind <b>${x.wind}</b></span><span>Seas <b>${x.seas}</b></span><span>Tide <b>${x.tide}</b></span></div></div>
-        <div class="badge ${badgeClass(x.rating)}">${x.rating}</div></article>`;
-    }
-    return `<article class="row-card" data-row="${i}">
-      <div><div class="row-name">${x.name}</div><div class="row-sub">${x.id} · ${x.source}</div>
-      <div class="row-data"><span>Height <b>${x.height}</b></span><span>Trend <b>${x.trend}</b></span></div></div>
-      <div class="badge neutral">${x.trend}</div></article>`;
-  }).join("");
-
-  document.querySelectorAll("[data-row]").forEach((el)=>{
-    const item=items[Number(el.dataset.row)];
-    el.addEventListener("click",()=>{
-      if(activeLayer==="wind") openWind(item);
-      else if(activeLayer==="swell") openWave(item);
-      else if(activeLayer==="fish") openFish(item);
-      else openTide(item);
-    });
-  });
-}
-
-/* -------------------- Detail sheets -------------------- */
-function openDetail(html,item){
-  currentDetail=item;
-  document.getElementById("detailContent").innerHTML=html;
-  document.getElementById("modal").style.display="flex";
-  const fav=document.getElementById("favoriteCurrent");
-  if(fav) fav.addEventListener("click",()=>toggleFavorite(item));
-}
-function closeDetail(){
-  document.getElementById("modal").style.display="none";
-  currentDetail=null;
-}
-
-function detailSource(item){
-  return `<div class="detail-source"><b>Source:</b> ${item.source || "Coastline prototype"}<br>
-  <b>Type:</b> ${item.sourceType || item.type || "Map location"}<br>
-  <b>Updated:</b> ${item.updated || "Prototype observation"}<br>
-  <b>Note:</b> This test build uses sample values. Do not use it for navigation or marine safety decisions.</div>
-  <button class="favorite-btn" id="favoriteCurrent" type="button">☆ Save to favorites</button>`;
-}
-
-function openWind(x){
-  const toward=windTowardDeg(x.windFromDeg);
-  openDetail(`
-    <div class="detail-kicker">Wind station · ${x.region}</div>
-    <div class="detail-title">${x.name}</div>
-    <div class="detail-status"><span style="width:8px;height:8px;border-radius:50%;background:${windColor(x.windKt)}"></span>${x.id} · ${x.updated}</div>
-    <div class="detail-grid">
-      <div class="detail-box"><span>WIND SPEED</span><b>${x.windKt} kt</b></div>
-      <div class="detail-box"><span>WIND FROM</span><b>${cardinal(x.windFromDeg)} ${x.windFromDeg}°</b></div>
-      <div class="detail-box"><span>BLOWING TOWARD</span><b>${cardinal(toward)} ${toward}°</b></div>
-      <div class="detail-box"><span>TEMPERATURE</span><b>${x.tempF}°F</b></div>
-      <div class="detail-box"><span>BAROMETER</span><b>${x.pressure} inHg</b></div>
-      <div class="detail-box"><span>MARKER</span><b>${x.windKt<=9?"Green":x.windKt<=16?"Yellow":x.windKt<=24?"Orange":"Red"}</b></div>
-    </div>${detailSource(x)}`,x);
-}
-
-function openWave(x){
-  openDetail(`
-    <div class="detail-kicker">Wave buoy · ${x.region}</div>
-    <div class="detail-title">${x.name}</div>
-    <div class="detail-status"><span style="width:8px;height:8px;border-radius:50%;background:${waveColor(x.waveFt)}"></span>${x.id} · ${x.updated}</div>
-    <div class="detail-grid">
-      <div class="detail-box"><span>WAVE / SEAS</span><b>${x.waveFt} ft</b></div>
-      <div class="detail-box"><span>PERIOD</span><b>${x.periodSec} s</b></div>
-      <div class="detail-box"><span>WAVE DIRECTION</span><b>${cardinal(x.waveDirDeg)} ${x.waveDirDeg}°</b></div>
-      <div class="detail-box"><span>WATER</span><b>${x.waterF}°F</b></div>
-      <div class="detail-box"><span>WIND</span><b>${x.windKt} kt</b></div>
-      <div class="detail-box"><span>MARKER</span><b>${x.waveFt<2?"Green":x.waveFt<4?"Yellow":x.waveFt<6?"Orange":"Red"}</b></div>
-    </div>${detailSource(x)}`,x);
-}
-
-function openSurf(x){
-  const fake={...x,id:x.id,source:"Coastline surf spot",sourceType:"Popular surf spot",updated:"Prototype"};
-  openDetail(`
-    <div class="detail-kicker">Popular surf spot · ${x.region}</div>
-    <div class="detail-title">${x.name}</div>
-    <div class="detail-status"><span style="width:8px;height:8px;border-radius:50%;background:${qualityColor(x.quality)}"></span>${x.quality} conditions</div>
-    <div class="detail-grid">
-      <div class="detail-box"><span>SURF</span><b>${x.surfFt} ft</b></div>
-      <div class="detail-box"><span>PERIOD</span><b>${x.periodSec} s</b></div>
-      <div class="detail-box"><span>SWELL</span><b>${x.swell}</b></div>
-      <div class="detail-box"><span>WIND</span><b>${x.wind}</b></div>
-      <div class="detail-box"><span>TIDE</span><b>${x.tide}</b></div>
-      <div class="detail-box"><span>WATER</span><b>${x.waterF}°F</b></div>
-    </div>${detailSource(fake)}`,fake);
-}
-
-function openFish(x){
-  const fake={...x,source:"Coastline condition model",sourceType:"Fishing area",updated:"Prototype"};
-  openDetail(`
-    <div class="detail-kicker">Fishing conditions · ${x.region}</div>
-    <div class="detail-title">${x.name}</div>
-    <div class="detail-status"><span style="width:8px;height:8px;border-radius:50%;background:${qualityColor(x.rating)}"></span>${x.rating} · score ${x.score}/100</div>
-    <div class="detail-grid">
-      <div class="detail-box"><span>WIND</span><b>${x.wind}</b></div>
-      <div class="detail-box"><span>SEAS</span><b>${x.seas}</b></div>
-      <div class="detail-box"><span>TIDE</span><b>${x.tide}</b></div>
-      <div class="detail-box"><span>WATER</span><b>${x.water}</b></div>
-      <div class="detail-box"><span>PRESSURE</span><b>${x.pressure}</b></div>
-      <div class="detail-box"><span>BEST WINDOW</span><b style="font-size:13px">${x.window}</b></div>
-    </div>
-    <div class="detail-note"><b>How to read this:</b><br>This is a simple environmental conditions score, not a guarantee that fish will bite.</div>
-    ${detailSource(fake)}`,fake);
-}
-
-function openTide(x){
-  const fake={...x,sourceType:"Tide station"};
-  openDetail(`
-    <div class="detail-kicker">Tide station · ${x.region}</div>
-    <div class="detail-title">${x.name}</div>
-    <div class="detail-status"><span style="width:8px;height:8px;border-radius:50%;background:${COLORS.blue}"></span>${x.id} · ${x.updated}</div>
-    <div class="detail-grid">
-      <div class="detail-box"><span>CURRENT HEIGHT</span><b>${x.height}</b></div>
-      <div class="detail-box"><span>TREND</span><b>${x.trend}</b></div>
-      <div class="detail-box"><span>NEXT HIGH</span><b style="font-size:13px">${x.nextHigh}</b></div>
-      <div class="detail-box"><span>NEXT LOW</span><b style="font-size:13px">${x.nextLow}</b></div>
-    </div>${detailSource(fake)}`,fake);
-}
-
-/* -------------------- Favorites -------------------- */
-function favorites(){
-  try{return JSON.parse(localStorage.getItem("coastlineFavorites")||"[]")}catch(e){return[]}
-}
-function toggleFavorite(item){
-  if(!item?.id) return;
-  let f=favorites();
-  const exists=f.some(x=>x.id===item.id);
-  if(exists) f=f.filter(x=>x.id!==item.id);
-  else f.push({id:item.id,name:item.name,lat:item.lat,lng:item.lng});
-  localStorage.setItem("coastlineFavorites",JSON.stringify(f));
-  showToast(exists?"Removed from favorites":"Saved to favorites");
-}
-function showFavorites(){
-  const f=favorites();
-  if(!f.length){showToast("No favorites saved yet");return;}
-  const html=f.map((x,i)=>`<button class="search-result" data-fav="${i}" type="button"><b>${x.name}</b><span>${x.id}</span></button>`).join("");
-  document.getElementById("searchResults").innerHTML=html;
-  document.getElementById("searchInput").value="";
-  document.getElementById("searchInput").placeholder="Favorites";
-  document.getElementById("searchPanel").style.display="block";
-  document.querySelectorAll("[data-fav]").forEach(b=>b.addEventListener("click",()=>{
-    const x=f[Number(b.dataset.fav)];
-    if(Number.isFinite(x.lat)&&Number.isFinite(x.lng)) map.flyTo([x.lat,x.lng],11,{duration:.6});
-    document.getElementById("searchPanel").style.display="none";
-  }));
-}
-
-/* -------------------- Search -------------------- */
-const allSearchItems = [
-  ...windStations.map(x=>({...x,_kind:"wind"})),
-  ...waveBuoys.map(x=>({...x,_kind:"wave"})),
-  ...surfSpots.map(x=>({...x,_kind:"surf"})),
-  ...fishingAreas.map(x=>({...x,_kind:"fish"})),
-  ...tideStations.map(x=>({...x,_kind:"tide"}))
-];
-function runSearch(q){
-  const query=q.trim().toLowerCase();
-  const box=document.getElementById("searchResults");
-  if(!query){box.innerHTML="";return;}
-  const hits=allSearchItems.filter(x=>(x.name+" "+x.id+" "+x.region).toLowerCase().includes(query)).slice(0,12);
-  box.innerHTML=hits.length?hits.map((x,i)=>`<button class="search-result" data-search="${i}" type="button"><b>${x.name}</b><span>${x.id || x._kind} · ${x.region}</span></button>`).join(""):`<div style="font-size:9px;color:#748792;padding:8px">No matches</div>`;
-  document.querySelectorAll("[data-search]").forEach(b=>b.addEventListener("click",()=>{
-    const x=hits[Number(b.dataset.search)];
-    map.flyTo([x.lat,x.lng],11,{duration:.6});
-    document.getElementById("searchPanel").style.display="none";
-    if(x._kind==="wind") openWind(x);
-    if(x._kind==="wave") openWave(x);
-    if(x._kind==="surf") openSurf(x);
-    if(x._kind==="fish") openFish(x);
-    if(x._kind==="tide") openTide(x);
-  }));
-}
-
-/* -------------------- Bottom sheet drag -------------------- */
-const sheet=document.getElementById("sheet");
-const handle=document.getElementById("sheetHandle");
-let dragging=false,startY=0,startH=0;
-function collapsedHeight(){return Math.min(210,window.innerHeight*.26)}
-function midHeight(){return Math.min(430,window.innerHeight*.48)}
-function expandedHeight(){return Math.min(650,window.innerHeight*.72)}
-function setSheetHeight(h){sheet.style.setProperty("--sheet-h",`${Math.round(h)}px`)}
-function collapseSheet(){setSheetHeight(collapsedHeight())}
-function expandSheet(){setSheetHeight(expandedHeight())}
-handle.addEventListener("pointerdown",e=>{
-  dragging=true;startY=e.clientY;startH=sheet.getBoundingClientRect().height;
-  sheet.classList.add("dragging");handle.setPointerCapture(e.pointerId);
-});
-handle.addEventListener("pointermove",e=>{
-  if(!dragging)return;
-  setSheetHeight(Math.max(156,Math.min(expandedHeight(),startH+(startY-e.clientY))));
-});
-handle.addEventListener("pointerup",()=>{
-  if(!dragging)return;
-  dragging=false;sheet.classList.remove("dragging");
-  const h=sheet.getBoundingClientRect().height;
-  const stops=[collapsedHeight(),midHeight(),expandedHeight()];
-  stops.sort((a,b)=>Math.abs(h-a)-Math.abs(h-b));
-  setSheetHeight(stops[0]);
-});
-
-/* -------------------- Buttons -------------------- */
-document.querySelectorAll(".layer-btn").forEach(b=>b.addEventListener("click",()=>setLayer(b.dataset.layer)));
-document.getElementById("surfBtn").addEventListener("click",()=>setMode("surf"));
-document.getElementById("boatBtn").addEventListener("click",()=>setMode("boat"));
-document.getElementById("viewAllBtn").addEventListener("click",expandSheet);
-document.getElementById("closeDetail").addEventListener("click",closeDetail);
-document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeDetail()});
-
-document.getElementById("searchBtn").addEventListener("click",()=>{
-  const p=document.getElementById("searchPanel");
-  const open=p.style.display==="block";
-  p.style.display=open?"none":"block";
-  if(!open){
-    document.getElementById("searchInput").placeholder="Search station, buoy, surf spot…";
-    document.getElementById("searchInput").focus();
-  }
-});
-document.getElementById("searchInput").addEventListener("input",e=>runSearch(e.target.value));
-document.getElementById("favoritesBtn").addEventListener("click",showFavorites);
-
-document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");
-  const n=b.dataset.nav;
-  if(n==="map") collapseSheet();
-  if(n==="spots") expandSheet();
-  if(n==="forecast") showToast("Forecast timeline is planned for a later build");
-  if(n==="more") showToast("More tools are planned for a later build");
-}));
-
-function showToast(msg){
-  const t=document.getElementById("toast");
-  t.textContent=msg;t.style.opacity="1";t.style.transform="translate(-50%,0)";
-  clearTimeout(showToast.timer);
-  showToast.timer=setTimeout(()=>{t.style.opacity="0";t.style.transform="translate(-50%,15px)"},1500);
-}
-
-window.addEventListener("resize",()=>{
-  setTimeout(()=>map.invalidateSize(),80);
-  const h=sheet.getBoundingClientRect().height;
-  if(h>expandedHeight()) setSheetHeight(expandedHeight());
-});
-
-/* Initial render */
-renderHeaderText();
-renderMetrics();
-renderRegions();
-renderList();
-drawMap();
-collapseSheet();
-setTimeout(()=>map.invalidateSize(),120);
+if("geolocation"in navigator)navigator.geolocation.getCurrentPosition(p=>map.setView([p.coords.latitude,p.coords.longitude],9.5),()=>fitRegion("All"),{{timeout:4500,maximumAge:300000}});
+setH(collapsed());render();loadLive();setTimeout(()=>map.invalidateSize(),100);
 </script>
 </body>
-</html>
+</html>'''
+
+(base/"index.html").write_text(index_html, encoding="utf-8")
+
+update_py = f'''#!/usr/bin/env python3
+"""
+Coastline live-data updater.
+- One NDBC latest_obs request gives the latest (<2h old) observations from all hosted stations.
+- CO-OPS tide stations are queried for latest water level every run.
+- High/low tide predictions are refreshed at most every 6 hours and otherwise reused.
+"""
+import json, math, os, urllib.request, urllib.parse
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/"data/live.json"
+UA="CoastlineApp/0.7 (public GitHub Pages prototype)"
+
+TIDES={json.dumps([{"station":s,"name":n,"lat":lat,"lng":lng} for s,n,lat,lng in tide_stations], indent=2)}
+
+NAMES={{
+ "46256":"Long Beach Channel",
+ "PRJC1":"Los Angeles Pier J",
+ "AGXC1":"Angels Gate",
+ "PFDC1":"Los Angeles Pier 400",
+ "PFXC1":"Los Angeles Pier F",
+ "46042":"Monterey Bay",
+ "46012":"Half Moon Bay",
+ "46026":"San Francisco",
+ "46022":"Eel River",
+ "46027":"St. Georges",
+ "46050":"Stonewall Bank",
+ "46029":"Columbia River Bar",
+ "46041":"Cape Elizabeth",
+ "46087":"Neah Bay",
+ "46088":"New Dungeness",
+ "46025":"Santa Monica Basin",
+ "46053":"East Santa Barbara Channel",
+ "46054":"West Santa Barbara Channel",
+ "46086":"San Clemente Basin",
+}}
+
+def get(url, timeout=25):
+    req=urllib.request.Request(url,headers={{"User-Agent":UA}})
+    with urllib.request.urlopen(req,timeout=timeout) as r:
+        return r.read().decode("utf-8","replace")
+
+def num(v):
+    if v in (None,"MM","M","", "999", "999.0"): return None
+    try:return float(v)
+    except:return None
+
+def west_coast(lat,lon):
+    # Coastal corridor Canada border -> Mexico border; avoids most inland stations.
+    if not (32.3 <= lat <= 49.1 and -131 <= lon <= -116.5): return False
+    if lat >= 42: return lon <= -122.3
+    if lat >= 38: return lon <= -122.0
+    if lat >= 34.35: return lon <= -119.0
+    return lon <= -117.0
+
+def parse_ndbc(text):
+    lines=[x.strip() for x in text.splitlines() if x.strip()]
+    header=None
+    out=[]
+    for line in lines:
+        if line.startswith("#STN"):
+            header=line.lstrip("#").split()
+            continue
+        if line.startswith("#") or header is None: continue
+        parts=line.split()
+        if len(parts)<len(header): continue
+        row=dict(zip(header,parts))
+        lat=num(row.get("LAT")); lon=num(row.get("LON"))
+        if lat is None or lon is None or not west_coast(lat,lon): continue
+        wspd=num(row.get("WSPD")); gst=num(row.get("GST")); wdir=num(row.get("WDIR"))
+        wave=num(row.get("WVHT")); dpd=num(row.get("DPD")); apd=num(row.get("APD")); mwd=num(row.get("MWD"))
+        pres=num(row.get("PRES")); atmp=num(row.get("ATMP")); wtmp=num(row.get("WTMP"))
+        def ms_to_kt(x): return None if x is None else x*1.94384449
+        def m_to_ft(x): return None if x is None else x*3.2808399
+        def c_to_f(x): return None if x is None else x*9/5+32
+        try:
+            dt=datetime(int(row["YYYY"]),int(row["MM"]),int(row["DD"]),int(row["hh"]),int(row["mm"]),tzinfo=timezone.utc)
+            observed=dt.isoformat().replace("+00:00","Z")
+        except Exception:
+            observed=None
+        st=row.get("STN")
+        out.append({{
+            "station":st,
+            "name":NAMES.get(st, "Station "+str(st)),
+            "lat":lat,"lng":lon,
+            "observed_at":observed,
+            "wind_from_deg":wdir,
+            "wind_kt":None if wspd is None else round(ms_to_kt(wspd),1),
+            "gust_kt":None if gst is None else round(ms_to_kt(gst),1),
+            "wave_ft":None if wave is None else round(m_to_ft(wave),1),
+            "period_sec":dpd if dpd is not None else apd,
+            "wave_from_deg":mwd,
+            "pressure_hpa":pres,
+            "air_f":None if atmp is None else round(c_to_f(atmp),1),
+            "water_f":None if wtmp is None else round(c_to_f(wtmp),1),
+            "source":"NOAA/NDBC latest observations"
+        }})
+    return out
+
+def coops(params):
+    base="https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+    params={{**params,"units":"english","time_zone":"gmt","application":"CoastlineApp","format":"json"}}
+    return json.loads(get(base+"?"+urllib.parse.urlencode(params)))
+
+def parse_dt(s):
+    if not s:return None
+    for fmt in ("%Y-%m-%d %H:%M","%Y-%m-%d %H:%M:%S"):
+        try:return datetime.strptime(s,fmt).replace(tzinfo=timezone.utc)
+        except:pass
+    return None
+
+def old_live():
+    try:return json.loads(OUT.read_text())
+    except:return {{}}
+
+def predictions_fresh(old):
+    ts=old.get("tide_predictions_generated_at")
+    if not ts:return False
+    try:return datetime.now(timezone.utc)-datetime.fromisoformat(ts.replace("Z","+00:00")) < timedelta(hours=6)
+    except:return False
+
+def tide_data():
+    old=old_live()
+    old_by={{x.get("station"):x for x in old.get("tides",[])}}
+    reuse=predictions_fresh(old)
+    now=datetime.now(timezone.utc)
+    today=now.strftime("%Y%m%d")
+    results=[]
+    for s in TIDES:
+        item={{**s,"height_ft":None,"observed_at":None,"trend":None,"next_high":None,"next_low":None}}
+        try:
+            wl=coops({{"date":"latest","station":s["station"],"product":"water_level","datum":"MLLW"}})
+            arr=wl.get("data") or []
+            if arr:
+                item["height_ft"]=num(arr[-1].get("v"))
+                item["observed_at"]=arr[-1].get("t")
+        except Exception as e:
+            item["water_level_error"]=str(e)[:140]
+
+        preds=None
+        if reuse and s["station"] in old_by:
+            preds=old_by[s["station"]].get("predictions")
+        if not preds:
+            try:
+                pj=coops({{"begin_date":today,"range":"48","station":s["station"],"product":"predictions","datum":"MLLW","interval":"hilo"}})
+                preds=pj.get("predictions") or []
+            except Exception as e:
+                item["prediction_error"]=str(e)[:140]
+                preds=[]
+        item["predictions"]=preds
+
+        future=[]
+        for p in preds:
+            dt=parse_dt(p.get("t"))
+            if dt and dt >= now-timedelta(minutes=10):
+                future.append((dt,p))
+        future.sort(key=lambda x:x[0])
+        if future:
+            # If next event is high, tide is generally rising; if next event is low, falling.
+            typ=(future[0][1].get("type") or "").upper()
+            item["trend"]="Rising" if typ=="H" else "Falling" if typ=="L" else None
+            for dt,p in future:
+                obj={{"time":p.get("t"),"height_ft":num(p.get("v"))}}
+                typ=(p.get("type") or "").upper()
+                if typ=="H" and item["next_high"] is None:item["next_high"]=obj
+                if typ=="L" and item["next_low"] is None:item["next_low"]=obj
+                if item["next_high"] and item["next_low"]:break
+        results.append(item)
+    return results, (old.get("tide_predictions_generated_at") if reuse else now.isoformat().replace("+00:00","Z"))
+
+def main():
+    now=datetime.now(timezone.utc)
+    ndbc_text=get("https://www.ndbc.noaa.gov/data/latest_obs/latest_obs.txt")
+    ndbc=parse_ndbc(ndbc_text)
+    tides,pred_ts=tide_data()
+    obj={{
+      "generated_at":now.isoformat().replace("+00:00","Z"),
+      "tide_predictions_generated_at":pred_ts,
+      "status":"live",
+      "ndbc":ndbc,
+      "tides":tides,
+      "sources":{{
+        "ndbc":"https://www.ndbc.noaa.gov/data/latest_obs/latest_obs.txt",
+        "coops":"https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+      }}
+    }}
+    OUT.parent.mkdir(parents=True,exist_ok=True)
+    OUT.write_text(json.dumps(obj,indent=2,sort_keys=False)+"\\n")
+    print(f"Wrote {{len(ndbc)}} West Coast NDBC observations and {{len(tides)}} tide stations")
+
+if __name__=="__main__":
+    main()
+'''
+(base/"scripts/update_live.py").write_text(update_py, encoding="utf-8")
+
+workflow = '''name: Update live marine data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "3,13,23,33,43,53 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: coastline-live-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch NOAA live data
+        run: python scripts/update_live.py
+
+      - name: Commit updated data
+        run: |
+          git config user.name "coastline-live-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/live.json
+          if git diff --cached --quiet; then
+            echo "No data changes."
+            exit 0
+          fi
+          git commit -m "Update live marine data"
+          git pull --rebase
+          git push
+'''
+(base/".github/workflows/update-live.yml").write_text(workflow, encoding="utf-8")
+
+setup = f'''COASTLINE LIVE V7 — GITHUB SETUP
+==================================
+
+This package contains:
+  index.html
+  data/live.json
+  scripts/update_live.py
+  .github/workflows/update-live.yml
+
+WHAT IT DOES
+------------
+• Covers the U.S. West Coast from the Canadian border to the Mexican border.
+• Fishing layer contains {len(fishing_spots)} major fishing-condition areas.
+• A GitHub Action updates data/live.json every 10 minutes.
+• Each scheduled update makes ONE request to NDBC's latest-observations file.
+• NOAA CO-OPS tide stations are updated every run.
+• High/low tide predictions are refreshed only every 6 hours and reused between updates.
+• The app itself refreshes live.json every 5 minutes.
+• Fishing ratings are an EXPERIMENTAL environmental score from the nearest live wind/wave observation and tide state; they are NOT a fish-bite guarantee.
+
+UPLOAD
+------
+Upload the files/folders to the ROOT of your existing AJF2122/coastline-app repository,
+preserving these paths exactly:
+
+  /index.html
+  /data/live.json
+  /scripts/update_live.py
+  /.github/workflows/update-live.yml
+
+IMPORTANT: GitHub's web uploader can upload ordinary files, but creating the hidden
+.github/workflows folder is easiest by using "Add file -> Create new file" and typing:
+  .github/workflows/update-live.yml
+Then paste the workflow contents.
+
+TURN ON ACTIONS WRITE PERMISSION
+--------------------------------
+GitHub repo:
+Settings -> Actions -> General -> Workflow permissions
+Choose:
+  Read and write permissions
+Save.
+
+RUN IT ONCE
+-----------
+Repo -> Actions -> "Update live marine data" -> Run workflow.
+
+After it succeeds, data/live.json should contain real observations.
+The workflow then runs automatically about every 10 minutes.
+
+YOUR EXISTING GITHUB PAGES URL
+------------------------------
+https://ajf2122.github.io/coastline-app/
+
+LIVE DATA SOURCES
+-----------------
+NOAA/NDBC latest observations:
+https://www.ndbc.noaa.gov/data/latest_obs/latest_obs.txt
+
+NOAA CO-OPS:
+https://api.tidesandcurrents.noaa.gov/api/prod/datagetter
+
+NOT INCLUDED AS LIVE SOURCES YET
+--------------------------------
+Weather Underground / PWS (including KCALONGB350) and ABYC are intentionally not
+scraped in this build because we have not established a clean, permitted public
+data feed for redistribution. Once we identify one, it can be added to the same
+live.json updater.
+
+SAFETY
+------
+This prototype is not a navigation or marine-safety system. Users should verify
+conditions with official NOAA/NWS/USCG sources before making safety decisions.
+'''
+(base/"README_SETUP.txt").write_text(setup, encoding="utf-8")
+
+# zip package
+zip_path=Path("/mnt/data/coastline-live-v7.zip")
+with zipfile.ZipFile(zip_path,"w",zipfile.ZIP_DEFLATED) as z:
+    for p in base.rglob("*"):
+        if p.is_file():
+            z.write(p, p.relative_to(base))
+
+print(f"Created package: {zip_path}")
+print(f"Fishing areas: {len(fishing_spots)}")
+print("Files:")
+for p in base.rglob("*"):
+    if p.is_file():
+        print(" -", p.relative_to(base), p.stat().st_size)
