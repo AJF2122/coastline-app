@@ -1,0 +1,9 @@
+{
+  "generated_at": null,
+  "status": "waiting_for_first_update",
+  "ndbc": [],
+  "tides": [],
+  "notes": [
+    "Run the GitHub Action once, or wait for the scheduled update."
+  ]
+}
