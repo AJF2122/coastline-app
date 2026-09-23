@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T09:37:27.492422Z",
+  "generated_at": "2026-09-23T09:53:59.340998Z",
   "tide_predictions_generated_at": "2026-09-23T04:38:29.794996Z",
   "status": "live",
   "ndbc": [
@@ -2203,8 +2203,8 @@
       "name": "Neah Bay, WA",
       "lat": 48.37,
       "lng": -124.602,
-      "height_ft": 3.245,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 2.841,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 19:07",
@@ -2262,8 +2262,8 @@
       "name": "Port Angeles, WA",
       "lat": 48.125,
       "lng": -123.44,
-      "height_ft": 4.906,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 4.62,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 21:37",
@@ -2321,8 +2321,8 @@
       "name": "Seattle, WA",
       "lat": 47.602,
       "lng": -122.339,
-      "height_ft": 9.113,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 9.162,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Rising",
       "next_high": {
         "time": "2026-09-23 09:53",
@@ -2380,8 +2380,8 @@
       "name": "Astoria, OR",
       "lat": 46.207,
       "lng": -123.768,
-      "height_ft": 3.836,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 3.357,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 19:27",
@@ -2439,8 +2439,8 @@
       "name": "Garibaldi, OR",
       "lat": 45.554,
       "lng": -123.918,
-      "height_ft": 3.314,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 2.894,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 18:49",
@@ -2493,8 +2493,8 @@
       "name": "South Beach, OR",
       "lat": 44.625,
       "lng": -124.044,
-      "height_ft": 2.828,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 2.372,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 18:26",
@@ -2547,8 +2547,8 @@
       "name": "Charleston, OR",
       "lat": 43.345,
       "lng": -124.322,
-      "height_ft": 2.238,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 2.054,
+      "observed_at": "2026-09-23 09:42",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 18:15",
@@ -2601,8 +2601,8 @@
       "name": "Crescent City, CA",
       "lat": 41.745,
       "lng": -124.184,
-      "height_ft": 1.509,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 1.138,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 17:48",
@@ -2655,8 +2655,8 @@
       "name": "North Spit, Humboldt Bay, CA",
       "lat": 40.767,
       "lng": -124.217,
-      "height_ft": 2.459,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 2.219,
+      "observed_at": "2026-09-23 09:42",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 17:57",
@@ -2709,8 +2709,8 @@
       "name": "San Francisco, CA",
       "lat": 37.807,
       "lng": -122.465,
-      "height_ft": 1.533,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 1.307,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 17:49",
@@ -2768,8 +2768,8 @@
       "name": "Monterey, CA",
       "lat": 36.605,
       "lng": -121.888,
-      "height_ft": 1.086,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 1.001,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 16:45",
@@ -2827,8 +2827,8 @@
       "name": "Port San Luis, CA",
       "lat": 35.169,
       "lng": -120.754,
-      "height_ft": 0.876,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 0.768,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-23 16:17",
@@ -2886,16 +2886,16 @@
       "name": "Santa Barbara, CA",
       "lat": 34.408,
       "lng": -119.685,
-      "height_ft": 0.958,
-      "observed_at": "2026-09-23 09:30",
-      "trend": "Falling",
+      "height_ft": 0.968,
+      "observed_at": "2026-09-23 09:42",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-23 15:54",
         "height_ft": 4.428
       },
       "next_low": {
-        "time": "2026-09-23 09:31",
-        "height_ft": 0.229
+        "time": "2026-09-23 21:15",
+        "height_ft": 1.987
       },
       "predictions": [
         {
@@ -2945,8 +2945,8 @@
       "name": "Los Angeles, CA",
       "lat": 33.72,
       "lng": -118.272,
-      "height_ft": 0.891,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 0.999,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Rising",
       "next_high": {
         "time": "2026-09-23 15:35",
@@ -3063,8 +3063,8 @@
       "name": "La Jolla, CA",
       "lat": 32.867,
       "lng": -117.257,
-      "height_ft": 0.854,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 0.975,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Rising",
       "next_high": {
         "time": "2026-09-23 15:27",
@@ -3122,8 +3122,8 @@
       "name": "San Diego, CA",
       "lat": 32.714,
       "lng": -117.174,
-      "height_ft": 0.993,
-      "observed_at": "2026-09-23 09:30",
+      "height_ft": 1.151,
+      "observed_at": "2026-09-23 09:48",
       "trend": "Rising",
       "next_high": {
         "time": "2026-09-23 15:25",
