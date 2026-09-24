@@ -59,6 +59,93 @@ button,input{font:inherit}
 .search{position:absolute;z-index:1500;left:10px;right:10px;top:calc(60px + var(--safe-top));background:#fff;border:1px solid #dce7eb;border-radius:16px;padding:10px;box-shadow:0 10px 32px rgba(21,53,67,.18);display:none} .search input{width:100%;border:1px solid #dce7eb;border-radius:12px;padding:12px 11px;font-size:16px} .results{display:grid;gap:5px;margin-top:8px;max-height:300px;overflow:auto} .results button{border:0;background:#f4f8fa;border-radius:11px;text-align:left;padding:9px} .results b{display:block;font-size:10px} .results small{font-size:8px;color:#70838e}
 .toast{position:absolute;z-index:1900;left:50%;bottom:84px;transform:translate(-50%,15px);background:rgba(18,43,55,.95);color:white;border-radius:999px;padding:8px 12px;font-size:8px;font-weight:800;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap}
 @media(min-width:560px){body{display:grid;place-items:center}.app{width:min(430px,100vw);height:min(900px,100dvh);border-radius:28px;box-shadow:0 20px 70px rgba(25,55,67,.18)}}
+
+/* ===== 7-DAY SWELL FORECAST SCREEN ===== */
+.forecast-screen{
+  position:absolute;inset:0;z-index:2200;background:#f5f9fa;
+  display:none;overflow:auto;padding-bottom:calc(24px + var(--safe-bottom));
+}
+.forecast-top{
+  position:sticky;top:0;z-index:5;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(14px);
+  border-bottom:1px solid #dfe9ed;
+  padding:calc(10px + var(--safe-top)) 12px 10px;
+}
+.forecast-head{display:flex;align-items:center;gap:10px}
+.forecast-back{
+  width:38px;height:38px;border:1px solid #dce7eb;border-radius:12px;
+  background:#fff;display:grid;place-items:center;font-size:20px;cursor:pointer
+}
+.forecast-head h1{font-size:18px;line-height:1.05;margin:0;letter-spacing:-.03em}
+.forecast-head small{display:block;font-size:8px;color:var(--muted);margin-top:3px}
+.forecast-controls{
+  margin-top:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px
+}
+.forecast-controls input{
+  min-width:0;border:1px solid #d8e5ea;border-radius:12px;background:#fff;
+  padding:11px 10px;font-size:15px;color:var(--ink)
+}
+.forecast-go{
+  border:0;border-radius:12px;background:var(--blue);color:#fff;
+  padding:0 13px;font-size:9px;font-weight:900;cursor:pointer
+}
+.forecast-content{padding:12px}
+.forecast-location{
+  background:#fff;border:1px solid #dfe9ed;border-radius:18px;padding:12px;
+  box-shadow:0 3px 12px rgba(23,55,70,.05)
+}
+.forecast-location .place{font-size:21px;font-weight:900;letter-spacing:-.04em}
+.forecast-location .meta{font-size:8px;color:var(--muted);margin-top:3px}
+.tide-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:10px
+}
+.tide-mini{background:#f1f6f8;border-radius:10px;padding:8px 6px;min-width:0}
+.tide-mini span{display:block;font-size:6.7px;color:#7c909a;font-weight:850;text-transform:uppercase}
+.tide-mini b{display:block;font-size:10px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.forecast-source{
+  margin:9px 1px 0;font-size:7.7px;line-height:1.4;color:#758892
+}
+.forecast-loading{
+  background:#fff;border:1px solid #dfe9ed;border-radius:16px;padding:18px;
+  text-align:center;font-size:10px;color:#607783;margin-top:10px
+}
+.day-cards{display:grid;gap:9px;margin-top:10px}
+.day-card{
+  background:#fff;border:1px solid #dfe9ed;border-radius:18px;
+  box-shadow:0 3px 12px rgba(23,55,70,.045);overflow:hidden
+}
+.day-summary{
+  width:100%;border:0;background:#fff;padding:11px;text-align:left;
+  display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:9px;align-items:center;cursor:pointer
+}
+.day-name b{display:block;font-size:11px}.day-name span{font-size:7px;color:var(--muted)}
+.wave-summary b{font-size:17px;display:block;letter-spacing:-.03em}
+.wave-summary small{font-size:7.5px;color:#71858f}
+.confidence{
+  font-size:6.8px;font-weight:900;border-radius:999px;padding:5px 7px;
+  background:#edf4f7;color:#627b87;white-space:nowrap
+}
+.wave-bar{height:5px;background:#e8f0f3;border-radius:999px;margin-top:6px;overflow:hidden}
+.wave-bar i{height:100%;display:block;background:var(--blue);border-radius:999px}
+.day-detail{display:none;border-top:1px solid #edf2f4;padding:8px 9px 11px}
+.day-card.open .day-detail{display:block}
+.hour-row{
+  display:grid;grid-template-columns:42px 1fr 1fr 1fr 1fr;gap:5px;
+  padding:7px 2px;border-bottom:1px solid #f0f4f5;align-items:center
+}
+.hour-row:last-child{border-bottom:0}
+.hour-row .time{font-size:8px;font-weight:900}
+.hour-cell span{display:block;font-size:6.2px;color:#80929b;text-transform:uppercase;font-weight:800}
+.hour-cell b{display:block;font-size:8px;margin-top:1px}
+.forecast-note{
+  margin-top:10px;background:#eaf7fb;border:1px solid #d1edf6;
+  border-radius:14px;padding:10px;font-size:8px;line-height:1.5;color:#496b78
+}
+@media(max-width:360px){
+  .hour-row{grid-template-columns:36px 1fr 1fr 1fr 1fr;gap:3px}
+  .hour-cell b{font-size:7.4px}
+}
+
 </style>
 </head>
 <body>
@@ -102,6 +189,25 @@ button,input{font:inherit}
 
 <div class="modal" id="modal"><div class="detail"><div class="dh"></div><button class="close" id="close">✕</button><div id="detail"></div></div></div>
 <div class="toast" id="toast"></div>
+
+<div class="forecast-screen" id="forecastScreen">
+  <div class="forecast-top">
+    <div class="forecast-head">
+      <button class="forecast-back" id="forecastBack" type="button" aria-label="Back">‹</button>
+      <div>
+        <h1>7-Day Swell Forecast</h1>
+        <small>Forecast waves, swell, wind and tide trend</small>
+      </div>
+    </div>
+    <div class="forecast-controls">
+      <input id="forecastSpotInput" list="forecastSpotList" placeholder="Enter or choose a surf spot…" autocomplete="off">
+      <datalist id="forecastSpotList"></datalist>
+      <button class="forecast-go" id="forecastGo" type="button">VIEW</button>
+    </div>
+  </div>
+  <div class="forecast-content" id="forecastContent"></div>
+</div>
+
 </div>
 
 <script>
@@ -123,6 +229,65 @@ function dist(a,b){const R=6371,p=Math.PI/180,dlat=(b.lat-a.lat)*p,dlon=(b.lng-a
 function visible(x){return region==="All"||x.region===region}
 function regionOf(lat){if(lat>=46)return"Washington";if(lat>=42)return"Oregon";if(lat>=38)return"Northern California";if(lat>=34.35)return"Central California";return"Southern California"}
 
+const FRIENDLY_NAMES={
+  "46012":"Half Moon Bay",
+  "46013":"Bodega Bay",
+  "46014":"Point Arena",
+  "46022":"Eel River / Humboldt",
+  "46025":"Santa Monica Basin",
+  "46026":"San Francisco",
+  "46027":"St. Georges / Crescent City",
+  "46029":"Columbia River",
+  "46041":"Cape Elizabeth",
+  "46042":"Monterey Bay",
+  "46050":"Stonewall Bank / Newport",
+  "46053":"East Santa Barbara Channel",
+  "46054":"West Santa Barbara Channel",
+  "46086":"San Clemente Basin",
+  "46087":"Neah Bay",
+  "46088":"New Dungeness",
+  "46221":"Santa Monica Bay",
+  "46224":"Oceanside Offshore",
+  "46225":"Torrey Pines",
+  "46232":"Point Loma South",
+  "46236":"Monterey Canyon",
+  "46237":"San Francisco Bar",
+  "46239":"Point Sur",
+  "46240":"Cabrillo Point",
+  "46253":"San Pedro South",
+  "46256":"Long Beach Channel",
+  "46258":"Mission Bay West",
+  "46274":"Leucadia",
+  "PRJC1":"Los Angeles Pier J",
+  "AGXC1":"Angels Gate",
+  "PFDC1":"Los Angeles Pier 400",
+  "PFXC1":"Los Angeles Pier F"
+};
+function friendlyName(x){
+  const id=String(x.station||x.id||"");
+  if(FRIENDLY_NAMES[id]) return FRIENDLY_NAMES[id];
+  const raw=(x.name||"").trim();
+  if(raw && !/^Station\s+[A-Z0-9-]+$/i.test(raw)) return raw;
+  if(Number.isFinite(x.lat)&&Number.isFinite(x.lng)){
+    let best=null,bd=Infinity;
+    for(const p of FISHING){
+      const d=dist(x,p);
+      if(d<bd){bd=d;best=p}
+    }
+    if(best && bd<130) return best.name + (x.wave_ft!=null ? " Offshore" : " Coastal");
+  }
+  return x.wave_ft!=null ? "Offshore Wave Station" : "Coastal Weather Station";
+}
+function mapCenterDistanceMi(x){
+  const c=map.getCenter();
+  return dist({lat:c.lat,lng:c.lng},x)*0.621371;
+}
+function inViewport(x){
+  if(!Number.isFinite(x.lat)||!Number.isFinite(x.lng)) return false;
+  return map.getBounds().pad(0.02).contains([x.lat,x.lng]);
+}
+
+
 function svg(kind,item){
  if(kind==="wind"){const d=toward(item.wind_from_deg)||0;return `<svg viewBox="0 0 24 24" style="transform:rotate(${d}deg)"><path d="M12 19V5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M7.5 9.5 12 5l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
  if(kind==="wave")return `<svg viewBox="0 0 24 24"><path d="M3 9c2.3-2.8 4.6-2.8 6.9 0s4.6 2.8 6.9 0S21 6.2 22 8.2M3 15c2.3-2.8 4.6-2.8 6.9 0s4.6 2.8 6.9 0S21 12.2 22 14.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
@@ -132,7 +297,7 @@ function svg(kind,item){
 }
 function icon(kind,item,color,label=""){return L.divIcon({className:"",iconSize:[38,46],iconAnchor:[19,37],html:`<div class="pin" style="--c:${color}"><div class="circle">${svg(kind,item)}</div><div class="tail"></div>${label?`<div class="mlabel">${label}</div>`:""}</div>`})}
 function clear(){markers.forEach(m=>map.removeLayer(m));markers=[]}
-function add(item,kind,color,label,click){const m=L.marker([item.lat,item.lng],{icon:icon(kind,item,color,label)}).addTo(map);m.bindTooltip(`<b>${item.name||item.station}</b><br>${item.station||item.id||""}`,{direction:"top",offset:[0,-26]});m.on("click",()=>click(item));markers.push(m)}
+function add(item,kind,color,label,click){const m=L.marker([item.lat,item.lng],{icon:icon(kind,item,color,label)}).addTo(map);m.bindTooltip(`<b>${friendlyName(item)}</b><br>${item.station||item.id||""}`,{direction:"top",offset:[0,-26]});m.on("click",()=>click(item));markers.push(m)}
 
 function nearestObs(p){let best=null,bd=1e9;for(const x of LIVE.ndbc){const d=dist(p,x);if(d<bd){bd=d;best=x}}return best?{...best,distance_km:bd}:null}
 function nearestTide(p){let best=null,bd=1e9;for(const x of LIVE.tides){const d=dist(p,x);if(d<bd){bd=d;best=x}}return best?{...best,distance_km:bd}:null}
@@ -158,20 +323,24 @@ function draw(){
  if(mode==="surf"&&layer!=="fish") SURF.filter(visible).forEach(x=>add(x,"surf",COLORS.blue,"",openSurf));
 }
 function listData(){
- if(layer==="fish")return FISHING.filter(visible).map(x=>({...x,...fishInfo(x)}));
- if(layer==="tides")return LIVE.tides.map(x=>({...x,region:regionOf(x.lat)})).filter(visible);
- const o=LIVE.ndbc.map(x=>({...x,region:regionOf(x.lat)})).filter(visible);
- if(layer==="wind")return o.filter(x=>x.wind_kt!=null);
- if(layer==="swell")return o.filter(x=>x.wave_ft!=null);
- return o;
+ let d=[];
+ if(layer==="fish") d=FISHING.filter(visible).filter(inViewport).map(x=>({...x,...fishInfo(x)}));
+ else if(layer==="tides") d=LIVE.tides.map(x=>({...x,region:regionOf(x.lat)})).filter(visible).filter(inViewport);
+ else{
+   const o=LIVE.ndbc.map(x=>({...x,region:regionOf(x.lat)})).filter(visible).filter(inViewport);
+   if(layer==="wind") d=o.filter(x=>x.wind_kt!=null);
+   else if(layer==="swell") d=o.filter(x=>x.wave_ft!=null);
+   else d=o;
+ }
+ return d.sort((a,b)=>mapCenterDistanceMi(a)-mapCenterDistanceMi(b));
 }
 function renderList(){
  const d=listData().slice(0,70),el=document.getElementById("list");
- if(!d.length){el.innerHTML='<div class="card"><div><b>No current observations</b><small>Waiting for the next live-data update.</small></div></div>';return}
+ if(!d.length){el.innerHTML='<div class="card"><div><b>No stations visible here</b><small>Pan or zoom the map to another coastal area.</small></div></div>';return}
  el.innerHTML=d.map((x,i)=>{
-   if(layer==="fish")return `<div class="card" data-i="${i}"><div><b>${x.name}</b><small>${x.region} · nearest live observations</small><div class="facts"><span>Wind <strong>${x.obs?.wind_kt!=null?x.obs.wind_kt.toFixed(0)+" kt":"—"}</strong></span><span>Seas <strong>${x.obs?.wave_ft!=null?x.obs.wave_ft.toFixed(1)+" ft":"—"}</strong></span><span>Tide <strong>${x.tide?.trend||"—"}</strong></span></div></div><span class="badge ${x.rating==="Good"?"good":x.rating==="Fair"?"fair":x.rating==="Poor"?"poor":"bad"}">${x.rating}</span></div>`;
-   if(layer==="tides")return `<div class="card" data-i="${i}"><div><b>${x.name}</b><small>${x.station}</small><div class="facts"><span>Height <strong>${x.height_ft??"—"} ft</strong></span><span>Trend <strong>${x.trend||"—"}</strong></span></div></div><span class="badge gray">${x.trend||"Tide"}</span></div>`;
-   return `<div class="card" data-i="${i}"><div><b>${x.name||("Station "+x.station)}</b><small>${x.station} · NOAA/NDBC</small><div class="facts"><span>Wind <strong>${x.wind_kt!=null?x.wind_kt.toFixed(0)+" kt":"—"}</strong></span><span>Wave <strong>${x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":"—"}</strong></span><span>Water <strong>${x.water_f!=null?x.water_f.toFixed(0)+"°F":"—"}</strong></span></div></div><span class="badge gray">${layer==="swell"&&x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":layer==="wind"&&x.wind_kt!=null?x.wind_kt.toFixed(0)+" kt":"Live"}</span></div>`;
+   if(layer==="fish")return `<div class="card" data-i="${i}"><div><b>${x.name}</b><small>${x.region} · ${mapCenterDistanceMi(x).toFixed(1)} mi from map center</small><div class="facts"><span>Wind <strong>${x.obs?.wind_kt!=null?x.obs.wind_kt.toFixed(0)+" kt":"—"}</strong></span><span>Seas <strong>${x.obs?.wave_ft!=null?x.obs.wave_ft.toFixed(1)+" ft":"—"}</strong></span><span>Tide <strong>${x.tide?.trend||"—"}</strong></span></div></div><span class="badge ${x.rating==="Good"?"good":x.rating==="Fair"?"fair":x.rating==="Poor"?"poor":"bad"}">${x.rating}</span></div>`;
+   if(layer==="tides")return `<div class="card" data-i="${i}"><div><b>${friendlyName(x)}</b><small>${x.station} · ${mapCenterDistanceMi(x).toFixed(1)} mi from map center</small><div class="facts"><span>Height <strong>${x.height_ft??"—"} ft</strong></span><span>Trend <strong>${x.trend||"—"}</strong></span></div></div><span class="badge gray">${x.trend||"Tide"}</span></div>`;
+   return `<div class="card" data-i="${i}"><div><b>${friendlyName(x)}</b><small>${x.station} · NOAA/NDBC · ${mapCenterDistanceMi(x).toFixed(1)} mi from map center</small><div class="facts"><span>Wind <strong>${x.wind_kt!=null?x.wind_kt.toFixed(0)+" kt":"—"}</strong></span><span>Wave <strong>${x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":"—"}</strong></span><span>Water <strong>${x.water_f!=null?x.water_f.toFixed(0)+"°F":"—"}</strong></span></div></div><span class="badge gray">${layer==="swell"&&x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":layer==="wind"&&x.wind_kt!=null?x.wind_kt.toFixed(0)+" kt":"Live"}</span></div>`;
  }).join("");
  document.querySelectorAll("[data-i]").forEach(b=>b.addEventListener("click",()=>{const x=d[+b.dataset.i];layer==="fish"?openFish(x):layer==="tides"?openTide(x):openObs(x)}));
 }
@@ -196,7 +365,7 @@ function renderRegions(){
 function fitRegion(r){const b={Washington:[[46.1,-125.1],[49.1,-122.0]],Oregon:[[41.9,-125.0],[46.3,-123.0]],"Northern California":[[37.8,-124.8],[42.1,-122.1]],"Central California":[[34.2,-123.0],[38.1,-119.9]],"Southern California":[[32.45,-120.0],[34.55,-117.0]],All:[[32.3,-125.6],[49.2,-116.8]]}[r];map.fitBounds(b,{padding:[45,45],maxZoom:8})}
 
 function open(html){document.getElementById("detail").innerHTML=html;document.getElementById("modal").style.display="flex"}
-function openObs(x){const to=toward(x.wind_from_deg);open(`<div class="dk">LIVE NOAA / NDBC OBSERVATION</div><div class="dt">${x.name||("Station "+x.station)}</div><div class="ds">${x.station} · ${x.observed_at||"latest"}</div><div class="grid"><div class="box"><span>WIND</span><b>${x.wind_kt!=null?x.wind_kt.toFixed(1)+" kt":"—"}</b></div><div class="box"><span>WIND FROM</span><b>${x.wind_from_deg!=null?card(x.wind_from_deg)+" "+x.wind_from_deg+"°":"—"}</b></div><div class="box"><span>BLOWING TOWARD</span><b>${to!=null?card(to)+" "+to+"°":"—"}</b></div><div class="box"><span>WAVE HEIGHT</span><b>${x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":"—"}</b></div><div class="box"><span>PERIOD</span><b>${x.period_sec!=null?x.period_sec.toFixed(0)+" s":"—"}</b></div><div class="box"><span>WATER</span><b>${x.water_f!=null?x.water_f.toFixed(1)+"°F":"—"}</b></div></div><div class="note">Official real-time observation cached by the Coastline GitHub updater. Always verify marine-safety decisions with official NOAA/NWS products.</div>`)}
+function openObs(x){const to=toward(x.wind_from_deg);open(`<div class="dk">LIVE NOAA / NDBC OBSERVATION</div><div class="dt">${friendlyName(x)}</div><div class="ds">${x.station} · ${x.observed_at||"latest"}</div><div class="grid"><div class="box"><span>WIND</span><b>${x.wind_kt!=null?x.wind_kt.toFixed(1)+" kt":"—"}</b></div><div class="box"><span>WIND FROM</span><b>${x.wind_from_deg!=null?card(x.wind_from_deg)+" "+x.wind_from_deg+"°":"—"}</b></div><div class="box"><span>BLOWING TOWARD</span><b>${to!=null?card(to)+" "+to+"°":"—"}</b></div><div class="box"><span>WAVE HEIGHT</span><b>${x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":"—"}</b></div><div class="box"><span>PERIOD</span><b>${x.period_sec!=null?x.period_sec.toFixed(0)+" s":"—"}</b></div><div class="box"><span>WATER</span><b>${x.water_f!=null?x.water_f.toFixed(1)+"°F":"—"}</b></div></div><div class="note">Official real-time observation cached by the Coastline GitHub updater. Always verify marine-safety decisions with official NOAA/NWS products.</div>`)}
 function openTide(x){open(`<div class="dk">LIVE NOAA CO-OPS</div><div class="dt">${x.name}</div><div class="ds">${x.station} · ${x.observed_at||"latest"}</div><div class="grid"><div class="box"><span>WATER LEVEL</span><b>${x.height_ft??"—"} ft</b></div><div class="box"><span>TREND</span><b>${x.trend||"—"}</b></div><div class="box"><span>NEXT HIGH</span><b style="font-size:12px">${x.next_high?.time||"—"}<br>${x.next_high?.height_ft??""} ft</b></div><div class="box"><span>NEXT LOW</span><b style="font-size:12px">${x.next_low?.time||"—"}<br>${x.next_low?.height_ft??""} ft</b></div></div><div class="note">Observed water level and tide predictions from NOAA Tides & Currents.</div>`)}
 function openFish(x){open(`<div class="dk">FISHING CONDITIONS · EXPERIMENTAL</div><div class="dt">${x.name}</div><div class="ds">${x.region} · environmental score ${x.score}/100</div><div class="grid"><div class="box"><span>RATING</span><b>${x.rating}</b></div><div class="box"><span>WIND</span><b>${x.obs?.wind_kt!=null?x.obs.wind_kt.toFixed(1)+" kt":"—"}</b></div><div class="box"><span>SEAS</span><b>${x.obs?.wave_ft!=null?x.obs.wave_ft.toFixed(1)+" ft":"—"}</b></div><div class="box"><span>TIDE</span><b>${x.tide?.trend||"—"}</b></div><div class="box"><span>NEAREST OBS</span><b style="font-size:12px">${x.obs?.station||"—"}</b></div><div class="box"><span>DISTANCE</span><b>${x.obs?.distance_km!=null?(x.obs.distance_km*0.621371).toFixed(0)+" mi":"—"}</b></div></div><div class="note">This is a simple live environmental-conditions score using nearby wind, seas and tide information. It is not a fish-bite prediction and does not guarantee fishing success.</div>`)}
 function openSurf(x){open(`<div class="dk">POPULAR SURF SPOT</div><div class="dt">${x.name}</div><div class="ds">${x.region}</div><div class="note">Popular surf-location marker. Live spot-quality modeling is not connected yet; use nearby Wind, Swell and Tides layers for current observations.</div>`)}
@@ -211,16 +380,235 @@ document.getElementById("boat").addEventListener("click",()=>{mode="boat";boat.c
 document.getElementById("surf").addEventListener("click",()=>{mode="surf";surf.classList.add("active");boat.classList.remove("active");render()});
 document.getElementById("close").addEventListener("click",()=>modal.style.display="none");modal.addEventListener("click",e=>{if(e.target===modal)modal.style.display="none"});
 document.getElementById("viewall").addEventListener("click",()=>setH(expanded()));
-document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-nav]").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.nav==="spots")setH(expanded());if(b.dataset.nav==="map")setH(collapsed());if(b.dataset.nav==="forecast")toast("Forecast view is the next feature to build");if(b.dataset.nav==="more")toast("More tools coming later")}));
+document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-nav]").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.nav==="spots")setH(expanded());if(b.dataset.nav==="map")setH(collapsed());if(b.dataset.nav==="forecast")openForecast();if(b.dataset.nav==="more")toast("More tools coming later")}));
 
-function allSearch(){return [...FISHING.map(x=>({...x,k:"fish"})),...SURF.map(x=>({...x,k:"surf"})),...LIVE.ndbc.map(x=>({...x,name:x.name||("Station "+x.station),id:x.station,k:"obs"})),...LIVE.tides.map(x=>({...x,id:x.station,k:"tide"}))]}
+function allSearch(){return [...FISHING.map(x=>({...x,k:"fish"})),...SURF.map(x=>({...x,k:"surf"})),...LIVE.ndbc.map(x=>({...x,name:friendlyName(x),id:x.station,k:"obs"})),...LIVE.tides.map(x=>({...x,id:x.station,k:"tide"}))]}
 function searchRun(v){const q=v.trim().toLowerCase(),res=document.getElementById("results");if(!q){res.innerHTML="";return}const h=allSearch().filter(x=>`${x.name||""} ${x.id||""} ${x.station||""}`.toLowerCase().includes(q)).slice(0,20);res.innerHTML=h.map((x,i)=>`<button data-s="${i}"><b>${x.name}</b><small>${x.id||x.station||x.k}</small></button>`).join("");document.querySelectorAll("[data-s]").forEach(b=>b.addEventListener("click",()=>{const x=h[+b.dataset.s];map.flyTo([x.lat,x.lng],10);search.style.display="none";x.k==="fish"?openFish({...x,...fishInfo(x)}):x.k==="surf"?openSurf(x):x.k==="tide"?openTide(x):openObs(x)}))}
 searchBtn.addEventListener("click",()=>{search.style.display=search.style.display==="block"?"none":"block";if(search.style.display==="block")q.focus()});q.addEventListener("input",e=>searchRun(e.target.value));favBtn.addEventListener("click",()=>toast("Favorites are still local to the device in the next build"));
+
+
+/* ===== FORECAST FEATURE ===== */
+let FORECAST_CACHE=new Map();
+
+function nearestSurfSpotToMap(){
+  const c=map.getCenter();
+  let best=SURF[0],bd=Infinity;
+  for(const s of SURF){
+    const d=dist({lat:c.lat,lng:c.lng},s);
+    if(d<bd){bd=d;best=s}
+  }
+  return best;
+}
+function findSurfSpot(text){
+  const q=(text||"").trim().toLowerCase();
+  if(!q) return nearestSurfSpotToMap();
+  return SURF.find(s=>s.name.toLowerCase()===q) ||
+         SURF.find(s=>s.name.toLowerCase().includes(q)) ||
+         SURF.find(s=>q.includes(s.name.toLowerCase())) || null;
+}
+function initForecastSpotList(){
+  const dl=document.getElementById("forecastSpotList");
+  dl.innerHTML=SURF.slice().sort((a,b)=>a.name.localeCompare(b.name))
+    .map(s=>`<option value="${s.name}">${s.region}</option>`).join("");
+}
+function openForecast(){
+  const screen=document.getElementById("forecastScreen");
+  const spot=nearestSurfSpotToMap();
+  document.getElementById("forecastSpotInput").value=spot.name;
+  screen.style.display="block";
+  document.querySelectorAll("[data-nav]").forEach(x=>x.classList.toggle("active",x.dataset.nav==="forecast"));
+  loadSpotForecast(spot);
+}
+function closeForecast(){
+  document.getElementById("forecastScreen").style.display="none";
+  document.querySelectorAll("[data-nav]").forEach(x=>x.classList.toggle("active",x.dataset.nav==="map"));
+}
+function feet(m){return m==null?null:m*3.2808399}
+function fTemp(c){return c==null?null:c*9/5+32}
+function n1(v){return v==null?"—":Number(v).toFixed(1)}
+function tideTrend(arr,i){
+  if(!arr||arr[i]==null)return"—";
+  const before=arr[Math.max(0,i-1)],after=arr[Math.min(arr.length-1,i+1)];
+  if(before==null||after==null)return"—";
+  const delta=after-before;
+  if(Math.abs(delta)<0.01)return"Slack";
+  return delta>0?"Rising":"Falling";
+}
+function confidenceLabel(i){return i<=1?"Higher confidence":i<=4?"Moderate confidence":"Lower confidence"}
+function formatDay(dateStr,i){
+  const d=new Date(dateStr+"T12:00:00");
+  const dow=d.toLocaleDateString([],{weekday:"short"}).toUpperCase();
+  const md=d.toLocaleDateString([],{month:"short",day:"numeric"});
+  return {dow,md,confidence:confidenceLabel(i)};
+}
+function nearestNoaaTideForSpot(spot){
+  let best=null,bd=Infinity;
+  for(const t of LIVE.tides||[]){
+    if(!Number.isFinite(t.lat)||!Number.isFinite(t.lng))continue;
+    const d=dist(spot,t);
+    if(d<bd){bd=d;best=t}
+  }
+  return best?{...best,distance_mi:bd*0.621371}:null;
+}
+async function fetchForecastData(spot){
+  const key=`${spot.lat.toFixed(3)},${spot.lng.toFixed(3)}`;
+  const old=FORECAST_CACHE.get(key);
+  if(old && Date.now()-old.when<15*60*1000)return old.data;
+
+  const marineVars=[
+    "wave_height","wave_direction","wave_period",
+    "swell_wave_height","swell_wave_direction","swell_wave_period",
+    "secondary_swell_wave_height","secondary_swell_wave_direction","secondary_swell_wave_period",
+    "sea_surface_temperature","sea_level_height_msl"
+  ].join(",");
+  const dailyVars=[
+    "wave_height_max","wave_direction_dominant","wave_period_max",
+    "swell_wave_height_max","swell_wave_direction_dominant","swell_wave_period_max"
+  ].join(",");
+  const marineURL=`https://marine-api.open-meteo.com/v1/marine?latitude=${spot.lat}&longitude=${spot.lng}&hourly=${marineVars}&daily=${dailyVars}&timezone=auto&forecast_days=7&cell_selection=sea`;
+  const weatherURL=`https://api.open-meteo.com/v1/forecast?latitude=${spot.lat}&longitude=${spot.lng}&hourly=wind_speed_10m,wind_direction_10m&daily=wind_speed_10m_max,wind_direction_10m_dominant&wind_speed_unit=kn&timezone=auto&forecast_days=7`;
+
+  const [mr,wr]=await Promise.all([fetch(marineURL),fetch(weatherURL)]);
+  if(!mr.ok)throw new Error("Marine forecast unavailable");
+  if(!wr.ok)throw new Error("Wind forecast unavailable");
+  const [marine,weather]=await Promise.all([mr.json(),wr.json()]);
+  const data={marine,weather};
+  FORECAST_CACHE.set(key,{when:Date.now(),data});
+  return data;
+}
+function hourIndexesForDay(times,dateStr){
+  const wanted=["06:00","09:00","12:00","15:00","18:00"];
+  return wanted.map(h=>times.indexOf(`${dateStr}T${h}`)).filter(i=>i>=0);
+}
+function forecastTideHeader(spot){
+  const t=nearestNoaaTideForSpot(spot);
+  if(!t)return `
+    <div class="tide-strip">
+      <div class="tide-mini"><span>NOAA Tide</span><b>Not nearby</b></div>
+      <div class="tide-mini"><span>Trend</span><b>—</b></div>
+      <div class="tide-mini"><span>Next High</span><b>—</b></div>
+      <div class="tide-mini"><span>Next Low</span><b>—</b></div>
+    </div>`;
+  const high=t.next_high?.time?new Date(t.next_high.time.replace(" ","T")+"Z").toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"—";
+  const low=t.next_low?.time?new Date(t.next_low.time.replace(" ","T")+"Z").toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):"—";
+  return `
+    <div class="tide-strip">
+      <div class="tide-mini"><span>Current Tide</span><b>${t.height_ft!=null?n1(t.height_ft)+" ft":"—"}</b></div>
+      <div class="tide-mini"><span>Going</span><b>${t.trend||"—"}</b></div>
+      <div class="tide-mini"><span>Next High</span><b>${high}</b></div>
+      <div class="tide-mini"><span>Next Low</span><b>${low}</b></div>
+    </div>
+    <div class="forecast-source">Nearest NOAA tide station: ${friendlyName(t)} (${t.station}) · about ${t.distance_mi.toFixed(0)} mi away.</div>`;
+}
+function renderForecast(spot,data){
+  const m=data.marine,w=data.weather;
+  const d=m.daily||{},h=m.hourly||{},wh=w.hourly||{},wd=w.daily||{};
+  const days=d.time||[];
+  let maxWave=0;
+  for(const v of d.wave_height_max||[])if(v!=null)maxWave=Math.max(maxWave,feet(v));
+
+  let html=`
+    <div class="forecast-location">
+      <div class="place">${spot.name}</div>
+      <div class="meta">${spot.region} · 7-day marine-model forecast</div>
+      ${forecastTideHeader(spot)}
+    </div>
+    <div class="forecast-note"><b>How to read this:</b> “Forecast Waves” is modeled significant wave height near the selected coastal point, not guaranteed breaking surf height on the beach. The tide trend in hourly rows is model-derived; the tide strip above uses the nearest available NOAA tide station.</div>
+    <div class="day-cards">`;
+
+  days.forEach((dateStr,di)=>{
+    const fd=formatDay(dateStr,di);
+    const wave=feet(d.wave_height_max?.[di]);
+    const swell=feet(d.swell_wave_height_max?.[di]);
+    const swellPeriod=d.swell_wave_period_max?.[di];
+    const swellDir=d.swell_wave_direction_dominant?.[di];
+    const windMax=wd.wind_speed_10m_max?.[di];
+    const windDir=wd.wind_direction_10m_dominant?.[di];
+    const bar=maxWave&&wave!=null?Math.max(8,Math.min(100,wave/maxWave*100)):10;
+    const idxs=hourIndexesForDay(h.time||[],dateStr);
+
+    html+=`
+      <div class="day-card ${di===0?"open":""}">
+        <button class="day-summary" type="button">
+          <div class="day-name"><b>${fd.dow}</b><span>${fd.md}</span></div>
+          <div class="wave-summary">
+            <b>${wave!=null?n1(wave)+" ft":"—"}</b>
+            <small>Forecast waves · Swell ${swell!=null?n1(swell)+" ft":"—"} @ ${swellPeriod!=null?Math.round(swellPeriod)+"s":"—"} ${swellDir!=null?card(swellDir):""}</small>
+            <div class="wave-bar"><i style="width:${bar}%"></i></div>
+          </div>
+          <div class="confidence">${fd.confidence}</div>
+        </button>
+        <div class="day-detail">
+          <div style="font-size:7.5px;color:#748994;margin:1px 2px 7px">Daily wind max: <b>${windMax!=null?n1(windMax)+" kt":"—"}</b> ${windDir!=null?card(windDir):""}</div>`;
+
+    idxs.forEach(i=>{
+      const tm=(h.time[i]||"").slice(11,16);
+      const hour=Number(tm.slice(0,2));
+      const label=hour===0?"12 AM":hour<12?hour+" AM":hour===12?"12 PM":(hour-12)+" PM";
+      const waveFt=feet(h.wave_height?.[i]);
+      const swellFt=feet(h.swell_wave_height?.[i]);
+      const swellPer=h.swell_wave_period?.[i];
+      const swellD=h.swell_wave_direction?.[i];
+      const windI=(wh.time||[]).indexOf(h.time[i]);
+      const windKt=windI>=0?wh.wind_speed_10m?.[windI]:null;
+      const windD=windI>=0?wh.wind_direction_10m?.[windI]:null;
+      const sst=fTemp(h.sea_surface_temperature?.[i]);
+      const tt=tideTrend(h.sea_level_height_msl,i);
+      html+=`
+        <div class="hour-row">
+          <div class="time">${label}</div>
+          <div class="hour-cell"><span>Waves</span><b>${waveFt!=null?n1(waveFt)+" ft":"—"}</b></div>
+          <div class="hour-cell"><span>Swell</span><b>${swellFt!=null?n1(swellFt)+"'":"—"} ${swellPer!=null?"@ "+Math.round(swellPer)+"s":""}<br>${swellD!=null?card(swellD):""}</b></div>
+          <div class="hour-cell"><span>Wind</span><b>${windKt!=null?n1(windKt)+" kt":"—"}<br>${windD!=null?card(windD):""}</b></div>
+          <div class="hour-cell"><span>Tide / SST</span><b>${tt}<br>${sst!=null?Math.round(sst)+"°F":"—"}</b></div>
+        </div>`;
+    });
+
+    html+=`</div></div>`;
+  });
+
+  html+=`</div>
+    <div class="forecast-source">Marine forecast: Open-Meteo model blend. Wind forecast: Open-Meteo weather model blend. Live tide strip: Coastline's cached NOAA CO-OPS data. Forecast/model data is for planning and testing, not navigation.</div>`;
+
+  document.getElementById("forecastContent").innerHTML=html;
+  document.querySelectorAll(".day-summary").forEach(btn=>btn.addEventListener("click",()=>btn.closest(".day-card").classList.toggle("open")));
+}
+async function loadSpotForecast(spot){
+  const c=document.getElementById("forecastContent");
+  c.innerHTML=`<div class="forecast-loading">Loading 7-day forecast for <b>${spot.name}</b>…</div>`;
+  try{
+    const data=await fetchForecastData(spot);
+    renderForecast(spot,data);
+  }catch(err){
+    c.innerHTML=`<div class="forecast-loading"><b>Forecast could not load.</b><br><br>${err.message}<br><br>Check your internet connection and try again.</div>`;
+  }
+}
 
 const sheet=document.getElementById("sheet"),handle=document.getElementById("handle");let drag=false,sy=0,sh=0;
 const collapsed=()=>Math.min(212,innerHeight*.27),mid=()=>Math.min(430,innerHeight*.49),expanded=()=>Math.min(650,innerHeight*.72),setH=h=>sheet.style.setProperty("--h",Math.round(h)+"px");
 handle.addEventListener("pointerdown",e=>{drag=true;sy=e.clientY;sh=sheet.getBoundingClientRect().height;sheet.classList.add("dragging");handle.setPointerCapture(e.pointerId)});handle.addEventListener("pointermove",e=>{if(drag)setH(Math.max(158,Math.min(expanded(),sh+sy-e.clientY)))});handle.addEventListener("pointerup",()=>{if(!drag)return;drag=false;sheet.classList.remove("dragging");const h=sheet.getBoundingClientRect().height,a=[collapsed(),mid(),expanded()].sort((x,y)=>Math.abs(h-x)-Math.abs(h-y));setH(a[0])});
 function toast(s){const t=document.getElementById("toast");t.textContent=s;t.style.opacity=1;t.style.transform="translate(-50%,0)";clearTimeout(toast.t);toast.t=setTimeout(()=>{t.style.opacity=0;t.style.transform="translate(-50%,15px)"},1500)}
+
+
+initForecastSpotList();
+document.getElementById("forecastBack").addEventListener("click",closeForecast);
+document.getElementById("forecastGo").addEventListener("click",()=>{
+  const spot=findSurfSpot(document.getElementById("forecastSpotInput").value);
+  if(!spot){toast("Surf spot not found");return}
+  document.getElementById("forecastSpotInput").value=spot.name;
+  loadSpotForecast(spot);
+});
+document.getElementById("forecastSpotInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    const spot=findSurfSpot(e.target.value);
+    if(spot){e.target.value=spot.name;loadSpotForecast(spot)}
+    else toast("Surf spot not found");
+  }
+});
+
+map.on("moveend zoomend",()=>{
+  if(document.getElementById("forecastScreen").style.display!=="block") render();
+});
 
 if("geolocation"in navigator)navigator.geolocation.getCurrentPosition(p=>map.setView([p.coords.latitude,p.coords.longitude],9.5),()=>fitRegion("All"),{timeout:4500,maximumAge:300000});
 setH(collapsed());render();loadLive();setTimeout(()=>map.invalidateSize(),100);
