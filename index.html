@@ -300,7 +300,31 @@ function clear(){markers.forEach(m=>map.removeLayer(m));markers=[]}
 function add(item,kind,color,label,click){const m=L.marker([item.lat,item.lng],{icon:icon(kind,item,color,label)}).addTo(map);m.bindTooltip(`<b>${friendlyName(item)}</b><br>${item.station||item.id||""}`,{direction:"top",offset:[0,-26]});m.on("click",()=>click(item));markers.push(m)}
 
 function nearestObs(p){let best=null,bd=1e9;for(const x of LIVE.ndbc){const d=dist(p,x);if(d<bd){bd=d;best=x}}return best?{...best,distance_km:bd}:null}
+function nearestWaveObs(p){
+ let best=null,bd=1e9;
+ for(const x of LIVE.ndbc){
+   if(x.wave_ft==null)continue;
+   const d=dist(p,x);
+   if(d<bd){bd=d;best=x}
+ }
+ return best?{...best,distance_km:bd}:null;
+}
+function nearestWindObs(p){
+ let best=null,bd=1e9;
+ for(const x of LIVE.ndbc){
+   if(x.wind_kt==null)continue;
+   const d=dist(p,x);
+   if(d<bd){bd=d;best=x}
+ }
+ return best?{...best,distance_km:bd}:null;
+}
 function nearestTide(p){let best=null,bd=1e9;for(const x of LIVE.tides){const d=dist(p,x);if(d<bd){bd=d;best=x}}return best?{...best,distance_km:bd}:null}
+function surfInfo(p){
+ const wave=nearestWaveObs(p);
+ const wind=nearestWindObs(p);
+ const tide=nearestTide(p);
+ return {...p,waveObs:wave,windObs:wind,tideObs:tide};
+}
 function fishInfo(p){
  const o=nearestObs(p),t=nearestTide(p);
  let score=60;
@@ -320,11 +344,14 @@ function draw(){
  if(layer==="stations") obs.filter(visible).forEach(x=>add(x,x.wave_ft!=null?"wave":"wind",COLORS.blue,"",openObs));
  if(layer==="tides") LIVE.tides.map(x=>({...x,region:regionOf(x.lat)})).filter(visible).forEach(x=>add(x,"tide",COLORS.blue,x.trend==="Rising"?"↑":"↓",openTide));
  if(layer==="fish") FISHING.filter(visible).forEach(x=>{const f=fishInfo(x);add({...x,...f},"fish",qColor(f.rating),`${f.score}`,openFish)});
- if(mode==="surf"&&layer!=="fish") SURF.filter(visible).forEach(x=>add(x,"surf",COLORS.blue,"",openSurf));
+ if(mode==="surf") SURF.filter(visible).forEach(x=>add(surfInfo(x),"surf",COLORS.blue,"",openSurf));
 }
 function listData(){
  let d=[];
- if(layer==="fish") d=FISHING.filter(visible).filter(inViewport).map(x=>({...x,...fishInfo(x)}));
+ if(mode==="surf"){
+   d=SURF.filter(visible).filter(inViewport).map(surfInfo);
+ }
+ else if(layer==="fish") d=FISHING.filter(visible).filter(inViewport).map(x=>({...x,...fishInfo(x)}));
  else if(layer==="tides") d=LIVE.tides.map(x=>({...x,region:regionOf(x.lat)})).filter(visible).filter(inViewport);
  else{
    const o=LIVE.ndbc.map(x=>({...x,region:regionOf(x.lat)})).filter(visible).filter(inViewport);
@@ -336,27 +363,86 @@ function listData(){
 }
 function renderList(){
  const d=listData().slice(0,70),el=document.getElementById("list");
- if(!d.length){el.innerHTML='<div class="card"><div><b>No stations visible here</b><small>Pan or zoom the map to another coastal area.</small></div></div>';return}
+ if(!d.length){
+   el.innerHTML=`<div class="card"><div><b>${mode==="surf"?"No surf spots visible here":"No stations visible here"}</b><small>${mode==="surf"?"Pan or zoom along the coast to find a nearby surf spot.":"Pan or zoom the map to another coastal area."}</small></div></div>`;
+   return;
+ }
  el.innerHTML=d.map((x,i)=>{
+   if(mode==="surf"){
+     const wave=x.waveObs,wind=x.windObs,tide=x.tideObs;
+     const waveText=wave?.wave_ft!=null?wave.wave_ft.toFixed(1)+" ft":"—";
+     const periodText=wave?.period_sec!=null?Math.round(wave.period_sec)+" s":"—";
+     const dirText=wave?.wave_from_deg!=null?card(wave.wave_from_deg):"—";
+     const windText=wind?.wind_kt!=null?wind.wind_kt.toFixed(0)+" kt":"—";
+     const windDir=wind?.wind_from_deg!=null?card(wind.wind_from_deg):"";
+     const tideText=tide?.trend||"—";
+     return `<div class="card" data-i="${i}">
+       <div>
+         <b>${x.name}</b>
+         <small>${x.region} · ${mapCenterDistanceMi(x).toFixed(1)} mi from map center</small>
+         <div class="facts">
+           <span>Waves <strong>${waveText}</strong></span>
+           <span>Period <strong>${periodText}</strong></span>
+           <span>Swell <strong>${dirText}</strong></span>
+           <span>Wind <strong>${windText}${windDir?" "+windDir:""}</strong></span>
+           <span>Tide <strong>${tideText}</strong></span>
+         </div>
+       </div>
+       <span class="badge gray">${waveText}</span>
+     </div>`;
+   }
    if(layer==="fish")return `<div class="card" data-i="${i}"><div><b>${x.name}</b><small>${x.region} · ${mapCenterDistanceMi(x).toFixed(1)} mi from map center</small><div class="facts"><span>Wind <strong>${x.obs?.wind_kt!=null?x.obs.wind_kt.toFixed(0)+" kt":"—"}</strong></span><span>Seas <strong>${x.obs?.wave_ft!=null?x.obs.wave_ft.toFixed(1)+" ft":"—"}</strong></span><span>Tide <strong>${x.tide?.trend||"—"}</strong></span></div></div><span class="badge ${x.rating==="Good"?"good":x.rating==="Fair"?"fair":x.rating==="Poor"?"poor":"bad"}">${x.rating}</span></div>`;
    if(layer==="tides")return `<div class="card" data-i="${i}"><div><b>${friendlyName(x)}</b><small>${x.station} · ${mapCenterDistanceMi(x).toFixed(1)} mi from map center</small><div class="facts"><span>Height <strong>${x.height_ft??"—"} ft</strong></span><span>Trend <strong>${x.trend||"—"}</strong></span></div></div><span class="badge gray">${x.trend||"Tide"}</span></div>`;
    return `<div class="card" data-i="${i}"><div><b>${friendlyName(x)}</b><small>${x.station} · NOAA/NDBC · ${mapCenterDistanceMi(x).toFixed(1)} mi from map center</small><div class="facts"><span>Wind <strong>${x.wind_kt!=null?x.wind_kt.toFixed(0)+" kt":"—"}</strong></span><span>Wave <strong>${x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":"—"}</strong></span><span>Water <strong>${x.water_f!=null?x.water_f.toFixed(0)+"°F":"—"}</strong></span></div></div><span class="badge gray">${layer==="swell"&&x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":layer==="wind"&&x.wind_kt!=null?x.wind_kt.toFixed(0)+" kt":"Live"}</span></div>`;
  }).join("");
- document.querySelectorAll("[data-i]").forEach(b=>b.addEventListener("click",()=>{const x=d[+b.dataset.i];layer==="fish"?openFish(x):layer==="tides"?openTide(x):openObs(x)}));
+ document.querySelectorAll("[data-i]").forEach(b=>b.addEventListener("click",()=>{
+   const x=d[+b.dataset.i];
+   if(mode==="surf")openSurf(x);
+   else if(layer==="fish")openFish(x);
+   else if(layer==="tides")openTide(x);
+   else openObs(x);
+ }));
 }
 function render(){
  document.querySelectorAll(".layer").forEach(b=>b.classList.toggle("active",b.dataset.layer===layer));
- document.getElementById("title").textContent=`${mode==="boat"?"Boat":"Surf"} + ${layer[0].toUpperCase()+layer.slice(1)}`;
- const meta={wind:["Wind stations","Arrow points where wind is blowing toward"],swell:["Wave buoys","Color = live wave/seas height"],fish:["Fishing conditions",`${FISHING.length} major West Coast areas · experimental score`],tides:["Tide stations","Latest observed level + high/low predictions"],stations:["All stations","Current NOAA/NDBC observation network"]}[layer];
- document.getElementById("sectionTitle").textContent=meta[0];document.getElementById("sectionSub").textContent=meta[1];
- const d=listData();let m=[];
- if(layer==="fish"){const good=d.filter(x=>x.rating==="Good").length;m=[["AREAS",FISHING.length],["GOOD",good],["LIVE OBS",LIVE.ndbc.length],["TIDES",LIVE.tides.length]]}
- else if(layer==="tides")m=[["TIDES",d.length],["RISING",d.filter(x=>x.trend==="Rising").length],["FALLING",d.filter(x=>x.trend==="Falling").length],["LIVE OBS",LIVE.ndbc.length]];
- else if(layer==="wind")m=[["WIND",d.length],["<10 KT",d.filter(x=>x.wind_kt<=9).length],["10–16",d.filter(x=>x.wind_kt>=10&&x.wind_kt<=16).length],["17+ KT",d.filter(x=>x.wind_kt>=17).length]];
- else if(layer==="swell")m=[["BUOYS",d.length],["<2 FT",d.filter(x=>x.wave_ft<2).length],["2–4 FT",d.filter(x=>x.wave_ft>=2&&x.wave_ft<4).length],["4+ FT",d.filter(x=>x.wave_ft>=4).length]];
- else m=[["STATIONS",d.length],["WIND",d.filter(x=>x.wind_kt!=null).length],["WAVE",d.filter(x=>x.wave_ft!=null).length],["TIDES",LIVE.tides.length]];
+ const d=listData();
+ let m=[];
+
+ if(mode==="surf"){
+   document.getElementById("title").textContent="Surf Spots";
+   document.getElementById("sub").textContent="Nearby surf spots with current marine conditions";
+   document.getElementById("sectionTitle").textContent="Surf spots in view";
+   document.getElementById("sectionSub").textContent="Wave, swell, wind and tide use the nearest live observations";
+
+   const withWave=d.filter(x=>x.waveObs?.wave_ft!=null);
+   const withWind=d.filter(x=>x.windObs?.wind_kt!=null);
+   const avgWave=withWave.length?withWave.reduce((s,x)=>s+x.waveObs.wave_ft,0)/withWave.length:null;
+   const avgWind=withWind.length?withWind.reduce((s,x)=>s+x.windObs.wind_kt,0)/withWind.length:null;
+   m=[
+     ["SPOTS",d.length],
+     ["AVG WAVE",avgWave!=null?avgWave.toFixed(1)+" ft":"—"],
+     ["AVG WIND",avgWind!=null?avgWind.toFixed(0)+" kt":"—"],
+     ["TIDES",d.filter(x=>x.tideObs?.trend).length]
+   ];
+ }
+ else{
+   document.getElementById("title").textContent=`Boat + ${layer[0].toUpperCase()+layer.slice(1)}`;
+   document.getElementById("sub").textContent="Latest official observations";
+   const meta={wind:["Wind stations","Arrow points where wind is blowing toward"],swell:["Wave buoys","Color = live wave/seas height"],fish:["Fishing conditions",`${FISHING.length} major West Coast areas · experimental score`],tides:["Tide stations","Latest observed level + high/low predictions"],stations:["All stations","Current NOAA/NDBC observation network"]}[layer];
+   document.getElementById("sectionTitle").textContent=meta[0];
+   document.getElementById("sectionSub").textContent=meta[1];
+
+   if(layer==="fish"){const good=d.filter(x=>x.rating==="Good").length;m=[["AREAS",d.length],["GOOD",good],["LIVE OBS",LIVE.ndbc.length],["TIDES",LIVE.tides.length]]}
+   else if(layer==="tides")m=[["TIDES",d.length],["RISING",d.filter(x=>x.trend==="Rising").length],["FALLING",d.filter(x=>x.trend==="Falling").length],["LIVE OBS",LIVE.ndbc.length]];
+   else if(layer==="wind")m=[["WIND",d.length],["<10 KT",d.filter(x=>x.wind_kt<=9).length],["10–16",d.filter(x=>x.wind_kt>=10&&x.wind_kt<=16).length],["17+ KT",d.filter(x=>x.wind_kt>=17).length]];
+   else if(layer==="swell")m=[["BUOYS",d.length],["<2 FT",d.filter(x=>x.wave_ft<2).length],["2–4 FT",d.filter(x=>x.wave_ft>=2&&x.wave_ft<4).length],["4+ FT",d.filter(x=>x.wave_ft>=4).length]];
+   else m=[["STATIONS",d.length],["WIND",d.filter(x=>x.wind_kt!=null).length],["WAVE",d.filter(x=>x.wave_ft!=null).length],["TIDES",LIVE.tides.length]];
+ }
+
  document.getElementById("metrics").innerHTML=m.map(x=>`<div class="metric"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("");
- renderRegions();renderList();draw();
+ renderRegions();
+ renderList();
+ draw();
 }
 function renderRegions(){
  document.getElementById("regions").innerHTML=REGIONS.map(r=>`<button class="${r===region?"active":""}" data-r="${r}">${r}</button>`).join("");
@@ -368,7 +454,32 @@ function open(html){document.getElementById("detail").innerHTML=html;document.ge
 function openObs(x){const to=toward(x.wind_from_deg);open(`<div class="dk">LIVE NOAA / NDBC OBSERVATION</div><div class="dt">${friendlyName(x)}</div><div class="ds">${x.station} · ${x.observed_at||"latest"}</div><div class="grid"><div class="box"><span>WIND</span><b>${x.wind_kt!=null?x.wind_kt.toFixed(1)+" kt":"—"}</b></div><div class="box"><span>WIND FROM</span><b>${x.wind_from_deg!=null?card(x.wind_from_deg)+" "+x.wind_from_deg+"°":"—"}</b></div><div class="box"><span>BLOWING TOWARD</span><b>${to!=null?card(to)+" "+to+"°":"—"}</b></div><div class="box"><span>WAVE HEIGHT</span><b>${x.wave_ft!=null?x.wave_ft.toFixed(1)+" ft":"—"}</b></div><div class="box"><span>PERIOD</span><b>${x.period_sec!=null?x.period_sec.toFixed(0)+" s":"—"}</b></div><div class="box"><span>WATER</span><b>${x.water_f!=null?x.water_f.toFixed(1)+"°F":"—"}</b></div></div><div class="note">Official real-time observation cached by the Coastline GitHub updater. Always verify marine-safety decisions with official NOAA/NWS products.</div>`)}
 function openTide(x){open(`<div class="dk">LIVE NOAA CO-OPS</div><div class="dt">${x.name}</div><div class="ds">${x.station} · ${x.observed_at||"latest"}</div><div class="grid"><div class="box"><span>WATER LEVEL</span><b>${x.height_ft??"—"} ft</b></div><div class="box"><span>TREND</span><b>${x.trend||"—"}</b></div><div class="box"><span>NEXT HIGH</span><b style="font-size:12px">${x.next_high?.time||"—"}<br>${x.next_high?.height_ft??""} ft</b></div><div class="box"><span>NEXT LOW</span><b style="font-size:12px">${x.next_low?.time||"—"}<br>${x.next_low?.height_ft??""} ft</b></div></div><div class="note">Observed water level and tide predictions from NOAA Tides & Currents.</div>`)}
 function openFish(x){open(`<div class="dk">FISHING CONDITIONS · EXPERIMENTAL</div><div class="dt">${x.name}</div><div class="ds">${x.region} · environmental score ${x.score}/100</div><div class="grid"><div class="box"><span>RATING</span><b>${x.rating}</b></div><div class="box"><span>WIND</span><b>${x.obs?.wind_kt!=null?x.obs.wind_kt.toFixed(1)+" kt":"—"}</b></div><div class="box"><span>SEAS</span><b>${x.obs?.wave_ft!=null?x.obs.wave_ft.toFixed(1)+" ft":"—"}</b></div><div class="box"><span>TIDE</span><b>${x.tide?.trend||"—"}</b></div><div class="box"><span>NEAREST OBS</span><b style="font-size:12px">${x.obs?.station||"—"}</b></div><div class="box"><span>DISTANCE</span><b>${x.obs?.distance_km!=null?(x.obs.distance_km*0.621371).toFixed(0)+" mi":"—"}</b></div></div><div class="note">This is a simple live environmental-conditions score using nearby wind, seas and tide information. It is not a fish-bite prediction and does not guarantee fishing success.</div>`)}
-function openSurf(x){open(`<div class="dk">POPULAR SURF SPOT</div><div class="dt">${x.name}</div><div class="ds">${x.region}</div><div class="note">Popular surf-location marker. Live spot-quality modeling is not connected yet; use nearby Wind, Swell and Tides layers for current observations.</div>`)}
+function openSurf(x){
+ const s=x.waveObs||x.windObs||x.tideObs?x:surfInfo(x);
+ const wave=s.waveObs,wind=s.windObs,tide=s.tideObs;
+ const waveDist=wave?.distance_km!=null?(wave.distance_km*0.621371).toFixed(0):null;
+ const windDist=wind?.distance_km!=null?(wind.distance_km*0.621371).toFixed(0):null;
+ const tideDist=tide?.distance_km!=null?(tide.distance_km*0.621371).toFixed(0):null;
+ open(`
+   <div class="dk">SURF SPOT · LIVE NEARBY CONDITIONS</div>
+   <div class="dt">${s.name}</div>
+   <div class="ds">${s.region}</div>
+   <div class="grid">
+     <div class="box"><span>WAVE HEIGHT</span><b>${wave?.wave_ft!=null?wave.wave_ft.toFixed(1)+" ft":"—"}</b></div>
+     <div class="box"><span>SWELL PERIOD</span><b>${wave?.period_sec!=null?Math.round(wave.period_sec)+" s":"—"}</b></div>
+     <div class="box"><span>SWELL DIRECTION</span><b>${wave?.wave_from_deg!=null?card(wave.wave_from_deg)+" "+wave.wave_from_deg+"°":"—"}</b></div>
+     <div class="box"><span>WIND</span><b>${wind?.wind_kt!=null?wind.wind_kt.toFixed(1)+" kt "+(wind.wind_from_deg!=null?card(wind.wind_from_deg):""):"—"}</b></div>
+     <div class="box"><span>TIDE</span><b>${tide?.height_ft!=null?tide.height_ft+" ft ":""}${tide?.trend||"—"}</b></div>
+     <div class="box"><span>WATER TEMP</span><b>${wave?.water_f!=null?wave.water_f.toFixed(1)+"°F":"—"}</b></div>
+   </div>
+   <div class="note">
+     These are the closest available live marine observations to this surf spot, not a measured breaking-wave height directly on the beach.
+     ${wave?`<br><br><b>Wave source:</b> ${friendlyName(wave)} (${wave.station})${waveDist?` · ${waveDist} mi away`:""}`:""}
+     ${wind?`<br><b>Wind source:</b> ${friendlyName(wind)} (${wind.station})${windDist?` · ${windDist} mi away`:""}`:""}
+     ${tide?`<br><b>Tide source:</b> ${friendlyName(tide)} (${tide.station})${tideDist?` · ${tideDist} mi away`:""}`:""}
+   </div>
+ `);
+}
 
 async function loadLive(){
  try{const r=await fetch(`data/live.json?ts=${Date.now()}`,{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);LIVE=await r.json();if(!Array.isArray(LIVE.ndbc))LIVE.ndbc=[];if(!Array.isArray(LIVE.tides))LIVE.tides=[];const dt=LIVE.generated_at?new Date(LIVE.generated_at):null;document.getElementById("liveText").textContent=dt?`Live data · ${dt.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}`:"Waiting for first update";document.getElementById("liveDot").style.background=dt?COLORS.green:COLORS.yellow;document.getElementById("liveSub").textContent=`${LIVE.ndbc.length} NOAA/NDBC obs · ${LIVE.tides.length} tide stations`;render()}catch(e){document.getElementById("liveText").textContent="Live data unavailable";document.getElementById("liveDot").style.background=COLORS.red;document.getElementById("liveSub").textContent="Run the GitHub updater workflow";render()}
