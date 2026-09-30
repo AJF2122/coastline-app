@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-09-30T02:08:09.158776Z",
-  "tide_predictions_generated_at": "2026-09-29T23:04:05.070544Z",
+  "generated_at": "2026-09-30T08:35:06.146416Z",
+  "tide_predictions_generated_at": "2026-09-30T08:35:06.374936Z",
   "status": "live",
   "ndbc": [
     {
@@ -8,14 +8,14 @@
       "name": "Station 46002",
       "lat": 42.56,
       "lng": -130.523,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:20:00Z",
       "wind_from_deg": 280.0,
-      "wind_kt": 11.7,
-      "gust_kt": 15.6,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1018.6,
+      "wind_kt": 9.7,
+      "gust_kt": 11.7,
+      "wave_ft": 7.5,
+      "period_sec": 8.1,
+      "wave_from_deg": 297.0,
+      "pressure_hpa": 1019.7,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -25,16 +25,16 @@
       "name": "Station 46011",
       "lat": 34.937,
       "lng": -120.999,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 310.0,
-      "wind_kt": 17.5,
-      "gust_kt": 21.4,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1007.1,
-      "air_f": 63.7,
-      "water_f": 65.1,
+      "observed_at": "2026-09-30T07:20:00Z",
+      "wind_from_deg": 330.0,
+      "wind_kt": 9.7,
+      "gust_kt": 11.7,
+      "wave_ft": 8.9,
+      "period_sec": 7.5,
+      "wave_from_deg": 307.0,
+      "pressure_hpa": 1008.2,
+      "air_f": 63.1,
+      "water_f": 64.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -42,15 +42,15 @@
       "name": "Half Moon Bay",
       "lat": 37.356,
       "lng": -122.881,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 300.0,
-      "wind_kt": 17.5,
-      "gust_kt": 21.4,
-      "wave_ft": 7.9,
-      "period_sec": 10.0,
+      "observed_at": "2026-09-30T07:00:00Z",
+      "wind_from_deg": 310.0,
+      "wind_kt": 13.6,
+      "gust_kt": 17.5,
+      "wave_ft": 9.5,
+      "period_sec": 9.0,
       "wave_from_deg": null,
-      "pressure_hpa": 1007.9,
-      "air_f": 60.6,
+      "pressure_hpa": 1008.2,
+      "air_f": 60.4,
       "water_f": 60.8,
       "source": "NOAA/NDBC latest observations"
     },
@@ -59,15 +59,15 @@
       "name": "Station 46013",
       "lat": 38.235,
       "lng": -123.317,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:30:00Z",
       "wind_from_deg": 310.0,
-      "wind_kt": 27.2,
-      "gust_kt": 33.0,
+      "wind_kt": 21.4,
+      "gust_kt": 27.2,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.2,
-      "air_f": 59.2,
+      "pressure_hpa": 1007.1,
+      "air_f": 57.9,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -76,16 +76,16 @@
       "name": "Station 46014",
       "lat": 39.225,
       "lng": -123.98,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:20:00Z",
       "wind_from_deg": 320.0,
-      "wind_kt": 25.3,
-      "gust_kt": 31.1,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1009.5,
+      "wind_kt": 21.4,
+      "gust_kt": 27.2,
+      "wave_ft": 8.9,
+      "period_sec": 6.0,
+      "wave_from_deg": 323.0,
+      "pressure_hpa": 1009.9,
       "air_f": null,
-      "water_f": 56.8,
+      "water_f": 55.4,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -93,16 +93,16 @@
       "name": "Station 46015",
       "lat": 42.754,
       "lng": -124.839,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 350.0,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 360.0,
       "wind_kt": 9.7,
-      "gust_kt": 9.7,
+      "gust_kt": 11.7,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1016.3,
-      "air_f": 57.7,
-      "water_f": 55.2,
+      "pressure_hpa": 1016.7,
+      "air_f": 57.4,
+      "water_f": 55.0,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -110,16 +110,16 @@
       "name": "Eel River",
       "lat": 40.716,
       "lng": -124.54,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 20.0,
-      "wind_kt": 7.8,
-      "gust_kt": 9.7,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 360.0,
+      "wind_kt": 11.7,
+      "gust_kt": 13.6,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.1,
-      "air_f": 55.9,
-      "water_f": 54.0,
+      "pressure_hpa": 1014.7,
+      "air_f": 56.3,
+      "water_f": 55.2,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -127,16 +127,16 @@
       "name": "Santa Monica Basin",
       "lat": 33.765,
       "lng": -119.077,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 260.0,
-      "wind_kt": 15.6,
-      "gust_kt": 17.5,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 330.0,
+      "wind_kt": 1.9,
+      "gust_kt": 3.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1004.0,
-      "air_f": 71.2,
-      "water_f": 72.1,
+      "pressure_hpa": 1005.9,
+      "air_f": 70.9,
+      "water_f": 72.3,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -144,14 +144,14 @@
       "name": "San Francisco",
       "lat": 37.75,
       "lng": -122.838,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 320.0,
-      "wind_kt": 15.6,
-      "gust_kt": 19.4,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 330.0,
+      "wind_kt": 9.7,
+      "gust_kt": 11.7,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.8,
+      "pressure_hpa": 1007.4,
       "air_f": null,
       "water_f": 58.5,
       "source": "NOAA/NDBC latest observations"
@@ -161,15 +161,15 @@
       "name": "St. Georges",
       "lat": 41.84,
       "lng": -124.382,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 320.0,
-      "wind_kt": 19.4,
-      "gust_kt": 25.3,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 340.0,
+      "wind_kt": 15.6,
+      "gust_kt": 21.4,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1013.2,
-      "air_f": 56.7,
+      "pressure_hpa": 1013.6,
+      "air_f": 55.2,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -178,16 +178,16 @@
       "name": "Station 46028",
       "lat": 35.763,
       "lng": -121.9,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 310.0,
-      "wind_kt": 23.3,
-      "gust_kt": 27.2,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 320.0,
+      "wind_kt": 15.6,
+      "gust_kt": 17.5,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.8,
-      "air_f": 61.3,
-      "water_f": 63.5,
+      "pressure_hpa": 1008.1,
+      "air_f": 60.8,
+      "water_f": 63.3,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -195,16 +195,16 @@
       "name": "Columbia River Bar",
       "lat": 46.148,
       "lng": -124.508,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 20.0,
-      "wind_kt": 1.9,
-      "gust_kt": 1.9,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 350.0,
+      "wind_kt": 5.8,
+      "gust_kt": 7.8,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.3,
-      "air_f": 56.5,
-      "water_f": 56.3,
+      "pressure_hpa": 1017.1,
+      "air_f": 56.1,
+      "water_f": 56.1,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -212,16 +212,16 @@
       "name": "Cape Elizabeth",
       "lat": 47.351,
       "lng": -124.741,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 330.0,
-      "wind_kt": 5.8,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 340.0,
+      "wind_kt": 7.8,
       "gust_kt": 9.7,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1016.1,
-      "air_f": 58.5,
-      "water_f": 59.4,
+      "pressure_hpa": 1018.4,
+      "air_f": 57.4,
+      "water_f": 59.2,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -229,16 +229,16 @@
       "name": "Monterey Bay",
       "lat": 36.787,
       "lng": -122.408,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:30:00Z",
       "wind_from_deg": 320.0,
-      "wind_kt": 21.4,
-      "gust_kt": 25.3,
+      "wind_kt": 15.6,
+      "gust_kt": 19.4,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1007.4,
-      "air_f": 61.5,
-      "water_f": 62.4,
+      "pressure_hpa": 1007.9,
+      "air_f": 61.3,
+      "water_f": 62.2,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -246,15 +246,15 @@
       "name": "Station 46047",
       "lat": 32.418,
       "lng": -119.535,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:20:00Z",
       "wind_from_deg": 300.0,
-      "wind_kt": 19.4,
-      "gust_kt": 25.3,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1005.5,
-      "air_f": 67.3,
+      "wind_kt": 13.6,
+      "gust_kt": 17.5,
+      "wave_ft": 9.8,
+      "period_sec": 7.3,
+      "wave_from_deg": 312.0,
+      "pressure_hpa": 1006.8,
+      "air_f": 67.6,
       "water_f": 69.3,
       "source": "NOAA/NDBC latest observations"
     },
@@ -263,14 +263,14 @@
       "name": "Stonewall Bank",
       "lat": 44.679,
       "lng": -124.535,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 190.0,
-      "wind_kt": 7.8,
-      "gust_kt": 7.8,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1016.3,
+      "observed_at": "2026-09-30T07:20:00Z",
+      "wind_from_deg": 290.0,
+      "wind_kt": 3.9,
+      "gust_kt": 3.9,
+      "wave_ft": 7.9,
+      "period_sec": 8.6,
+      "wave_from_deg": 300.0,
+      "pressure_hpa": 1016.9,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -280,16 +280,16 @@
       "name": "East Santa Barbara Channel",
       "lat": 34.246,
       "lng": -119.842,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 270.0,
-      "wind_kt": 19.4,
-      "gust_kt": 21.4,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 290.0,
+      "wind_kt": 7.8,
+      "gust_kt": 9.7,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1003.9,
-      "air_f": 70.5,
-      "water_f": 69.4,
+      "pressure_hpa": 1005.4,
+      "air_f": 69.8,
+      "water_f": 69.1,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -297,16 +297,16 @@
       "name": "West Santa Barbara Channel",
       "lat": 34.274,
       "lng": -120.468,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:30:00Z",
       "wind_from_deg": 310.0,
-      "wind_kt": 23.3,
-      "gust_kt": 29.2,
+      "wind_kt": 21.4,
+      "gust_kt": 27.2,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1004.4,
+      "pressure_hpa": 1004.8,
       "air_f": null,
-      "water_f": 68.2,
+      "water_f": 67.1,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -314,16 +314,16 @@
       "name": "Station 46059",
       "lat": 38.067,
       "lng": -129.895,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 340.0,
-      "wind_kt": 15.6,
-      "gust_kt": 19.4,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1020.0,
-      "air_f": 66.6,
-      "water_f": 66.6,
+      "observed_at": "2026-09-30T07:20:00Z",
+      "wind_from_deg": 350.0,
+      "wind_kt": 13.6,
+      "gust_kt": 17.5,
+      "wave_ft": 6.6,
+      "period_sec": 12.0,
+      "wave_from_deg": 301.0,
+      "pressure_hpa": 1020.5,
+      "air_f": 66.2,
+      "water_f": 66.4,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -331,16 +331,16 @@
       "name": "Station 46069",
       "lat": 33.657,
       "lng": -120.227,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:30:00Z",
       "wind_from_deg": 310.0,
       "wind_kt": 17.5,
-      "gust_kt": 23.3,
+      "gust_kt": 21.4,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.8,
-      "air_f": 64.9,
-      "water_f": 65.8,
+      "pressure_hpa": 1007.1,
+      "air_f": 64.0,
+      "water_f": 64.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -348,14 +348,14 @@
       "name": "San Clemente Basin",
       "lat": 32.504,
       "lng": -118.029,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 280.0,
-      "wind_kt": 17.5,
-      "gust_kt": 21.4,
+      "observed_at": "2026-09-30T07:20:00Z",
+      "wind_from_deg": 230.0,
+      "wind_kt": 9.7,
+      "gust_kt": 11.7,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1004.8,
+      "pressure_hpa": 1006.7,
       "air_f": 70.7,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -365,16 +365,16 @@
       "name": "Neah Bay",
       "lat": 48.493,
       "lng": -124.727,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 260.0,
-      "wind_kt": 5.8,
-      "gust_kt": 7.8,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 230.0,
+      "wind_kt": 3.9,
+      "gust_kt": 5.8,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.4,
-      "air_f": 54.7,
-      "water_f": 52.2,
+      "pressure_hpa": 1017.4,
+      "air_f": 53.6,
+      "water_f": 53.1,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -382,16 +382,16 @@
       "name": "New Dungeness",
       "lat": 48.332,
       "lng": -123.179,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:30:00Z",
       "wind_from_deg": 270.0,
-      "wind_kt": 15.6,
-      "gust_kt": 19.4,
+      "wind_kt": 11.7,
+      "gust_kt": 13.6,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1013.7,
-      "air_f": 56.5,
-      "water_f": 51.4,
+      "pressure_hpa": 1017.0,
+      "air_f": 53.2,
+      "water_f": 51.6,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -399,16 +399,16 @@
       "name": "Station 46089",
       "lat": 45.928,
       "lng": -125.815,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 340.0,
-      "wind_kt": 7.8,
-      "gust_kt": 9.7,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1015.5,
+      "observed_at": "2026-09-30T07:20:00Z",
+      "wind_from_deg": 360.0,
+      "wind_kt": 5.8,
+      "gust_kt": 7.8,
+      "wave_ft": 7.5,
+      "period_sec": 8.6,
+      "wave_from_deg": 287.0,
+      "pressure_hpa": 1017.2,
       "air_f": null,
-      "water_f": 62.2,
+      "water_f": 61.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -416,14 +416,14 @@
       "name": "Station 46092",
       "lat": 36.751,
       "lng": -122.029,
-      "observed_at": "2026-09-30T01:08:00Z",
-      "wind_from_deg": 330.0,
-      "wind_kt": 15.6,
+      "observed_at": "2026-09-30T07:08:00Z",
+      "wind_from_deg": 350.0,
+      "wind_kt": 5.8,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.3,
+      "pressure_hpa": 1007.4,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -433,7 +433,7 @@
       "name": "Station 46128",
       "lat": 43.292,
       "lng": -124.538,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -442,7 +442,7 @@
       "wave_from_deg": null,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 58.3,
+      "water_f": 56.7,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -450,16 +450,16 @@
       "name": "Station 46206",
       "lat": 48.84,
       "lng": -126.0,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 290.0,
-      "wind_kt": 9.7,
-      "gust_kt": 11.7,
-      "wave_ft": 6.9,
+      "observed_at": "2026-09-30T08:00:00Z",
+      "wind_from_deg": 310.0,
+      "wind_kt": 7.8,
+      "gust_kt": 7.8,
+      "wave_ft": 6.2,
       "period_sec": 10.0,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.4,
-      "air_f": 55.9,
-      "water_f": 53.6,
+      "pressure_hpa": 1017.8,
+      "air_f": 54.5,
+      "water_f": 53.1,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -467,16 +467,16 @@
       "name": "Station 46211",
       "lat": 46.857,
       "lng": -124.243,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 7.9,
-      "period_sec": 13.0,
-      "wave_from_deg": 285.0,
+      "wave_ft": 5.9,
+      "period_sec": 12.0,
+      "wave_from_deg": 292.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 57.7,
+      "water_f": 57.4,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -484,16 +484,16 @@
       "name": "Station 46213",
       "lat": 40.291,
       "lng": -124.748,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 6.6,
-      "period_sec": 14.0,
-      "wave_from_deg": 293.0,
+      "wave_ft": 7.9,
+      "period_sec": 10.0,
+      "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 56.3,
-      "water_f": 57.7,
+      "air_f": 56.1,
+      "water_f": 55.8,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -501,16 +501,16 @@
       "name": "Station 46214",
       "lat": 37.944,
       "lng": -123.466,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:26:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 12.5,
-      "period_sec": 8.0,
+      "wave_ft": 13.5,
+      "period_sec": 9.0,
       "wave_from_deg": 320.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 57.7,
+      "water_f": 57.4,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -518,16 +518,16 @@
       "name": "Station 46215",
       "lat": 35.204,
       "lng": -120.859,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 6.9,
+      "wave_ft": 7.5,
       "period_sec": 11.0,
-      "wave_from_deg": 290.0,
+      "wave_from_deg": 288.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 66.0,
+      "water_f": 63.0,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -535,16 +535,16 @@
       "name": "Station 46218",
       "lat": 34.452,
       "lng": -120.78,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": 7.9,
-      "period_sec": 14.0,
-      "wave_from_deg": 283.0,
+      "period_sec": 13.0,
+      "wave_from_deg": 310.0,
       "pressure_hpa": null,
-      "air_f": 63.3,
-      "water_f": 63.7,
+      "air_f": 63.0,
+      "water_f": 63.3,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -552,16 +552,16 @@
       "name": "Station 46219",
       "lat": 33.226,
       "lng": -119.891,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": 7.9,
       "period_sec": 14.0,
-      "wave_from_deg": 300.0,
+      "wave_from_deg": 306.0,
       "pressure_hpa": null,
-      "air_f": 66.4,
-      "water_f": 68.0,
+      "air_f": 65.3,
+      "water_f": 67.6,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -569,16 +569,16 @@
       "name": "Station 46221",
       "lat": 33.86,
       "lng": -118.641,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 4.3,
-      "period_sec": 4.0,
-      "wave_from_deg": 270.0,
+      "wave_ft": 3.9,
+      "period_sec": 6.0,
+      "wave_from_deg": 268.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 73.0,
+      "water_f": 72.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -586,16 +586,16 @@
       "name": "Station 46222",
       "lat": 33.614,
       "lng": -118.314,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": 4.3,
-      "period_sec": 11.0,
-      "wave_from_deg": 183.0,
+      "period_sec": 7.0,
+      "wave_from_deg": 273.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 73.4,
+      "water_f": 73.0,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -603,16 +603,16 @@
       "name": "Station 46224",
       "lat": 33.178,
       "lng": -117.472,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 3.6,
-      "period_sec": 8.0,
-      "wave_from_deg": 270.0,
+      "wave_ft": 3.3,
+      "period_sec": 17.0,
+      "wave_from_deg": 222.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 74.5,
+      "water_f": 73.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -620,16 +620,16 @@
       "name": "Station 46225",
       "lat": 32.933,
       "lng": -117.391,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 3.9,
-      "period_sec": 15.0,
-      "wave_from_deg": 221.0,
+      "wave_ft": 5.2,
+      "period_sec": 7.0,
+      "wave_from_deg": 277.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 73.2,
+      "water_f": 73.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -637,16 +637,16 @@
       "name": "Station 46229",
       "lat": 43.772,
       "lng": -124.549,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 6.9,
-      "period_sec": 11.0,
-      "wave_from_deg": 305.0,
+      "wave_ft": 7.2,
+      "period_sec": 12.0,
+      "wave_from_deg": 315.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 58.6,
+      "water_f": 58.5,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -654,16 +654,16 @@
       "name": "Station 46232",
       "lat": 32.517,
       "lng": -117.425,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 4.3,
-      "period_sec": 17.0,
-      "wave_from_deg": 225.0,
+      "wave_ft": 4.9,
+      "period_sec": 13.0,
+      "wave_from_deg": 199.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 73.0,
+      "water_f": 72.5,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -671,16 +671,16 @@
       "name": "Station 46236",
       "lat": 36.759,
       "lng": -121.95,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 6.9,
-      "period_sec": 10.0,
-      "wave_from_deg": 299.0,
+      "wave_ft": 5.9,
+      "period_sec": 8.0,
+      "wave_from_deg": 301.0,
       "pressure_hpa": null,
-      "air_f": 61.2,
-      "water_f": 59.7,
+      "air_f": 58.6,
+      "water_f": 59.5,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -688,16 +688,16 @@
       "name": "Station 46239",
       "lat": 36.342,
       "lng": -122.11,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 9.8,
+      "wave_ft": 10.2,
       "period_sec": 10.0,
-      "wave_from_deg": 319.0,
+      "wave_from_deg": 315.0,
       "pressure_hpa": null,
-      "air_f": 61.0,
-      "water_f": 59.4,
+      "air_f": 59.7,
+      "water_f": 59.7,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -705,16 +705,16 @@
       "name": "Station 46243",
       "lat": 46.215,
       "lng": -124.129,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": 6.9,
-      "period_sec": 10.0,
-      "wave_from_deg": 266.0,
+      "period_sec": 12.0,
+      "wave_from_deg": 276.0,
       "pressure_hpa": null,
-      "air_f": null,
-      "water_f": 55.8,
+      "air_f": 57.2,
+      "water_f": 57.6,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -722,7 +722,7 @@
       "name": "Station 46244",
       "lat": 40.896,
       "lng": -124.358,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -739,16 +739,16 @@
       "name": "Station 46248",
       "lat": 46.133,
       "lng": -124.64,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 7.9,
-      "period_sec": 12.0,
-      "wave_from_deg": 298.0,
+      "wave_ft": 8.5,
+      "period_sec": 11.0,
+      "wave_from_deg": 293.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 57.4,
+      "water_f": 57.0,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -756,16 +756,16 @@
       "name": "Station 46251",
       "lat": 33.769,
       "lng": -119.565,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 5.6,
-      "period_sec": 11.0,
-      "wave_from_deg": 158.0,
+      "wave_ft": 4.6,
+      "period_sec": 14.0,
+      "wave_from_deg": 255.0,
       "pressure_hpa": null,
-      "air_f": 69.6,
-      "water_f": 70.7,
+      "air_f": 67.5,
+      "water_f": 70.2,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -773,16 +773,16 @@
       "name": "Station 46253",
       "lat": 33.576,
       "lng": -118.182,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": 3.9,
-      "period_sec": 5.0,
-      "wave_from_deg": 280.0,
+      "period_sec": 7.0,
+      "wave_from_deg": 274.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 73.2,
+      "water_f": 72.7,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -790,16 +790,16 @@
       "name": "Station 46254",
       "lat": 32.868,
       "lng": -117.267,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": 3.6,
-      "period_sec": 8.0,
-      "wave_from_deg": 281.0,
+      "period_sec": 7.0,
+      "wave_from_deg": 282.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 73.4,
+      "water_f": 72.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -807,16 +807,16 @@
       "name": "Long Beach Channel",
       "lat": 33.7,
       "lng": -118.201,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 2.6,
-      "period_sec": 15.0,
-      "wave_from_deg": 284.0,
+      "wave_ft": 3.3,
+      "period_sec": 14.0,
+      "wave_from_deg": 185.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 70.7,
+      "water_f": 70.5,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -824,16 +824,16 @@
       "name": "Station 46258",
       "lat": 32.749,
       "lng": -117.502,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 4.9,
-      "period_sec": 17.0,
-      "wave_from_deg": 266.0,
+      "wave_ft": 5.2,
+      "period_sec": 14.0,
+      "wave_from_deg": 237.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 72.9,
+      "water_f": 72.5,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -841,13 +841,13 @@
       "name": "Station 46259",
       "lat": 34.774,
       "lng": -121.491,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 9.2,
-      "period_sec": 10.0,
-      "wave_from_deg": 328.0,
+      "wave_ft": 8.9,
+      "period_sec": 11.0,
+      "wave_from_deg": 320.0,
       "pressure_hpa": null,
       "air_f": null,
       "water_f": 65.3,
@@ -858,16 +858,16 @@
       "name": "Station 46266",
       "lat": 32.957,
       "lng": -117.279,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 3.3,
-      "period_sec": 17.0,
-      "wave_from_deg": 247.0,
+      "wave_ft": 4.3,
+      "period_sec": 15.0,
+      "wave_from_deg": 243.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 73.9,
+      "water_f": 73.8,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -875,16 +875,16 @@
       "name": "Station 46267",
       "lat": 48.171,
       "lng": -123.6,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 2.3,
-      "period_sec": 10.0,
-      "wave_from_deg": 301.0,
+      "wave_ft": 1.6,
+      "period_sec": 12.0,
+      "wave_from_deg": 286.0,
       "pressure_hpa": null,
-      "air_f": 53.8,
-      "water_f": 50.5,
+      "air_f": 51.3,
+      "water_f": 49.5,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -892,13 +892,13 @@
       "name": "Station 46268",
       "lat": 34.022,
       "lng": -118.578,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 3.3,
-      "period_sec": 4.0,
-      "wave_from_deg": 243.0,
+      "wave_ft": 2.6,
+      "period_sec": 17.0,
+      "wave_from_deg": 206.0,
       "pressure_hpa": null,
       "air_f": null,
       "water_f": 72.7,
@@ -909,16 +909,16 @@
       "name": "Station 46274",
       "lat": 33.062,
       "lng": -117.314,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 3.0,
-      "period_sec": 15.0,
-      "wave_from_deg": 235.0,
+      "wave_ft": 3.3,
+      "period_sec": 17.0,
+      "wave_from_deg": 229.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 74.1,
+      "water_f": 73.6,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -926,16 +926,16 @@
       "name": "Station 46275",
       "lat": 33.291,
       "lng": -117.501,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 3.6,
+      "wave_ft": 3.0,
       "period_sec": 15.0,
-      "wave_from_deg": 232.0,
+      "wave_from_deg": 216.0,
       "pressure_hpa": null,
-      "air_f": 73.0,
-      "water_f": 73.4,
+      "air_f": 70.0,
+      "water_f": 73.2,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -943,16 +943,16 @@
       "name": "Station 46277",
       "lat": 33.336,
       "lng": -117.659,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 3.9,
-      "period_sec": 9.0,
-      "wave_from_deg": 276.0,
+      "wave_ft": 3.6,
+      "period_sec": 13.0,
+      "wave_from_deg": 204.0,
       "pressure_hpa": null,
-      "air_f": null,
-      "water_f": 73.6,
+      "air_f": 69.6,
+      "water_f": 73.2,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -960,16 +960,16 @@
       "name": "Station 46278",
       "lat": 45.559,
       "lng": -123.991,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 7.9,
-      "period_sec": 11.0,
-      "wave_from_deg": 285.0,
+      "wave_ft": 8.9,
+      "period_sec": 12.0,
+      "wave_from_deg": 296.0,
       "pressure_hpa": null,
-      "air_f": 56.5,
-      "water_f": 54.5,
+      "air_f": 56.3,
+      "water_f": 54.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -977,16 +977,16 @@
       "name": "Station 46285",
       "lat": 33.445,
       "lng": -117.68,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 3.3,
-      "period_sec": 15.0,
-      "wave_from_deg": 217.0,
+      "wave_ft": 3.6,
+      "period_sec": 14.0,
+      "wave_from_deg": 231.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 73.4,
+      "water_f": 73.0,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -994,16 +994,16 @@
       "name": "Station 46286",
       "lat": 35.164,
       "lng": -120.737,
-      "observed_at": "2026-09-30T01:26:00Z",
+      "observed_at": "2026-09-30T07:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
-      "wave_ft": 2.3,
-      "period_sec": 15.0,
-      "wave_from_deg": 213.0,
+      "wave_ft": 2.0,
+      "period_sec": 13.0,
+      "wave_from_deg": 207.0,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 65.1,
+      "water_f": 64.4,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1011,16 +1011,16 @@
       "name": "Station 46303",
       "lat": 49.02,
       "lng": -123.43,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 150.0,
-      "wind_kt": 3.9,
-      "gust_kt": 5.8,
-      "wave_ft": 1.0,
+      "observed_at": "2026-09-30T06:00:00Z",
+      "wind_from_deg": 10.0,
+      "wind_kt": 1.9,
+      "gust_kt": 3.9,
+      "wave_ft": 0.7,
       "period_sec": 4.0,
       "wave_from_deg": null,
-      "pressure_hpa": 1013.3,
-      "air_f": 57.9,
-      "water_f": 57.9,
+      "pressure_hpa": 1016.0,
+      "air_f": 55.9,
+      "water_f": 57.0,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1028,15 +1028,15 @@
       "name": "Station AAMC1",
       "lat": 37.772,
       "lng": -122.3,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 270.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 250.0,
       "wind_kt": 4.1,
-      "gust_kt": 6.0,
+      "gust_kt": 4.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.5,
-      "air_f": 68.7,
+      "pressure_hpa": 1007.7,
+      "air_f": 63.5,
       "water_f": 66.2,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1045,15 +1045,15 @@
       "name": "Angels Gate",
       "lat": 33.716,
       "lng": -118.246,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 250.0,
-      "wind_kt": 8.9,
-      "gust_kt": 12.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 290.0,
+      "wind_kt": 1.0,
+      "gust_kt": 1.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 74.8,
+      "air_f": 71.2,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1062,16 +1062,16 @@
       "name": "Station ANVC1",
       "lat": 38.915,
       "lng": -123.711,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 350.0,
-      "wind_kt": 2.9,
-      "gust_kt": 13.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 310.0,
+      "wind_kt": 7.0,
+      "gust_kt": 11.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1009.4,
-      "air_f": 61.0,
-      "water_f": 54.9,
+      "pressure_hpa": 1009.0,
+      "air_f": 57.0,
+      "water_f": 53.6,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1079,16 +1079,16 @@
       "name": "Station ASTO3",
       "lat": 46.207,
       "lng": -123.768,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 280.0,
-      "wind_kt": 8.9,
-      "gust_kt": 15.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 70.0,
+      "wind_kt": 1.9,
+      "gust_kt": 2.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 60.4,
-      "water_f": 59.9,
+      "air_f": 56.8,
+      "water_f": 64.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1096,10 +1096,10 @@
       "name": "Station BAXC1",
       "lat": 33.766,
       "lng": -118.24,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 290.0,
-      "wind_kt": 8.9,
-      "gust_kt": 13.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 160.0,
+      "wind_kt": 1.9,
+      "gust_kt": 4.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
@@ -1113,7 +1113,7 @@
       "name": "Station BDXC1",
       "lat": 38.317,
       "lng": -123.071,
-      "observed_at": "2026-09-30T00:56:00Z",
+      "observed_at": "2026-09-30T06:56:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -1122,7 +1122,7 @@
       "wave_from_deg": null,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 57.4,
+      "water_f": 55.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1130,15 +1130,15 @@
       "name": "Station BMTW1",
       "lat": 47.562,
       "lng": -122.626,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 250.0,
-      "wind_kt": 8.0,
-      "gust_kt": 9.9,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 130.0,
+      "wind_kt": 5.1,
+      "gust_kt": 8.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.1,
-      "air_f": 53.8,
+      "pressure_hpa": 1018.0,
+      "air_f": 53.4,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1147,16 +1147,16 @@
       "name": "Station CECC1",
       "lat": 41.746,
       "lng": -124.184,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 360.0,
-      "wind_kt": 11.1,
-      "gust_kt": 17.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 140.0,
+      "wind_kt": 1.0,
+      "gust_kt": 1.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": 1014.3,
-      "air_f": 62.8,
-      "water_f": 60.3,
+      "air_f": 57.0,
+      "water_f": 59.7,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1164,14 +1164,14 @@
       "name": "Station CHAO3",
       "lat": 43.351,
       "lng": -124.337,
-      "observed_at": "2026-09-30T00:36:00Z",
-      "wind_from_deg": 260.0,
-      "wind_kt": 2.9,
-      "gust_kt": 5.1,
+      "observed_at": "2026-09-30T07:36:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 0.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1016.3,
+      "pressure_hpa": 1016.6,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -1181,14 +1181,14 @@
       "name": "Station CHYW1",
       "lat": 48.863,
       "lng": -122.759,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1013.6,
+      "pressure_hpa": 1017.0,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -1198,15 +1198,15 @@
       "name": "Station CPMW1",
       "lat": 48.86,
       "lng": -122.756,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 160.0,
-      "wind_kt": 7.0,
-      "gust_kt": 8.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 120.0,
+      "wind_kt": 4.1,
+      "gust_kt": 5.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 54.7,
+      "air_f": 52.0,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1215,15 +1215,15 @@
       "name": "Station CPNW1",
       "lat": 48.863,
       "lng": -122.758,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 170.0,
-      "wind_kt": 6.0,
-      "gust_kt": 8.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 100.0,
+      "wind_kt": 1.9,
+      "gust_kt": 5.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 54.1,
+      "air_f": 52.5,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1232,14 +1232,14 @@
       "name": "Station DESW1",
       "lat": 47.675,
       "lng": -124.485,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
-      "wind_kt": 8.9,
-      "gust_kt": 9.9,
+      "wind_kt": 7.0,
+      "gust_kt": 7.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.0,
+      "pressure_hpa": 1017.5,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -1249,14 +1249,14 @@
       "name": "Station EBSW1",
       "lat": 47.602,
       "lng": -122.338,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1013.9,
+      "pressure_hpa": 1016.4,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -1266,15 +1266,15 @@
       "name": "Station FRDW1",
       "lat": 48.545,
       "lng": -123.012,
-      "observed_at": "2026-09-30T00:36:00Z",
-      "wind_from_deg": 30.0,
-      "wind_kt": 1.0,
-      "gust_kt": 1.9,
+      "observed_at": "2026-09-30T07:36:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 1.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1014.3,
-      "air_f": 54.0,
+      "pressure_hpa": 1017.5,
+      "air_f": 48.4,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1283,15 +1283,15 @@
       "name": "Station FTPC1",
       "lat": 37.806,
       "lng": -122.466,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 230.0,
-      "wind_kt": 18.1,
-      "gust_kt": 24.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 210.0,
+      "wind_kt": 7.0,
+      "gust_kt": 13.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.1,
-      "air_f": 63.7,
+      "pressure_hpa": 1007.5,
+      "air_f": 60.1,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1300,7 +1300,7 @@
       "name": "Station HBXC1",
       "lat": 40.777,
       "lng": -124.197,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:45:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -1309,7 +1309,7 @@
       "wave_from_deg": null,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 57.7,
+      "water_f": 56.5,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1317,41 +1317,7 @@
       "name": "Station HBYC1",
       "lat": 40.767,
       "lng": -124.217,
-      "observed_at": "2026-09-30T00:36:00Z",
-      "wind_from_deg": null,
-      "wind_kt": null,
-      "gust_kt": null,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1015.1,
-      "air_f": null,
-      "water_f": null,
-      "source": "NOAA/NDBC latest observations"
-    },
-    {
-      "station": "ICAC1",
-      "name": "Station ICAC1",
-      "lat": 34.008,
-      "lng": -118.5,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 270.0,
-      "wind_kt": 14.0,
-      "gust_kt": 18.1,
-      "wave_ft": null,
-      "period_sec": null,
-      "wave_from_deg": null,
-      "pressure_hpa": 1003.3,
-      "air_f": 73.8,
-      "water_f": 75.2,
-      "source": "NOAA/NDBC latest observations"
-    },
-    {
-      "station": "KLMW1",
-      "name": "Station KLMW1",
-      "lat": 45.983,
-      "lng": -122.835,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:36:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -1364,20 +1330,54 @@
       "source": "NOAA/NDBC latest observations"
     },
     {
+      "station": "ICAC1",
+      "name": "Station ICAC1",
+      "lat": 34.008,
+      "lng": -118.5,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 20.0,
+      "wind_kt": 1.9,
+      "gust_kt": 2.9,
+      "wave_ft": null,
+      "period_sec": null,
+      "wave_from_deg": null,
+      "pressure_hpa": 1006.9,
+      "air_f": 70.0,
+      "water_f": 73.9,
+      "source": "NOAA/NDBC latest observations"
+    },
+    {
+      "station": "KLMW1",
+      "name": "Station KLMW1",
+      "lat": 45.983,
+      "lng": -122.835,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": null,
+      "wind_kt": null,
+      "gust_kt": null,
+      "wave_ft": null,
+      "period_sec": null,
+      "wave_from_deg": null,
+      "pressure_hpa": 1016.2,
+      "air_f": null,
+      "water_f": null,
+      "source": "NOAA/NDBC latest observations"
+    },
+    {
       "station": "LAPW1",
       "name": "Station LAPW1",
       "lat": 47.913,
       "lng": -124.637,
-      "observed_at": "2026-09-30T00:36:00Z",
-      "wind_from_deg": 300.0,
-      "wind_kt": 4.1,
-      "gust_kt": 7.0,
+      "observed_at": "2026-09-30T07:36:00Z",
+      "wind_from_deg": 60.0,
+      "wind_kt": 7.0,
+      "gust_kt": 8.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.1,
-      "air_f": 56.3,
-      "water_f": 55.8,
+      "pressure_hpa": 1017.8,
+      "air_f": 48.0,
+      "water_f": 55.9,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1385,16 +1385,16 @@
       "name": "Station LJAC1",
       "lat": 32.867,
       "lng": -117.257,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 200.0,
-      "wind_kt": 1.9,
-      "gust_kt": 1.9,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 120.0,
+      "wind_kt": 4.1,
+      "gust_kt": 5.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1005.5,
-      "air_f": 73.9,
-      "water_f": 72.5,
+      "pressure_hpa": 1007.5,
+      "air_f": 70.2,
+      "water_f": 70.0,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1402,11 +1402,11 @@
       "name": "Station LJPC1",
       "lat": 32.867,
       "lng": -117.257,
-      "observed_at": "2026-09-30T00:20:00Z",
-      "wind_from_deg": 260.0,
+      "observed_at": "2026-09-30T07:20:00Z",
+      "wind_from_deg": 140.0,
       "wind_kt": 1.9,
-      "gust_kt": 4.1,
-      "wave_ft": 3.9,
+      "gust_kt": 5.1,
+      "wave_ft": 3.6,
       "period_sec": 7.0,
       "wave_from_deg": null,
       "pressure_hpa": null,
@@ -1419,15 +1419,15 @@
       "name": "Station LNDC1",
       "lat": 37.795,
       "lng": -122.281,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 250.0,
-      "wind_kt": 7.0,
-      "gust_kt": 8.9,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 1.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.3,
-      "air_f": 70.7,
+      "pressure_hpa": 1007.5,
+      "air_f": 63.9,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1436,16 +1436,16 @@
       "name": "Station LOPW1",
       "lat": 46.106,
       "lng": -122.954,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1014.8,
+      "pressure_hpa": 1016.7,
       "air_f": null,
-      "water_f": 64.4,
+      "water_f": 63.7,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1453,7 +1453,7 @@
       "name": "Station MBXC1",
       "lat": 35.371,
       "lng": -120.859,
-      "observed_at": "2026-09-30T00:40:00Z",
+      "observed_at": "2026-09-30T07:40:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -1462,7 +1462,7 @@
       "wave_from_deg": null,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 64.9,
+      "water_f": 62.4,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1470,16 +1470,16 @@
       "name": "Station MEYC1",
       "lat": 36.605,
       "lng": -121.889,
-      "observed_at": "2026-09-30T00:36:00Z",
+      "observed_at": "2026-09-30T07:36:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1007.8,
+      "pressure_hpa": 1008.2,
       "air_f": null,
-      "water_f": 62.1,
+      "water_f": 61.2,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1487,14 +1487,14 @@
       "name": "Station MLSC1",
       "lat": 36.802,
       "lng": -121.791,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T08:00:00Z",
       "wind_from_deg": null,
-      "wind_kt": 8.9,
+      "wind_kt": 5.1,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1007.3,
+      "pressure_hpa": 1008.1,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -1504,15 +1504,15 @@
       "name": "Station MZXC1",
       "lat": 38.035,
       "lng": -122.125,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 270.0,
-      "wind_kt": 5.1,
-      "gust_kt": 6.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 290.0,
+      "wind_kt": 8.9,
+      "gust_kt": 11.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1005.4,
-      "air_f": 82.0,
+      "pressure_hpa": 1007.1,
+      "air_f": 64.6,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1521,16 +1521,16 @@
       "name": "Station NEAW1",
       "lat": 48.367,
       "lng": -124.614,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1016.8,
+      "pressure_hpa": 1019.1,
       "air_f": null,
-      "water_f": 52.2,
+      "water_f": 51.3,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1538,15 +1538,15 @@
       "name": "Station NTBC1",
       "lat": 34.405,
       "lng": -119.692,
-      "observed_at": "2026-09-30T00:36:00Z",
-      "wind_from_deg": 60.0,
-      "wind_kt": 2.9,
-      "gust_kt": 4.1,
+      "observed_at": "2026-09-30T07:36:00Z",
+      "wind_from_deg": 80.0,
+      "wind_kt": 6.0,
+      "gust_kt": 9.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1004.1,
-      "air_f": 73.6,
+      "pressure_hpa": 1005.9,
+      "air_f": 70.3,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1555,10 +1555,10 @@
       "name": "Station NWPO3",
       "lat": 44.613,
       "lng": -124.067,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 190.0,
-      "wind_kt": 8.0,
-      "gust_kt": 8.9,
+      "observed_at": "2026-09-30T08:00:00Z",
+      "wind_from_deg": 240.0,
+      "wind_kt": 4.1,
+      "gust_kt": 5.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
@@ -1572,7 +1572,7 @@
       "name": "Station OBXC1",
       "lat": 37.804,
       "lng": -122.341,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -1580,7 +1580,7 @@
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 67.6,
+      "air_f": 63.1,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1589,14 +1589,14 @@
       "name": "Station OHBC1",
       "lat": 33.72,
       "lng": -118.273,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1004.0,
+      "pressure_hpa": 1007.1,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -1606,15 +1606,15 @@
       "name": "Station OKXC1",
       "lat": 37.811,
       "lng": -122.333,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 270.0,
-      "wind_kt": 6.0,
-      "gust_kt": 7.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": null,
+      "wind_kt": null,
+      "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.3,
-      "air_f": 68.7,
+      "pressure_hpa": 1007.5,
+      "air_f": 62.4,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1623,10 +1623,10 @@
       "name": "Station OMHC1",
       "lat": 37.801,
       "lng": -122.33,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 250.0,
-      "wind_kt": 8.9,
-      "gust_kt": 9.9,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 1.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
@@ -1640,15 +1640,15 @@
       "name": "Station PBFW1",
       "lat": 48.464,
       "lng": -122.469,
-      "observed_at": "2026-09-30T01:30:00Z",
+      "observed_at": "2026-09-30T07:30:00Z",
       "wind_from_deg": 150.0,
       "wind_kt": 5.1,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1014.0,
-      "air_f": 55.2,
+      "pressure_hpa": 1017.0,
+      "air_f": 49.5,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1657,16 +1657,16 @@
       "name": "Station PCOC1",
       "lat": 38.056,
       "lng": -122.039,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 240.0,
-      "wind_kt": 6.0,
-      "gust_kt": 8.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 230.0,
+      "wind_kt": 11.1,
+      "gust_kt": 12.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1004.8,
-      "air_f": 83.1,
-      "water_f": 67.8,
+      "pressure_hpa": 1006.3,
+      "air_f": 65.3,
+      "water_f": 67.1,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1674,10 +1674,10 @@
       "name": "Los Angeles Pier 400",
       "lat": 33.735,
       "lng": -118.241,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 220.0,
-      "wind_kt": 7.0,
-      "gust_kt": 13.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 1.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
@@ -1691,15 +1691,15 @@
       "name": "Los Angeles Pier F",
       "lat": 33.747,
       "lng": -118.215,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 330.0,
-      "wind_kt": 5.1,
-      "gust_kt": 8.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 1.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1003.2,
-      "air_f": 82.4,
+      "pressure_hpa": 1006.2,
+      "air_f": 70.0,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1708,16 +1708,16 @@
       "name": "Station PORO3",
       "lat": 42.739,
       "lng": -124.498,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 340.0,
-      "wind_kt": 9.9,
-      "gust_kt": 15.9,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 330.0,
+      "wind_kt": 8.0,
+      "gust_kt": 11.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.5,
-      "air_f": 63.7,
-      "water_f": 52.2,
+      "pressure_hpa": 1015.4,
+      "air_f": 60.4,
+      "water_f": 51.8,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1725,15 +1725,15 @@
       "name": "Station PPXC1",
       "lat": 37.906,
       "lng": -122.365,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 190.0,
-      "wind_kt": 11.1,
-      "gust_kt": 13.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 210.0,
+      "wind_kt": 8.9,
+      "gust_kt": 12.1,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.5,
-      "air_f": 64.9,
+      "pressure_hpa": 1007.9,
+      "air_f": 62.4,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1742,10 +1742,10 @@
       "name": "Los Angeles Pier J",
       "lat": 33.733,
       "lng": -118.186,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 250.0,
-      "wind_kt": 9.9,
-      "gust_kt": 14.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 0.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
@@ -1759,16 +1759,16 @@
       "name": "Station PRYC1",
       "lat": 37.996,
       "lng": -122.977,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.9,
+      "pressure_hpa": 1007.9,
       "air_f": null,
-      "water_f": 57.9,
+      "water_f": 57.0,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1776,16 +1776,16 @@
       "name": "Station PSLC1",
       "lat": 35.169,
       "lng": -120.754,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.6,
+      "pressure_hpa": 1008.9,
       "air_f": null,
-      "water_f": 64.6,
+      "water_f": 64.4,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1793,16 +1793,16 @@
       "name": "Station PTAW1",
       "lat": 48.125,
       "lng": -123.441,
-      "observed_at": "2026-09-30T00:36:00Z",
-      "wind_from_deg": 290.0,
-      "wind_kt": 7.0,
-      "gust_kt": 11.1,
+      "observed_at": "2026-09-30T07:36:00Z",
+      "wind_from_deg": 270.0,
+      "wind_kt": 9.9,
+      "gust_kt": 14.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1014.8,
-      "air_f": 57.6,
-      "water_f": 50.5,
+      "pressure_hpa": 1017.9,
+      "air_f": 55.4,
+      "water_f": 50.7,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1810,15 +1810,15 @@
       "name": "Station PTGC1",
       "lat": 34.577,
       "lng": -120.648,
-      "observed_at": "2026-09-30T01:40:00Z",
-      "wind_from_deg": 360.0,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 10.0,
       "wind_kt": 19.0,
-      "gust_kt": 21.0,
+      "gust_kt": 22.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": 1006.7,
-      "air_f": 63.0,
+      "air_f": 60.6,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1827,15 +1827,15 @@
       "name": "Station PTWW1",
       "lat": 48.111,
       "lng": -122.76,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 240.0,
-      "wind_kt": 8.0,
-      "gust_kt": 12.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 80.0,
+      "wind_kt": 1.9,
+      "gust_kt": 2.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1014.0,
-      "air_f": 57.0,
+      "pressure_hpa": 1017.9,
+      "air_f": 52.7,
       "water_f": 53.6,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1844,10 +1844,10 @@
       "name": "Station PXAC1",
       "lat": 33.764,
       "lng": -118.265,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 300.0,
-      "wind_kt": 5.1,
-      "gust_kt": 11.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 240.0,
+      "wind_kt": 1.0,
+      "gust_kt": 1.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
@@ -1861,15 +1861,15 @@
       "name": "Station PXOC1",
       "lat": 37.798,
       "lng": -122.393,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": null,
-      "wind_kt": 0.0,
-      "gust_kt": 4.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 60.0,
+      "wind_kt": 1.9,
+      "gust_kt": 2.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1005.4,
-      "air_f": 68.9,
+      "pressure_hpa": 1006.6,
+      "air_f": 63.3,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1878,7 +1878,7 @@
       "name": "Station PXSC1",
       "lat": 37.803,
       "lng": -122.397,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -1886,7 +1886,7 @@
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 68.5,
+      "air_f": 63.7,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1895,16 +1895,16 @@
       "name": "Station RCMC1",
       "lat": 37.923,
       "lng": -122.41,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 150.0,
-      "wind_kt": 1.9,
-      "gust_kt": 4.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 200.0,
+      "wind_kt": 6.0,
+      "gust_kt": 8.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1005.7,
-      "air_f": 68.9,
-      "water_f": 64.6,
+      "pressure_hpa": 1007.1,
+      "air_f": 62.8,
+      "water_f": 64.2,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -1912,15 +1912,15 @@
       "name": "Station RTYC1",
       "lat": 37.507,
       "lng": -122.212,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 340.0,
-      "wind_kt": 6.0,
-      "gust_kt": 8.0,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 210.0,
+      "wind_kt": 1.9,
+      "gust_kt": 1.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.3,
-      "air_f": 71.1,
+      "pressure_hpa": 1007.4,
+      "air_f": 62.8,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1929,14 +1929,14 @@
       "name": "Station SBEO3",
       "lat": 44.625,
       "lng": -124.045,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1016.8,
+      "pressure_hpa": 1017.3,
       "air_f": null,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
@@ -1946,14 +1946,14 @@
       "name": "Station SDBC1",
       "lat": 32.714,
       "lng": -117.174,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1005.6,
+      "pressure_hpa": 1007.7,
       "air_f": null,
       "water_f": 76.5,
       "source": "NOAA/NDBC latest observations"
@@ -1963,15 +1963,15 @@
       "name": "Station SFXC1",
       "lat": 38.2,
       "lng": -122.026,
-      "observed_at": "2026-09-30T00:45:00Z",
+      "observed_at": "2026-09-30T06:45:00Z",
       "wind_from_deg": 270.0,
       "wind_kt": 8.0,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1004.0,
-      "air_f": 87.1,
+      "pressure_hpa": 1005.0,
+      "air_f": 67.8,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1980,15 +1980,15 @@
       "name": "Station SISW1",
       "lat": 48.321,
       "lng": -122.831,
-      "observed_at": "2026-09-30T01:40:00Z",
-      "wind_from_deg": 50.0,
-      "wind_kt": 1.9,
-      "gust_kt": 4.1,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 300.0,
+      "wind_kt": 15.0,
+      "gust_kt": 19.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 54.9,
+      "air_f": 54.0,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -1997,15 +1997,15 @@
       "name": "Station SNTO3",
       "lat": 43.279,
       "lng": -124.318,
-      "observed_at": "2026-09-30T01:30:00Z",
-      "wind_from_deg": 20.0,
-      "wind_kt": 2.9,
+      "observed_at": "2026-09-30T07:30:00Z",
+      "wind_from_deg": 30.0,
+      "wind_kt": 1.0,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": 1017.0,
-      "air_f": 61.7,
+      "air_f": 58.8,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -2014,15 +2014,15 @@
       "name": "Station TCMW1",
       "lat": 47.276,
       "lng": -122.418,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 230.0,
-      "wind_kt": 8.9,
-      "gust_kt": 12.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 1.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
       "pressure_hpa": null,
-      "air_f": 62.6,
+      "air_f": 56.7,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -2031,16 +2031,16 @@
       "name": "Station TCNW1",
       "lat": 47.267,
       "lng": -122.413,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:48:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1014.5,
+      "pressure_hpa": 1017.8,
       "air_f": null,
-      "water_f": 56.5,
+      "water_f": 56.8,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -2048,7 +2048,7 @@
       "name": "Station TDPC1",
       "lat": 41.055,
       "lng": -124.147,
-      "observed_at": "2026-09-30T01:00:00Z",
+      "observed_at": "2026-09-30T07:45:00Z",
       "wind_from_deg": null,
       "wind_kt": null,
       "gust_kt": null,
@@ -2057,7 +2057,7 @@
       "wave_from_deg": null,
       "pressure_hpa": null,
       "air_f": null,
-      "water_f": 52.5,
+      "water_f": 52.3,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -2065,15 +2065,15 @@
       "name": "Station TIXC1",
       "lat": 32.575,
       "lng": -117.127,
-      "observed_at": "2026-09-30T00:45:00Z",
-      "wind_from_deg": 250.0,
+      "observed_at": "2026-09-30T06:45:00Z",
+      "wind_from_deg": 190.0,
       "wind_kt": 1.9,
       "gust_kt": null,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1006.0,
-      "air_f": 73.8,
+      "pressure_hpa": 1007.0,
+      "air_f": 66.2,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -2082,16 +2082,16 @@
       "name": "Station TOKW1",
       "lat": 46.707,
       "lng": -123.967,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 330.0,
-      "wind_kt": 2.9,
-      "gust_kt": 4.1,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 360.0,
+      "wind_kt": 1.9,
+      "gust_kt": 2.9,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1015.3,
-      "air_f": 58.1,
-      "water_f": 58.8,
+      "pressure_hpa": 1017.7,
+      "air_f": 53.2,
+      "water_f": 58.6,
       "source": "NOAA/NDBC latest observations"
     },
     {
@@ -2099,9 +2099,9 @@
       "name": "Station UPBC1",
       "lat": 38.038,
       "lng": -122.121,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 280.0,
-      "wind_kt": 8.9,
+      "observed_at": "2026-09-30T07:48:00Z",
+      "wind_from_deg": 300.0,
+      "wind_kt": 8.0,
       "gust_kt": 11.1,
       "wave_ft": null,
       "period_sec": null,
@@ -2116,15 +2116,15 @@
       "name": "Station WPOW1",
       "lat": 47.662,
       "lng": -122.435,
-      "observed_at": "2026-09-30T01:00:00Z",
-      "wind_from_deg": 40.0,
-      "wind_kt": 11.1,
-      "gust_kt": 12.1,
+      "observed_at": "2026-09-30T08:00:00Z",
+      "wind_from_deg": null,
+      "wind_kt": 0.0,
+      "gust_kt": 0.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1014.7,
-      "air_f": 56.3,
+      "pressure_hpa": 1017.8,
+      "air_f": 54.7,
       "water_f": null,
       "source": "NOAA/NDBC latest observations"
     },
@@ -2133,16 +2133,16 @@
       "name": "Station WPTW1",
       "lat": 46.904,
       "lng": -124.105,
-      "observed_at": "2026-09-30T00:36:00Z",
-      "wind_from_deg": null,
-      "wind_kt": null,
-      "gust_kt": null,
+      "observed_at": "2026-09-30T07:36:00Z",
+      "wind_from_deg": 320.0,
+      "wind_kt": 7.0,
+      "gust_kt": 8.0,
       "wave_ft": null,
       "period_sec": null,
       "wave_from_deg": null,
-      "pressure_hpa": 1014.8,
-      "air_f": null,
-      "water_f": 57.2,
+      "pressure_hpa": 1017.2,
+      "air_f": 55.6,
+      "water_f": 57.4,
       "source": "NOAA/NDBC latest observations"
     }
   ],
@@ -2152,38 +2152,18 @@
       "name": "Neah Bay, WA",
       "lat": 48.37,
       "lng": -124.602,
-      "height_ft": 2.516,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 3.937,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 11:06",
         "height_ft": 6.061
       },
       "next_low": {
-        "time": "2026-09-30 04:49",
-        "height_ft": -1.103
+        "time": "2026-09-30 16:08",
+        "height_ft": 2.776
       },
       "predictions": [
-        {
-          "t": "2026-09-29 04:03",
-          "v": "-0.85",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 10:12",
-          "v": "6.509",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 15:36",
-          "v": "2.152",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 21:39",
-          "v": "8.484",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 04:49",
           "v": "-1.103",
@@ -2203,6 +2183,26 @@
           "t": "2026-09-30 22:15",
           "v": "8.465",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 05:41",
+          "v": "-1.095",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 12:08",
+          "v": "5.584",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 16:44",
+          "v": "3.369",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 22:58",
+          "v": "8.24",
+          "type": "H"
         }
       ]
     },
@@ -2211,38 +2211,18 @@
       "name": "Port Angeles, WA",
       "lat": 48.125,
       "lng": -123.44,
-      "height_ft": 5.641,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 0.683,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 14:02",
         "height_ft": 6.08
       },
       "next_low": {
-        "time": "2026-09-30 06:55",
-        "height_ft": -0.711
+        "time": "2026-09-30 18:11",
+        "height_ft": 5.269
       },
       "predictions": [
-        {
-          "t": "2026-09-29 06:08",
-          "v": "-0.177",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 12:52",
-          "v": "6.107",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 17:41",
-          "v": "4.471",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 23:08",
-          "v": "7.487",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 06:55",
           "v": "-0.711",
@@ -2262,6 +2242,26 @@
           "t": "2026-09-30 23:24",
           "v": "7.618",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 07:46",
+          "v": "-0.994",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 15:26",
+          "v": "6.044",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 18:25",
+          "v": "5.884",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 23:48",
+          "v": "7.614",
+          "type": "H"
         }
       ]
     },
@@ -2270,8 +2270,8 @@
       "name": "Seattle, WA",
       "lat": 47.602,
       "lng": -122.339,
-      "height_ft": 11.987,
-      "observed_at": "2026-09-30 02:00",
+      "height_ft": -0.727,
+      "observed_at": "2026-09-30 08:30",
       "trend": "Falling",
       "next_high": {
         "time": "2026-09-30 15:35",
@@ -2282,26 +2282,6 @@
         "height_ft": -1.47
       },
       "predictions": [
-        {
-          "t": "2026-09-29 01:15",
-          "v": "11.388",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 07:59",
-          "v": "-0.842",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 14:38",
-          "v": "11.018",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 20:13",
-          "v": "5.208",
-          "type": "L"
-        },
         {
           "t": "2026-09-30 01:45",
           "v": "11.274",
@@ -2321,6 +2301,26 @@
           "t": "2026-09-30 20:59",
           "v": "6.316",
           "type": "L"
+        },
+        {
+          "t": "2026-10-01 02:18",
+          "v": "11.006",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 09:28",
+          "v": "-1.672",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 16:38",
+          "v": "10.806",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 21:54",
+          "v": "7.273",
+          "type": "L"
         }
       ]
     },
@@ -2329,38 +2329,18 @@
       "name": "Astoria, OR",
       "lat": 46.207,
       "lng": -123.768,
-      "height_ft": 4.043,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 3.787,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 11:41",
         "height_ft": 7.043
       },
       "next_low": {
-        "time": "2026-09-30 05:18",
-        "height_ft": -0.952
+        "time": "2026-09-30 17:04",
+        "height_ft": 2.026
       },
       "predictions": [
-        {
-          "t": "2026-09-29 04:35",
-          "v": "-0.89",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 10:49",
-          "v": "7.412",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 16:26",
-          "v": "1.456",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 22:21",
-          "v": "9.171",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 05:18",
           "v": "-0.952",
@@ -2380,6 +2360,26 @@
           "t": "2026-09-30 22:58",
           "v": "9.193",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 06:06",
+          "v": "-0.777",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 12:38",
+          "v": "6.612",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 17:47",
+          "v": "2.601",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 23:42",
+          "v": "8.974",
+          "type": "H"
         }
       ]
     },
@@ -2388,38 +2388,18 @@
       "name": "Garibaldi, OR",
       "lat": 45.554,
       "lng": -123.918,
-      "height_ft": 3.153,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 4.724,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 11:08",
         "height_ft": 7.008
       },
       "next_low": {
-        "time": "2026-09-30 04:31",
-        "height_ft": -0.805
+        "time": "2026-09-30 16:18",
+        "height_ft": 2.566
       },
       "predictions": [
-        {
-          "t": "2026-09-29 03:46",
-          "v": "-0.685",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 10:17",
-          "v": "7.348",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 15:40",
-          "v": "1.933",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 21:58",
-          "v": "8.858",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 04:31",
           "v": "-0.805",
@@ -2439,6 +2419,26 @@
           "t": "2026-09-30 22:35",
           "v": "8.844",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 05:20",
+          "v": "-0.678",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 12:04",
+          "v": "6.603",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 17:02",
+          "v": "3.192",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 23:19",
+          "v": "8.646",
+          "type": "H"
         }
       ]
     },
@@ -2447,38 +2447,18 @@
       "name": "South Beach, OR",
       "lat": 44.625,
       "lng": -124.044,
-      "height_ft": 1.952,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 5.594,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 10:39",
         "height_ft": 7.027
       },
       "next_low": {
-        "time": "2026-09-30 04:05",
-        "height_ft": -0.882
+        "time": "2026-09-30 15:52",
+        "height_ft": 2.58
       },
       "predictions": [
-        {
-          "t": "2026-09-29 03:20",
-          "v": "-0.746",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 09:47",
-          "v": "7.392",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 15:14",
-          "v": "1.916",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 21:26",
-          "v": "8.973",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 04:05",
           "v": "-0.882",
@@ -2498,6 +2478,26 @@
           "t": "2026-09-30 22:03",
           "v": "8.936",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 04:54",
+          "v": "-0.766",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 11:37",
+          "v": "6.598",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 16:36",
+          "v": "3.234",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 22:47",
+          "v": "8.7",
+          "type": "H"
         }
       ]
     },
@@ -2506,38 +2506,18 @@
       "name": "Charleston, OR",
       "lat": 43.345,
       "lng": -124.322,
-      "height_ft": 1.299,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 5.243,
+      "observed_at": "2026-09-30 08:24",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 10:26",
         "height_ft": 6.368
       },
       "next_low": {
-        "time": "2026-09-30 03:54",
-        "height_ft": -0.729
+        "time": "2026-09-30 15:38",
+        "height_ft": 2.495
       },
       "predictions": [
-        {
-          "t": "2026-09-29 03:09",
-          "v": "-0.555",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 09:34",
-          "v": "6.751",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 15:00",
-          "v": "1.933",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 21:09",
-          "v": "8.327",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 03:54",
           "v": "-0.729",
@@ -2557,6 +2537,26 @@
           "t": "2026-09-30 21:47",
           "v": "8.265",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 04:45",
+          "v": "-0.665",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 11:25",
+          "v": "5.948",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 16:21",
+          "v": "3.056",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 22:32",
+          "v": "8.032",
+          "type": "H"
         }
       ]
     },
@@ -2565,38 +2565,18 @@
       "name": "Crescent City, CA",
       "lat": 41.745,
       "lng": -124.184,
-      "height_ft": 0.423,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 5.148,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 09:57",
         "height_ft": 5.732
       },
       "next_low": {
-        "time": "2026-09-30 03:27",
-        "height_ft": -0.553
+        "time": "2026-09-30 15:07",
+        "height_ft": 2.598
       },
       "predictions": [
-        {
-          "t": "2026-09-29 02:41",
-          "v": "-0.384",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 09:02",
-          "v": "6.065",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 14:29",
-          "v": "2.057",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 20:34",
-          "v": "7.582",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 03:27",
           "v": "-0.553",
@@ -2616,6 +2596,26 @@
           "t": "2026-09-30 21:12",
           "v": "7.545",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 04:20",
+          "v": "-0.528",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 10:59",
+          "v": "5.37",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 15:52",
+          "v": "3.098",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 21:58",
+          "v": "7.345",
+          "type": "H"
         }
       ]
     },
@@ -2624,38 +2624,18 @@
       "name": "North Spit, Humboldt Bay, CA",
       "lat": 40.767,
       "lng": -124.217,
-      "height_ft": 1.58,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 5.303,
+      "observed_at": "2026-09-30 08:24",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 10:12",
         "height_ft": 5.548
       },
       "next_low": {
-        "time": "2026-09-30 03:37",
-        "height_ft": -0.532
+        "time": "2026-09-30 15:13",
+        "height_ft": 2.645
       },
       "predictions": [
-        {
-          "t": "2026-09-29 02:50",
-          "v": "-0.34",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 09:16",
-          "v": "5.891",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 14:35",
-          "v": "2.117",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 20:45",
-          "v": "7.526",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 03:37",
           "v": "-0.532",
@@ -2675,6 +2655,26 @@
           "t": "2026-09-30 21:23",
           "v": "7.531",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 04:30",
+          "v": "-0.533",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 11:16",
+          "v": "5.199",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 15:57",
+          "v": "3.131",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 22:09",
+          "v": "7.371",
+          "type": "H"
         }
       ]
     },
@@ -2683,38 +2683,18 @@
       "name": "San Francisco, CA",
       "lat": 37.807,
       "lng": -122.465,
-      "height_ft": 1.13,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 4.65,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 10:11",
         "height_ft": 4.652
       },
       "next_low": {
-        "time": "2026-09-30 03:06",
-        "height_ft": -0.223
+        "time": "2026-09-30 14:48",
+        "height_ft": 2.659
       },
       "predictions": [
-        {
-          "t": "2026-09-29 02:18",
-          "v": "-0.029",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 09:09",
-          "v": "4.923",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 14:08",
-          "v": "2.152",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 20:30",
-          "v": "6.307",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 03:06",
           "v": "-0.223",
@@ -2734,6 +2714,26 @@
           "t": "2026-09-30 21:10",
           "v": "6.326",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 04:00",
+          "v": "-0.262",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 11:24",
+          "v": "4.416",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 15:36",
+          "v": "3.109",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 21:58",
+          "v": "6.219",
+          "type": "H"
         }
       ]
     },
@@ -2742,38 +2742,18 @@
       "name": "Monterey, CA",
       "lat": 36.605,
       "lng": -121.888,
-      "height_ft": 0.718,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 4.524,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 09:03",
         "height_ft": 3.88
       },
       "next_low": {
-        "time": "2026-09-30 02:29",
-        "height_ft": 0.001
+        "time": "2026-09-30 13:39",
+        "height_ft": 2.564
       },
       "predictions": [
-        {
-          "t": "2026-09-29 01:36",
-          "v": "0.173",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 07:56",
-          "v": "4.218",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 13:06",
-          "v": "2.115",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 19:17",
-          "v": "5.911",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 02:29",
           "v": "0.001",
@@ -2793,6 +2773,26 @@
           "t": "2026-09-30 19:56",
           "v": "5.943",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 03:30",
+          "v": "-0.062",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 10:27",
+          "v": "3.629",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 14:19",
+          "v": "2.959",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 20:45",
+          "v": "5.843",
+          "type": "H"
         }
       ]
     },
@@ -2801,38 +2801,18 @@
       "name": "Port San Luis, CA",
       "lat": 35.169,
       "lng": -120.754,
-      "height_ft": 0.869,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Falling",
+      "height_ft": 4.547,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Rising",
       "next_high": {
         "time": "2026-09-30 08:28",
         "height_ft": 3.83
       },
       "next_low": {
-        "time": "2026-09-30 02:00",
-        "height_ft": 0.084
+        "time": "2026-09-30 13:04",
+        "height_ft": 2.509
       },
       "predictions": [
-        {
-          "t": "2026-09-29 01:07",
-          "v": "0.217",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 07:23",
-          "v": "4.22",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 12:32",
-          "v": "2.051",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 18:47",
-          "v": "5.971",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 02:00",
           "v": "0.084",
@@ -2852,6 +2832,26 @@
           "t": "2026-09-30 19:27",
           "v": "5.968",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 03:02",
+          "v": "0.064",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 09:52",
+          "v": "3.528",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 13:42",
+          "v": "2.925",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 20:16",
+          "v": "5.826",
+          "type": "H"
         }
       ]
     },
@@ -2860,38 +2860,18 @@
       "name": "Santa Barbara, CA",
       "lat": 34.408,
       "lng": -119.685,
-      "height_ft": 1.316,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Rising",
+      "height_ft": 4.738,
+      "observed_at": "2026-09-30 08:24",
+      "trend": "Falling",
       "next_high": {
-        "time": "2026-09-30 07:51",
-        "height_ft": 3.743
+        "time": "2026-09-30 19:01",
+        "height_ft": 6.044
       },
       "next_low": {
         "time": "2026-09-30 12:31",
         "height_ft": 2.303
       },
       "predictions": [
-        {
-          "t": "2026-09-29 00:35",
-          "v": "0.165",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 06:48",
-          "v": "4.222",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 12:02",
-          "v": "1.838",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 18:21",
-          "v": "6.075",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 01:29",
           "v": "0.113",
@@ -2911,6 +2891,26 @@
           "t": "2026-09-30 19:01",
           "v": "6.044",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 02:33",
+          "v": "0.169",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 09:14",
+          "v": "3.353",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 13:03",
+          "v": "2.744",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 19:51",
+          "v": "5.867",
+          "type": "H"
         }
       ]
     },
@@ -2919,38 +2919,18 @@
       "name": "Los Angeles, CA",
       "lat": 33.72,
       "lng": -118.272,
-      "height_ft": 1.465,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Rising",
+      "height_ft": 4.621,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Falling",
       "next_high": {
-        "time": "2026-09-30 07:17",
-        "height_ft": 3.795
+        "time": "2026-09-30 18:36",
+        "height_ft": 6.125
       },
       "next_low": {
         "time": "2026-09-30 12:05",
         "height_ft": 2.143
       },
       "predictions": [
-        {
-          "t": "2026-09-29 00:09",
-          "v": "0.051",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 06:19",
-          "v": "4.352",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 11:37",
-          "v": "1.651",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 17:58",
-          "v": "6.217",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 01:00",
           "v": "0.057",
@@ -2970,6 +2950,26 @@
           "t": "2026-09-30 18:36",
           "v": "6.125",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 02:03",
+          "v": "0.19",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 08:38",
+          "v": "3.31",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 12:34",
+          "v": "2.631",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 19:24",
+          "v": "5.878",
+          "type": "H"
         }
       ]
     },
@@ -2980,36 +2980,16 @@
       "lng": -117.883,
       "height_ft": null,
       "observed_at": null,
-      "trend": "Rising",
+      "trend": "Falling",
       "next_high": {
-        "time": "2026-09-30 07:11",
-        "height_ft": 3.737
+        "time": "2026-09-30 18:33",
+        "height_ft": 6.015
       },
       "next_low": {
         "time": "2026-09-30 11:59",
         "height_ft": 2.042
       },
       "predictions": [
-        {
-          "t": "2026-09-29 00:04",
-          "v": "0.033",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 06:14",
-          "v": "4.301",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 11:33",
-          "v": "1.558",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 17:55",
-          "v": "6.115",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 00:55",
           "v": "0.049",
@@ -3029,6 +3009,26 @@
           "t": "2026-09-30 18:33",
           "v": "6.015",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 01:57",
+          "v": "0.193",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 08:31",
+          "v": "3.235",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 12:27",
+          "v": "2.525",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 19:22",
+          "v": "5.761",
+          "type": "H"
         }
       ]
     },
@@ -3037,38 +3037,18 @@
       "name": "La Jolla, CA",
       "lat": 32.867,
       "lng": -117.257,
-      "height_ft": 1.441,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Rising",
+      "height_ft": 4.472,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Falling",
       "next_high": {
-        "time": "2026-09-30 07:08",
-        "height_ft": 3.686
+        "time": "2026-09-30 18:30",
+        "height_ft": 5.985
       },
       "next_low": {
         "time": "2026-09-30 11:57",
         "height_ft": 2.036
       },
       "predictions": [
-        {
-          "t": "2026-09-29 00:02",
-          "v": "0.069",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 06:11",
-          "v": "4.248",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 11:31",
-          "v": "1.556",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 17:52",
-          "v": "6.069",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 00:53",
           "v": "0.075",
@@ -3088,6 +3068,26 @@
           "t": "2026-09-30 18:30",
           "v": "5.985",
           "type": "H"
+        },
+        {
+          "t": "2026-10-01 01:56",
+          "v": "0.202",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 08:29",
+          "v": "3.188",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 12:25",
+          "v": "2.513",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 19:18",
+          "v": "5.746",
+          "type": "H"
         }
       ]
     },
@@ -3096,38 +3096,18 @@
       "name": "San Diego, CA",
       "lat": 32.714,
       "lng": -117.174,
-      "height_ft": 1.702,
-      "observed_at": "2026-09-30 02:00",
-      "trend": "Rising",
+      "height_ft": 4.815,
+      "observed_at": "2026-09-30 08:30",
+      "trend": "Falling",
       "next_high": {
-        "time": "2026-09-30 07:07",
-        "height_ft": 4.072
+        "time": "2026-09-30 18:31",
+        "height_ft": 6.372
       },
       "next_low": {
         "time": "2026-09-30 12:00",
         "height_ft": 2.137
       },
       "predictions": [
-        {
-          "t": "2026-09-29 00:05",
-          "v": "0.08",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 06:11",
-          "v": "4.666",
-          "type": "H"
-        },
-        {
-          "t": "2026-09-29 11:35",
-          "v": "1.633",
-          "type": "L"
-        },
-        {
-          "t": "2026-09-29 17:54",
-          "v": "6.499",
-          "type": "H"
-        },
         {
           "t": "2026-09-30 00:56",
           "v": "0.122",
@@ -3146,6 +3126,26 @@
         {
           "t": "2026-09-30 18:31",
           "v": "6.372",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 01:57",
+          "v": "0.299",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 08:22",
+          "v": "3.53",
+          "type": "H"
+        },
+        {
+          "t": "2026-10-01 12:26",
+          "v": "2.642",
+          "type": "L"
+        },
+        {
+          "t": "2026-10-01 19:20",
+          "v": "6.084",
           "type": "H"
         }
       ]
